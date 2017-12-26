@@ -1,13 +1,9 @@
 import * as React from 'react';
 import './DashboardFilter.css';
-import { FormGroup, FormControl, Form } from 'react-bootstrap';
+import { Form, FormControl, FormGroup } from 'react-bootstrap';
+import { DashboardFilterData } from '../../types/DashboardState';
 
-export interface Props {
-    startDate: Date;
-    endDate: Date;
-}
-
-class DashboardFilter extends React.Component<Props, object> {
+class DashboardFilter extends React.Component<DashboardFilterData, object> {
     render() {
         const p = this.props;
 
@@ -18,7 +14,7 @@ class DashboardFilter extends React.Component<Props, object> {
                         <FormControl
                             type="text"
                             placeholder="Start date"
-                            value={p.startDate.toString()}
+                            defaultValue={p.startDate.toString()}
                         />
                     </FormGroup>
                     {' \u2014 '}
@@ -26,7 +22,7 @@ class DashboardFilter extends React.Component<Props, object> {
                         <FormControl
                             type="text"
                             placeholder="End date"
-                            value={p.endDate.toString()}
+                            defaultValue={p.endDate.toString()}
                         />
                     </FormGroup>
                 </Form>

@@ -4,6 +4,8 @@ import 'raf/polyfill';
 
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap-theme.css';
 
@@ -11,8 +13,15 @@ import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import './index.css';
 
+import DashboardReducer from './reducers/DashboardReducer';
+import { DashboardState } from './types/DashboardState';
+
+const store = createStore<DashboardState>(DashboardReducer);
+
 ReactDOM.render(
-  <App />,
-  document.getElementById('root') as HTMLElement
+    <Provider store={store}>
+        <App/>
+    </Provider>,
+    document.getElementById('root') as HTMLElement
 );
 registerServiceWorker();
