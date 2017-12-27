@@ -1,20 +1,30 @@
-import { Action, ActionType } from '../actions/Actions';
+import * as moment from 'moment';
+import { Action, ActionType, SelectCountry, SetFilterPeriod } from '../actions/Actions';
 import { DashboardState } from '../types/DashboardState';
 import { ActionHandlerSelector } from '../utils/ActionHandlerSelector';
 
 const handlerSelector = new ActionHandlerSelector<DashboardState>()
     .addHandler(ActionType.selectCountry, (action, state) => {
-        return state;
+        const actionImpl = <SelectCountry> action;
+        return {...state, map: {...state.map, selectedCountryCode: actionImpl.countryCode}};
     })
-    .addHandler(ActionType.setFilterValue, (action, state) => {
-        return state;
+    .addHandler(ActionType.setFilterPeriod, (action, state) => {
+        const actionImpl = <SetFilterPeriod> action;
+        return {
+            ...state,
+            filter: {
+                ...state.filter,
+                startDate: actionImpl.startDate,
+                endDate: actionImpl.endDate
+            }
+        };
     });
 
 function getDefaultDashboardState() {
     return {
         filter: {
-            startDate: new Date(),
-            endDate: new Date()
+            startDate: moment().subtract(7, 'days'),
+            endDate: moment()
         },
         map: {
             selectedCountryCode: ''

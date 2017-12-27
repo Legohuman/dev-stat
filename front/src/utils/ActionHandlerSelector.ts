@@ -5,13 +5,13 @@ export class ActionHandlerSelector<S> {
         [actionType: string]: (action: Action, state: S) => S;
     } = {};
 
-    addHandler(actionType: ActionType, handler: (action: Action, state: S) => S): ActionHandlerSelector<S> {
+    addHandler(actionType: ActionType, handler: (action: Action, state: S) => S): this {
         this.handlers[actionType.toString()] = handler;
         return this;
     }
 
     handle(action: Action, state: S): S {
-        const handler = this[action.type];
+        const handler = this.handlers[action.type];
         if (handler) {
             return handler(action, state);
         }

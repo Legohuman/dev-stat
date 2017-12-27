@@ -1,3 +1,5 @@
+import * as moment from 'moment';
+
 export interface DashboardState {
     filter: DashboardFilterData,
     map: DashboardMapData,
@@ -5,12 +7,12 @@ export interface DashboardState {
 }
 
 export interface DashboardFilterData {
-    startDate: Date,
-    endDate: Date
+    startDate?: moment.Moment,
+    endDate?: moment.Moment
 }
 
 export interface DashboardMapData {
-    selectedCountryCode: string
+    selectedCountryCode?: string
 }
 
 export interface DashboardCountryDetailData {

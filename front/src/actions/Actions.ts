@@ -1,40 +1,36 @@
-import { AnyAction } from 'redux';
+import * as moment from 'moment';
 
 export enum ActionType {
-    setFilterValue = 'setFilterValue',
+    setFilterPeriod = 'setFilterPeriod',
     selectCountry = 'selectCountry',
 }
 
-export enum DashboardFilterField {
-    startDate = 'startDate',
-    endDate = 'endDate',
+export interface SetFilterPeriod {
+    readonly type: typeof ActionType.setFilterPeriod;
+    readonly startDate?: moment.Moment;
+    readonly endDate?: moment.Moment;
 }
 
-export abstract class Action implements AnyAction {
-    readonly type: ActionType;
-    [extraProps: string]: any;
-
-    constructor(actionType: ActionType) {
-        this.actionType = actionType;
-    }
+export interface SelectCountry {
+    readonly type: typeof ActionType.selectCountry;
+    readonly countryCode?: string;
 }
 
-export class SetFilterDateValue extends Action {
-    readonly field: DashboardFilterField;
-    readonly value: Date;
+export type Action = SetFilterPeriod | SelectCountry;
 
-    constructor(field: DashboardFilterField, value: Date) {
-        super(ActionType.setFilterValue);
-        this.field = field;
-        this.value = value;
-    }
-}
+export const ActionsFactory = {
+    setFilterPeriod(startDate?: moment.Moment, endDate?: moment.Moment): SetFilterPeriod {
+        return {
+            type: ActionType.setFilterPeriod,
+            startDate,
+            endDate
+        };
+    },
 
-export class SelectCountry extends Action {
-    readonly countryCode: string;
-
-    constructor(countryCode: string) {
-        super(ActionType.selectCountry);
-        this.countryCode = countryCode;
-    }
-}
+    selectCountry(countryCode?: string): SelectCountry {
+        return {
+            type: ActionType.selectCountry,
+            countryCode
+        };
+    },
+};

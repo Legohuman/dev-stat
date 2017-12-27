@@ -1,9 +1,22 @@
 import * as React from 'react';
+import { Form, FormGroup } from 'react-bootstrap';
+import * as moment from 'moment';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import './DashboardFilter.css';
-import { Form, FormControl, FormGroup } from 'react-bootstrap';
-import { DashboardFilterData } from '../../types/DashboardState';
 
-class DashboardFilter extends React.Component<DashboardFilterData, object> {
+import { DashboardFilterData } from '../../types/DashboardState';
+import { DashboardPageHandlers } from './DashboardPageHandlers';
+
+const filterDateFormat = 'DD.MM.YYYY';
+const commonDatePickerProps = {
+    peekNextMonth: true,
+    showMonthDropdown: true,
+    showYearDropdown: true,
+    dateFormat: filterDateFormat
+};
+
+class DashboardFilter extends React.Component<DashboardFilterData & DashboardPageHandlers, object> {
     render() {
         const p = this.props;
 
@@ -11,18 +24,28 @@ class DashboardFilter extends React.Component<DashboardFilterData, object> {
             <div className="DashboardFilter">
                 <Form inline={true}>
                     <FormGroup controlId="formInlineName">
-                        <FormControl
-                            type="text"
-                            placeholder="Start date"
-                            defaultValue={p.startDate.toString()}
+                        <DatePicker
+                            selected={p.startDate}
+                            selectsStart={true}
+                            startDate={p.startDate}
+                            endDate={p.endDate}
+                            onChange={(date: moment.Moment | null) => {
+                                p.handlers.handlePeriodChange(date || undefined, p.endDate);
+                            }}
+                            {...commonDatePickerProps}
                         />
                     </FormGroup>
                     {' \u2014 '}
                     <FormGroup controlId="formInlineEmail">
-                        <FormControl
-                            type="text"
-                            placeholder="End date"
-                            defaultValue={p.endDate.toString()}
+                        <DatePicker
+                            selected={p.endDate}
+                            selectsEnd={true}
+                            startDate={p.startDate}
+                            endDate={p.endDate}
+                            onChange={(date: moment.Moment | null) => {
+                                p.handlers.handlePeriodChange(p.startDate, date || undefined);
+                            }}
+                            {...commonDatePickerProps}
                         />
                     </FormGroup>
                 </Form>

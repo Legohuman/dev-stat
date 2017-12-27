@@ -4,17 +4,27 @@ import DashboardFilter from './DashboardFilter';
 import DashboardMap from './DashboardMap';
 import DashboardCountryDetail from './DashboardCountryDetail';
 import { DashboardState } from '../../types/DashboardState';
-import { connect, Dispatch } from 'react-redux';
+import { connect } from 'react-redux';
+import { createDashboardPageHandlers, DashboardPageHandlers } from './DashboardPageHandlers';
 
-class DashboardPage extends React.Component<DashboardState, object> {
+class DashboardPage extends React.Component<DashboardState & DashboardPageHandlers, object> {
     render() {
         const p = this.props;
 
         return (
             <div className="DashboardPage">
-                <DashboardFilter {...p.filter}/>
-                <DashboardMap {...p.map}/>
-                <DashboardCountryDetail {...p.countryDetail}/>
+                <DashboardFilter
+                    {...p.filter}
+                    handlers={p.handlers}
+                />
+                <DashboardMap
+                    {...p.map}
+                    handlers={p.handlers}
+                />
+                <DashboardCountryDetail
+                    {...p.countryDetail}
+                    handlers={p.handlers}
+                />
             </div>
         );
     }
@@ -24,8 +34,4 @@ function mapStateToProps(state: DashboardState) {
     return state;
 }
 
-function mapDispatchToProps(dispatch: Dispatch<DashboardState>) {
-    return {};
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(DashboardPage);
+export default connect(mapStateToProps, createDashboardPageHandlers)(DashboardPage);

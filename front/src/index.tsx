@@ -4,7 +4,8 @@ import 'raf/polyfill';
 
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { createStore } from 'redux';
+import { applyMiddleware, createStore } from 'redux';
+import logger from 'redux-logger';
 import { Provider } from 'react-redux';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap-theme.css';
@@ -16,7 +17,9 @@ import './index.css';
 import DashboardReducer from './reducers/DashboardReducer';
 import { DashboardState } from './types/DashboardState';
 
-const store = createStore<DashboardState>(DashboardReducer);
+const store = createStore<DashboardState>(DashboardReducer, applyMiddleware(
+    logger
+));
 
 ReactDOM.render(
     <Provider store={store}>
