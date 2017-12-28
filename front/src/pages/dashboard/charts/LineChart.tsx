@@ -1,8 +1,7 @@
 import * as React from 'react';
 import * as d3 from 'd3';
-import { ChartBin } from "../../../types/DashboardState";
+import { ChartPoint } from "../../../types/DashboardState";
 
-const barHorizontalMargin = 2;
 const plotMargins = {
     top: 30,
     bottom: 30,
@@ -11,7 +10,7 @@ const plotMargins = {
 };
 
 interface Props {
-    data: Array<ChartBin>,
+    data: Array<ChartPoint>,
     width: number,
     height: number,
 }
@@ -49,7 +48,7 @@ class BarChart extends React.Component<Props, object> {
     }
 
     createBarChart() {
-        console.debug('Creating bar chart');
+        console.debug('Creating line chart');
 
         this.updatePlotDimensions();
         this.prepareAxes();
@@ -59,11 +58,11 @@ class BarChart extends React.Component<Props, object> {
     }
 
     updateBarChart() {
-        console.debug('Updating bar chart');
+        console.debug('Updating line chart');
 
         this.updateAxesScale();
         this.renderAxes();
-        this.renderBars();
+        this.renderLine();
     }
 
     private prepareChartGroups() {
@@ -101,10 +100,10 @@ class BarChart extends React.Component<Props, object> {
 
     private updateAxesScale() {
         const p = this.props;
-        const dataMaxX = d3.max(p.data, d => d.x1) || 0;
+        const dataMaxX = d3.max(p.data, d => d.x) || 0;
         this.xScale.domain([0, dataMaxX]).nice();
 
-        const dataMaxY = d3.max(p.data, d => d.height) || 0;
+        const dataMaxY = d3.max(p.data, d => d.y) || 0;
         this.yScale.domain([0, dataMaxY]).nice();
     }
 
@@ -113,27 +112,22 @@ class BarChart extends React.Component<Props, object> {
         this.yAxisGroup.call(this.yAxis);
     }
 
-    private renderBars() {
+    private renderLine() {
         const p = this.props;
 
-        this.plotGroup.selectAll('rect')
-            .data(p.data)
-            .enter()
-            .append('rect');
-
-        this.plotGroup.selectAll('rect')
-            .data(p.data)
-            .exit()
+        this.plotGroup.selectAll("path")
             .remove();
 
-        this.plotGroup.selectAll('rect')
-            .data(p.data)
-            .style('fill', '#fe9922')
-            .style('stroke', '#666')
-            .attr('x', (d, i) => this.xScale(d.x0) + barHorizontalMargin)
-            .attr('y', d => this.plotHeight - this.yScale(d.height))
-            .attr('height', d => this.yScale(d.height))
-            .attr('width', d => this.xScale(d.x1 - d.x0) - barHorizontalMargin * 2);
+        this.plotGroup.append("path")
+            .datum(p.data)
+            .attr("fill", "none")
+            .attr("stroke", "#000")
+            .attr("stroke-width", 1.5)
+            .attr("stroke-linejoin", "round")
+            .attr("d", d3.line<ChartPoint>()
+                .curve(d3.curveBasis)
+                .x(d => this.xScale(d.x))
+                .y(d => this.yScale(d.y)));
     }
 }
 
