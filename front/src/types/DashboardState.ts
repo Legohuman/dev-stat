@@ -20,14 +20,19 @@ export interface DashboardCountryDetailData {
     meanSalary: number,
     meanExperience: number,
     meanCompanySize: number,
-    ageDistribution: Array<CountBin>,
-    salaryDistribution: Array<CountBin>,
-    experienceDistribution: Array<CountBin>,
-    companySizeDistribution: Array<CountBin>,
+    ageDistribution: Array<ChartBin>,
+    salaryDistribution: Array<ChartPoint>,
+    experienceDistribution: Array<ChartBin>,
+    companySizeDistribution: Array<ChartBin>,
 }
 
-interface CountBin {
-    count: number,
-    intervalStart: number,
-    intervalEnd: number
+export interface ChartBin {
+    height: number,
+    x0: number,
+    x1: number
+}
+
+export interface ChartPoint {
+    x: number,
+    y: number
 }
