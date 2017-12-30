@@ -12,7 +12,8 @@ export interface DashboardFilterData {
 }
 
 export interface DashboardMapData {
-    selectedCountryCode?: string
+    countries: CountriesSummary,
+    selectedCountry?: CountryInfo
 }
 
 export interface DashboardCountryDetailData {
@@ -35,4 +36,19 @@ export interface ChartBin {
 export interface ChartPoint {
     x: number,
     y: number
+}
+
+export interface CountryInfo {
+    id: string,
+    name: string
+}
+
+export interface CountriesSummary {
+    [countryCode: string]: CountrySummary
+}
+
+export interface CountrySummary {
+    developersCount: number,
+    vacancyCount: number,
+    economyLevel: number
 }

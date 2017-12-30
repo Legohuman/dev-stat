@@ -16,7 +16,7 @@ interface Props {
 }
 
 class BarChart extends React.Component<Props, object> {
-    private node: SVGSVGElement | null;
+    private svgElement: SVGSVGElement | null;
     private plotGroup: d3.Selection<any, any, null, undefined>;
     private xAxisGroup: d3.Selection<any, any, null, undefined>;
     private yAxisGroup: d3.Selection<any, any, null, undefined>;
@@ -33,7 +33,7 @@ class BarChart extends React.Component<Props, object> {
         const p = this.props;
 
         return <svg
-            ref={node => this.node = node}
+            ref={node => this.svgElement = node}
             width={p.width}
             height={p.height}>
         </svg>
@@ -66,7 +66,7 @@ class BarChart extends React.Component<Props, object> {
     }
 
     private prepareChartGroups() {
-        this.plotGroup = d3.select(this.node)
+        this.plotGroup = d3.select(this.svgElement)
             .append('g')
             .classed('plot', true)
             .attr('transform', `translate(${plotMargins.left},${plotMargins.top})`);

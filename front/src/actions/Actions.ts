@@ -1,4 +1,5 @@
 import * as moment from 'moment';
+import { CountryInfo } from '../types/DashboardState';
 
 export enum ActionType {
     setFilterPeriod = 'setFilterPeriod',
@@ -13,7 +14,7 @@ export interface SetFilterPeriod {
 
 export interface SelectCountry {
     readonly type: typeof ActionType.selectCountry;
-    readonly countryCode?: string;
+    readonly country?: CountryInfo;
 }
 
 export type Action = SetFilterPeriod | SelectCountry;
@@ -27,10 +28,10 @@ export const ActionsFactory = {
         };
     },
 
-    selectCountry(countryCode?: string): SelectCountry {
+    selectCountry(country?: CountryInfo): SelectCountry {
         return {
             type: ActionType.selectCountry,
-            countryCode
+            country
         };
     },
 };

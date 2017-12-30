@@ -6,7 +6,7 @@ import { ActionHandlerSelector } from '../utils/ActionHandlerSelector';
 const handlerSelector = new ActionHandlerSelector<DashboardState>()
     .addHandler(ActionType.selectCountry, (action, state) => {
         const actionImpl = <SelectCountry> action;
-        return {...state, map: {...state.map, selectedCountryCode: actionImpl.countryCode}};
+        return {...state, map: {...state.map, selectedCountry: actionImpl.country}};
     })
     .addHandler(ActionType.setFilterPeriod, (action, state) => {
         const actionImpl = <SetFilterPeriod> action;
@@ -27,7 +27,8 @@ function getDefaultDashboardState() {
             endDate: moment()
         },
         map: {
-            selectedCountryCode: ''
+            countries: {},
+            selectedCountry: undefined
         },
         countryDetail: {
             meanAge: 0,
