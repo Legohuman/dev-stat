@@ -1,7 +1,7 @@
 import { Action, ActionType } from '../actions/Actions';
 
 export class ActionHandlerSelector<S> {
-    handlers: {
+    private readonly handlers: {
         [actionType: string]: (action: Action, state: S) => S;
     } = {};
 

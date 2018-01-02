@@ -1,3 +1,14 @@
 .App {
   text-align: center;
 }
+
+//reset bootstrap styles
+.navbar {
+  margin-bottom: 0;
+  border-radius: 0;
+}
+
+.alert {
+  margin-bottom: 0;
+  border-radius: 0;
+}

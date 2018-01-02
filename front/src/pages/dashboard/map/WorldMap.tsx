@@ -34,6 +34,9 @@ class WorldMap extends React.Component<Props, object> {
                     ref={node => this.tooltip = node}
                     className="WorldMap-Tooltip"
                 />
+                <div className="WorldMap-GestureHint">
+                    Alt + scroll for zoom. Alt + drag to pan.
+                </div>
             </div>
         );
     }
@@ -54,7 +57,8 @@ class WorldMap extends React.Component<Props, object> {
 
         const zoom = d3.zoom()
             .scaleExtent([1, 10])
-            .on('zoom', zoomed);
+            .filter(() => !d3.event.button && d3.event.altKey)
+            .on('zoom', onZoom);
 
         const pathGenerator = d3.geoPath()
             .projection(projection);
@@ -84,7 +88,7 @@ class WorldMap extends React.Component<Props, object> {
                 this.hideTooltip();
             });
 
-        function zoomed() {
+        function onZoom() {
             countriesGroup.attr('transform', `translate(${d3.event.transform.x},${d3.event.transform.y})scale(${d3.event.transform.k})`);
         }
     }
@@ -97,8 +101,8 @@ class WorldMap extends React.Component<Props, object> {
             .duration(100)
             .style('opacity', 0.75);
         tooltip.html(p.getCountryTooltipHtml(feature as d3.ExtendedFeature<Polygonal, any>))
-            .style('left', (d3.event.pageX + 10) + 'px')
-            .style('top', (d3.event.pageY + 10) + 'px');
+            .style('left', (d3.event.clientX + 10) + 'px')
+            .style('top', (d3.event.clientY + 10) + 'px');
     }
 
     private hideTooltip() {

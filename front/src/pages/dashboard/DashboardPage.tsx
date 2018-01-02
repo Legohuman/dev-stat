@@ -6,6 +6,7 @@ import DashboardCountryDetail from './DashboardCountryDetail';
 import { DashboardState } from '../../types/DashboardState';
 import { connect } from 'react-redux';
 import { createDashboardPageHandlers, DashboardPageHandlers } from './DashboardPageHandlers';
+import DashboardMessages from "./DashboardMessages";
 
 class DashboardPage extends React.Component<DashboardState & DashboardPageHandlers, object> {
     render() {
@@ -13,6 +14,7 @@ class DashboardPage extends React.Component<DashboardState & DashboardPageHandle
 
         return (
             <div className="DashboardPage">
+                <DashboardMessages {...p.messages}/>
                 <DashboardFilter
                     {...p.filter}
                     handlers={p.handlers}

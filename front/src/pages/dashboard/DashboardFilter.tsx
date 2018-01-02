@@ -23,6 +23,7 @@ class DashboardFilter extends React.Component<DashboardFilterData & DashboardPag
         return (
             <div className="DashboardFilter">
                 <Form inline={true}>
+                    Date period:
                     <FormGroup controlId="formInlineName">
                         <DatePicker
                             selected={p.startDate}

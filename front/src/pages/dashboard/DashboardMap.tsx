@@ -7,14 +7,9 @@ import ConversionUtils from '../../utils/ConversionUtils';
 
 class DashboardMap extends React.Component<DashboardMapData & DashboardPageHandlers, object> {
     render() {
-        const p = this.props;
 
         return (
             <div className="DashboardMap">
-                {(p.selectedCountry ?
-                    <div>Selected country {p.selectedCountry.name}</div> :
-                    undefined)}
-
                 <WorldMap
                     initialScale={210}
                     initialShiftX={0}
@@ -38,7 +33,7 @@ class DashboardMap extends React.Component<DashboardMapData & DashboardPageHandl
             };
         }
 
-        p.handlers.selectCountry(countryInfo);
+        p.handlers.handleCountryChange(countryInfo);
     }
 
     private getCountryTooltipHtml(country: d3.ExtendedFeature<Polygonal, any>): string {

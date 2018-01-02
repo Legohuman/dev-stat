@@ -6,6 +6,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { applyMiddleware, createStore } from 'redux';
 import logger from 'redux-logger';
+import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap-theme.css';
@@ -18,7 +19,7 @@ import DashboardReducer from './reducers/DashboardReducer';
 import { DashboardState } from './types/DashboardState';
 
 const store = createStore<DashboardState>(DashboardReducer, applyMiddleware(
-    logger
+    thunk, logger
 ));
 
 ReactDOM.render(

@@ -1,15 +1,24 @@
 import * as moment from 'moment';
-import { Action, ActionType, SelectCountry, SetFilterPeriod } from '../actions/Actions';
+import {
+    Action, ActionType, ApplyChartData, ApplyCountriesSummary, ApplyMeanDevSummary, PutErrorMessage,
+    SelectChartType, SelectCountry, SelectFilterPeriod
+} from '../actions/Actions';
 import { DashboardState } from '../types/DashboardState';
 import { ActionHandlerSelector } from '../utils/ActionHandlerSelector';
 
 const handlerSelector = new ActionHandlerSelector<DashboardState>()
-    .addHandler(ActionType.selectCountry, (action, state) => {
-        const actionImpl = <SelectCountry> action;
-        return {...state, map: {...state.map, selectedCountry: actionImpl.country}};
+    .addHandler(ActionType.putErrorMessage, (action, state) => {
+        const actionImpl = <PutErrorMessage> action;
+        return {
+            ...state,
+            messages: {
+                ...state.messages,
+                [actionImpl.key]: actionImpl.message
+            }
+        };
     })
-    .addHandler(ActionType.setFilterPeriod, (action, state) => {
-        const actionImpl = <SetFilterPeriod> action;
+    .addHandler(ActionType.selectFilterPeriod, (action, state) => {
+        const actionImpl = <SelectFilterPeriod> action;
         return {
             ...state,
             filter: {
@@ -18,10 +27,42 @@ const handlerSelector = new ActionHandlerSelector<DashboardState>()
                 endDate: actionImpl.endDate
             }
         };
+    })
+    .addHandler(ActionType.selectCountry, (action, state) => {
+        const actionImpl = <SelectCountry> action;
+        return {...state, countryDetail: {...state.countryDetail, selectedCountry: actionImpl.country}};
+    })
+    .addHandler(ActionType.selectChartType, (action, state) => {
+        const actionImpl = <SelectChartType> action;
+        return {...state, countryDetail: {...state.countryDetail, selectedChartType: actionImpl.chartType}};
+    })
+    .addHandler(ActionType.applyCountriesSummary, (action, state) => {
+        const actionImpl = <ApplyCountriesSummary> action;
+        return {...state, map: {...state.map, countries: actionImpl.summary}};
+    })
+    .addHandler(ActionType.applyMeanDevSummary, (action, state) => {
+        const actionImpl = <ApplyMeanDevSummary> action;
+        return {
+            ...state, countryDetail: {
+                ...state.countryDetail, meanDev: actionImpl.summary
+            }
+        };
+    })
+    .addHandler(ActionType.applyChartData, (action, state) => {
+        const actionImpl = <ApplyChartData> action;
+        return {
+            ...state, countryDetail: {
+                ...state.countryDetail, charts: {
+                    ...state.countryDetail.charts, [actionImpl.chartType]: actionImpl.data
+                }
+            }
+        };
     });
 
 function getDefaultDashboardState() {
     return {
+        operations: {},
+        messages: {},
         filter: {
             startDate: moment().subtract(7, 'days'),
             endDate: moment()
@@ -31,14 +72,9 @@ function getDefaultDashboardState() {
             selectedCountry: undefined
         },
         countryDetail: {
-            meanAge: 0,
-            meanSalary: 0,
-            meanExperience: 0,
-            meanCompanySize: 0,
-            ageDistribution: [],
-            salaryDistribution: [],
-            experienceDistribution: [],
-            companySizeDistribution: []
+            meanDev: undefined,
+            charts: {},
+            selectedChartType: undefined
         }
     };
 }

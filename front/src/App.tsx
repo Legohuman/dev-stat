@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Navbar, Nav, NavItem } from 'react-bootstrap';
+import { Nav, Navbar, NavItem } from 'react-bootstrap';
 
 import './App.css';
 import DashboardPage from './pages/dashboard/DashboardPage';
@@ -10,8 +10,7 @@ class App extends React.Component {
             <div className="App">
                 <Navbar inverse={true}>
                     <Nav>
-                        <NavItem eventKey={1} href="#">Dashboard</NavItem>
-                        <NavItem eventKey={2} href="#">Generator</NavItem>
+                        <NavItem href="#">Dashboard</NavItem>
                     </Nav>
                 </Navbar>
 

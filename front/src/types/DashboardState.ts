@@ -1,31 +1,40 @@
 import * as moment from 'moment';
 
 export interface DashboardState {
+    operations: DashboardOperations,
+    messages: DashboardErrorMessages,
     filter: DashboardFilterData,
     map: DashboardMapData,
     countryDetail: DashboardCountryDetailData
 }
 
+export interface DashboardOperations {
+    [operation: string]: boolean | undefined
+}
+
+export interface DashboardErrorMessages {
+    [key: string]: string | undefined
+}
+
 export interface DashboardFilterData {
     startDate?: moment.Moment,
-    endDate?: moment.Moment
+    endDate?: moment.Moment,
 }
 
 export interface DashboardMapData {
     countries: CountriesSummary,
-    selectedCountry?: CountryInfo
 }
 
 export interface DashboardCountryDetailData {
-    meanAge: number,
-    meanSalary: number,
-    meanExperience: number,
-    meanCompanySize: number,
-    ageDistribution: Array<ChartBin>,
-    salaryDistribution: Array<ChartPoint>,
-    experienceDistribution: Array<ChartBin>,
-    companySizeDistribution: Array<ChartBin>,
+    selectedCountry?: CountryInfo,
+    selectedChartType?: ChartType,
+    meanDev?: MeanDevSummary,
+    charts: ChartsData,
 }
+
+export type ChartsData = {
+    [P in keyof ChartType]?: ChartDataType
+    }
 
 export interface ChartBin {
     height: number,
@@ -52,3 +61,19 @@ export interface CountrySummary {
     vacancyCount: number,
     economyLevel: number
 }
+
+export interface MeanDevSummary {
+    age: number,
+    salary: number,
+    experience: number,
+    companySize: number,
+}
+
+export enum ChartType {
+    age = 'age',
+    salary = 'salary',
+    experience = 'experience',
+    companySize = 'companySize'
+}
+
+export type ChartDataType = Array<ChartBin> | Array<ChartPoint>

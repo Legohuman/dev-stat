@@ -1,6 +1,9 @@
 # dependencies
 front/node_modules
 
+#generated css
+front/src/**/*.css
+
 # testing
 front/coverage
 
