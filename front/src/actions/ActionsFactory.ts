@@ -4,13 +4,13 @@ import { ThunkAction } from 'redux-thunk';
 import {
     ChartDataType, ChartType, CountriesSummary, CountryInfo, DashboardState,
     MeanDevSummary
-} from "../types/DashboardState";
-import { DataService, PeriodAndCountryRequest, PeriodRequest } from "../service/DataService";
+} from '../types/DashboardState';
+import { DataService, PeriodAndCountryRequest, PeriodRequest } from '../service/DataService';
 import {
     ActionType, ApplyChartData, ApplyCountriesSummary, ApplyMeanDevSummary, PutErrorMessage, SelectChartType,
     SelectCountry, SelectFilterPeriod
-} from "./Actions";
-import { devMeasureDescriptorSelector } from "../utils/DevMeasureDescriptorSelector";
+} from './Actions';
+import { devMeasureDescriptorSelector } from '../utils/DevMeasureDescriptorSelector';
 
 export const ActionsFactory = {
     handlePeriodChange(startDate?: moment.Moment, endDate?: moment.Moment): ThunkAction<void, DashboardState, any> {
@@ -43,7 +43,7 @@ export const ActionsFactory = {
 
             if (isValidDates(startDate, endDate)) {
                 const periodRequest: PeriodRequest = {startDate, endDate};
-                changePeriodAndCountry(dispatch, getState, periodRequest, selectedCountry)
+                changePeriodAndCountry(dispatch, getState, periodRequest, selectedCountry);
             }
         };
     },
@@ -60,12 +60,11 @@ export const ActionsFactory = {
                     endDate,
                     countryId: selectedCountry.id
                 };
-                changeChartType(dispatch, getState, periodAndCountryRequest, chartType)
+                changeChartType(dispatch, getState, periodAndCountryRequest, chartType);
             }
         };
     }
 };
-
 
 function changePeriodAndCountry(dispatch: Dispatch<DashboardState>, getState: () => DashboardState,
                                 periodRequest: PeriodRequest, selectedCountry?: CountryInfo) {
@@ -104,13 +103,14 @@ function changeChartType(dispatch: Dispatch<DashboardState>, getState: () => Das
 function invokeAsync<T>(dispatch: Dispatch<any>, operation: keyof typeof DataService, requestFn: () => Promise<T>): Promise<T> {
     dispatch({type: ActionType.startAsyncOperation, operation});
 
-    return requestFn().then((result: T) => {
-        dispatch({type: ActionType.finishAsyncOperation, operation});
-        return result;
-    }, error => {
-        dispatch({type: ActionType.finishAsyncOperation, operation});
-        return Promise.reject(error);
-    });
+    return requestFn().then(
+        (result: T) => {
+            dispatch({type: ActionType.finishAsyncOperation, operation});
+            return result;
+        }, error => {
+            dispatch({type: ActionType.finishAsyncOperation, operation});
+            return Promise.reject(error);
+        });
 }
 
 function setFilterPeriod(startDate?: moment.Moment, endDate?: moment.Moment): SelectFilterPeriod {

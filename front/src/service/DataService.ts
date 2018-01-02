@@ -2,13 +2,13 @@ import * as moment from 'moment';
 import RestService, { DataResponse } from './RestService';
 import HttpUtils from '../utils/HttpUtils';
 import ConversionUtils from '../utils/ConversionUtils';
-import { ChartBin, ChartPoint, CountriesSummary, MeanDevSummary } from "../types/DashboardState";
+import { ChartBin, ChartDataSet, ChartPoint, CountriesSummary, MeanDevSummary } from '../types/DashboardState';
 
 function getDateQueryObject(filterData: PeriodRequestPart): any {
     return {
         startDate: ConversionUtils.momentToString(filterData.startDate),
         endDate: ConversionUtils.momentToString(filterData.endDate)
-    }
+    };
 }
 
 export const DataService = {
@@ -20,30 +20,30 @@ export const DataService = {
         return RestService.get('countries/' + request.countryId + '/mean-dev' + HttpUtils.objToQueryString(getDateQueryObject(request)));
     },
 
-    getDevAgeChart(request: PeriodAndCountryRequest): Promise<DataResponse<Array<ChartBin>>> {
+    getDevAgeChart(request: PeriodAndCountryRequest): Promise<DataResponse<ChartDataSet<ChartBin>>> {
         return RestService.get('countries/' + request.countryId + '/charts/age' + HttpUtils.objToQueryString(getDateQueryObject(request)));
     },
 
-    getDevSalaryChart(request: PeriodAndCountryRequest): Promise<DataResponse<Array<ChartPoint>>> {
+    getDevSalaryChart(request: PeriodAndCountryRequest): Promise<DataResponse<ChartDataSet<ChartPoint>>> {
         return RestService.get('countries/' + request.countryId + '/charts/salary' + HttpUtils.objToQueryString(getDateQueryObject(request)));
     },
 
-    getDevExperienceChart(request: PeriodAndCountryRequest): Promise<DataResponse<Array<ChartBin>>> {
+    getDevExperienceChart(request: PeriodAndCountryRequest): Promise<DataResponse<ChartDataSet<ChartBin>>> {
         return RestService.get('countries/' + request.countryId + '/charts/experience' + HttpUtils.objToQueryString(getDateQueryObject(request)));
     },
 
-    getDevCompanySizeChart(request: PeriodAndCountryRequest): Promise<DataResponse<Array<ChartBin>>> {
+    getDevCompanySizeChart(request: PeriodAndCountryRequest): Promise<DataResponse<ChartDataSet<ChartBin>>> {
         return RestService.get('countries/' + request.countryId + '/charts/company-size' + HttpUtils.objToQueryString(getDateQueryObject(request)));
     }
 };
 
 interface PeriodRequestPart {
-    startDate?: moment.Moment,
-    endDate?: moment.Moment,
+    startDate?: moment.Moment;
+    endDate?: moment.Moment;
 }
 
 interface CountryRequestPart {
-    countryId: string
+    countryId: string;
 }
 
 export type PeriodRequest = PeriodRequestPart;

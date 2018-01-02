@@ -13,14 +13,14 @@ function getJson(response: Response) {
     return response.json().then(
         data => {
             if (response.status >= 200 && response.status < 300) {
-                return {status: response.status, data: data}
+                return {status: response.status, data: data};
             }
             throw {status: response.status, data: data};
         },
         error => {
             throw {status: response.status, message: 'Unable to parse JSON'};
         }
-    )
+    );
 }
 
 function handleError(error: any) {
@@ -30,7 +30,7 @@ function handleError(error: any) {
 function fetchData<T>(request: RequestInfo, init?: RequestInit): Promise<DataResponse<T>> {
     try {
         return fetch(request, init)
-            .then(getJson, handleError)
+            .then(getJson, handleError);
     } catch (e) {
         return Promise.reject({status: -1, message: e.toString()});
     }
@@ -45,7 +45,7 @@ const RestService = {
      * @return {*} promise
      */
     get<T>(url: string, init?: RequestInit): Promise<DataResponse<T>> {
-        return fetchData(new Request(baseServiceUrl + url), init)
+        return fetchData(new Request(baseServiceUrl + url), init);
     },
 
     /**
@@ -61,7 +61,7 @@ const RestService = {
                 method: 'POST',
                 headers: postPutHeaders,
                 body: JSON.stringify(data || null)
-            }, init))
+            }, init));
     },
 
     /**
@@ -77,7 +77,7 @@ const RestService = {
                 method: 'PUT',
                 headers: postPutHeaders,
                 body: JSON.stringify(data || null)
-            }, init))
+            }, init));
     },
 
     /**
@@ -90,8 +90,8 @@ const RestService = {
         return fetchData(new Request(baseServiceUrl + url),
             Object.assign({
                 method: 'DELETE',
-            }, init))
+            }, init));
     }
 };
 
-export default RestService
+export default RestService;

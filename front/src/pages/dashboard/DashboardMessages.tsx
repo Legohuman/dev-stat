@@ -16,7 +16,8 @@ class DashboardMessages extends React.Component<DashboardErrorMessages, object> 
                     className="DashboardMessages"
                     bsStyle="warning"
                 >
-                    {messages.map((message, i) => <div
+                    {messages.map((message, i) =>
+                        <div
                             key={'m' + i}
                             className="DashboardMessages-Message"
                         >

@@ -13,9 +13,9 @@ function internalObjToQueryString(obj: any, prefix: string): string {
             const val = obj[key];
             if (val) {
                 if (_.isObject(val)) {
-                    return internalObjToQueryString(val, key + '.')
+                    return internalObjToQueryString(val, key + '.');
                 } else {
-                    return (encodeURIComponent(prefix) || '') + encodeURIComponent(key) + '=' + encodeURIComponent(val)
+                    return (encodeURIComponent(prefix) || '') + encodeURIComponent(key) + '=' + encodeURIComponent(val);
                 }
             }
             return null;

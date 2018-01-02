@@ -6,7 +6,7 @@ import DashboardCountryDetail from './DashboardCountryDetail';
 import { DashboardState } from '../../types/DashboardState';
 import { connect } from 'react-redux';
 import { createDashboardPageHandlers, DashboardPageHandlers } from './DashboardPageHandlers';
-import DashboardMessages from "./DashboardMessages";
+import DashboardMessages from './DashboardMessages';
 
 class DashboardPage extends React.Component<DashboardState & DashboardPageHandlers, object> {
     render() {

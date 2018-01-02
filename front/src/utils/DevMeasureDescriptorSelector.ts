@@ -1,8 +1,8 @@
-import { ChartDataType, ChartType } from "../types/DashboardState";
+import { ChartDataType, ChartType } from '../types/DashboardState';
 import {
     AgeChartDescriptor, CompanySizeChartDescriptor, DevMeasureDescriptor, ExperienceChartDescriptor,
     SalaryChartDescriptor
-} from "./DevMeasureDescriptors";
+} from './DevMeasureDescriptors';
 
 class DevMeasureDescriptorSelector {
     private readonly descriptors: {
@@ -13,12 +13,7 @@ class DevMeasureDescriptorSelector {
         this.add(ChartType.age, new AgeChartDescriptor())
             .add(ChartType.salary, new SalaryChartDescriptor())
             .add(ChartType.experience, new ExperienceChartDescriptor())
-            .add(ChartType.companySize, new CompanySizeChartDescriptor())
-    }
-
-    private add(chartType: ChartType, descriptor: DevMeasureDescriptor<ChartDataType>): this {
-        this.descriptors[chartType.toString()] = descriptor;
-        return this;
+            .add(ChartType.companySize, new CompanySizeChartDescriptor());
     }
 
     get(chartType: ChartType): DevMeasureDescriptor<ChartDataType> {
@@ -31,6 +26,11 @@ class DevMeasureDescriptorSelector {
 
     list(): Array<DevMeasureDescriptor<ChartDataType>> {
         return Object.keys(this.descriptors).map(k => this.descriptors[k]);
+    }
+
+    private add(chartType: ChartType, descriptor: DevMeasureDescriptor<ChartDataType>): this {
+        this.descriptors[chartType.toString()] = descriptor;
+        return this;
     }
 }
 

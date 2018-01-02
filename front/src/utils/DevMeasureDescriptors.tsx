@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Button, Glyphicon } from 'react-bootstrap';
-import { DataService, PeriodAndCountryRequest } from "../service/DataService";
-import { DataResponse } from "../service/RestService";
-import { ChartBin, ChartPoint, ChartType, MeanDevSummary } from "../types/DashboardState";
+import { DataService, PeriodAndCountryRequest } from '../service/DataService';
+import { DataResponse } from '../service/RestService';
+import { ChartBin, ChartDataSet, ChartPoint, ChartType, MeanDevSummary } from '../types/DashboardState';
 
 export interface DevMeasureDescriptor<T> {
     readonly chartType: ChartType;
@@ -22,22 +22,24 @@ abstract class BaseChartDescriptor<T> implements DevMeasureDescriptor<T> {
     abstract renderMeanValue(data: MeanDevSummary): React.ReactNode;
 
     renderMeasureInfo(data: MeanDevSummary, selectChartHandler: (chartType: ChartType) => void): React.ReactNode {
-        return <div>
-            {this.renderMeanValue(data)}
-            <Button
-                className="DashboardCountryDetail-MeasureChartIcon"
-                bsStyle="primary"
-            >
-                <Glyphicon
-                    glyph="signal"
-                    onClick={() => selectChartHandler(this.chartType)}
-                />
-            </Button>
-        </div>
+        return (
+            <div>
+                {this.renderMeanValue(data)}
+                <Button
+                    className="DashboardCountryDetail-MeasureChartIcon"
+                    bsStyle="primary"
+                >
+                    <Glyphicon
+                        glyph="signal"
+                        onClick={() => selectChartHandler(this.chartType)}
+                    />
+                </Button>
+            </div>
+        );
     }
 }
 
-export class AgeChartDescriptor extends BaseChartDescriptor<Array<ChartBin>> {
+export class AgeChartDescriptor extends BaseChartDescriptor<ChartDataSet<ChartBin>> {
     readonly chartType = ChartType.age;
     readonly chartDataRequestOperation: keyof typeof DataService = 'getDevAgeChart';
 
@@ -46,14 +48,16 @@ export class AgeChartDescriptor extends BaseChartDescriptor<Array<ChartBin>> {
     }
 
     renderMeanValue(data: MeanDevSummary): React.ReactNode {
-        return <React.Fragment>
-            <span className="DashboardCountryDetail-MeasureTitle">Mean age:&nbsp;</span>
-            <span className="DashboardCountryDetail-MeasureValue">{data.age} years</span>
-        </React.Fragment>;
+        return (
+            <React.Fragment>
+                <span className="DashboardCountryDetail-MeasureTitle">Mean age:&nbsp;</span>
+                <span className="DashboardCountryDetail-MeasureValue">{data.age} years</span>
+            </React.Fragment>
+        );
     }
 }
 
-export class SalaryChartDescriptor extends BaseChartDescriptor<Array<ChartPoint>> {
+export class SalaryChartDescriptor extends BaseChartDescriptor<ChartDataSet<ChartPoint>> {
     readonly chartType = ChartType.salary;
     readonly chartDataRequestOperation: keyof typeof DataService = 'getDevSalaryChart';
 
@@ -62,14 +66,16 @@ export class SalaryChartDescriptor extends BaseChartDescriptor<Array<ChartPoint>
     }
 
     renderMeanValue(data: MeanDevSummary): React.ReactNode {
-        return <React.Fragment>
-            <span className="DashboardCountryDetail-MeasureTitle">Mean salary:&nbsp;</span>
-            <span className="DashboardCountryDetail-MeasureValue">{data.salary} $/month</span>
-        </React.Fragment>;
+        return (
+            <React.Fragment>
+                <span className="DashboardCountryDetail-MeasureTitle">Mean salary:&nbsp;</span>
+                <span className="DashboardCountryDetail-MeasureValue">{data.salary} $/month</span>
+            </React.Fragment>
+        );
     }
 }
 
-export class ExperienceChartDescriptor extends BaseChartDescriptor<Array<ChartBin>> {
+export class ExperienceChartDescriptor extends BaseChartDescriptor<ChartDataSet<ChartBin>> {
     readonly chartType = ChartType.experience;
     readonly chartDataRequestOperation: keyof typeof DataService = 'getDevExperienceChart';
 
@@ -78,14 +84,16 @@ export class ExperienceChartDescriptor extends BaseChartDescriptor<Array<ChartBi
     }
 
     renderMeanValue(data: MeanDevSummary): React.ReactNode {
-        return <React.Fragment>
-            <span className="DashboardCountryDetail-MeasureTitle">Mean experience:&nbsp;</span>
-            <span className="DashboardCountryDetail-MeasureValue">{data.experience} years</span>
-        </React.Fragment>;
+        return (
+            <React.Fragment>
+                <span className="DashboardCountryDetail-MeasureTitle">Mean experience:&nbsp;</span>
+                <span className="DashboardCountryDetail-MeasureValue">{data.experience} years</span>
+            </React.Fragment>
+        );
     }
 }
 
-export class CompanySizeChartDescriptor extends BaseChartDescriptor<Array<ChartBin>> {
+export class CompanySizeChartDescriptor extends BaseChartDescriptor<ChartDataSet<ChartBin>> {
     readonly chartType = ChartType.companySize;
     readonly chartDataRequestOperation: keyof typeof DataService = 'getDevCompanySizeChart';
 
@@ -94,9 +102,11 @@ export class CompanySizeChartDescriptor extends BaseChartDescriptor<Array<ChartB
     }
 
     renderMeanValue(data: MeanDevSummary): React.ReactNode {
-        return <React.Fragment>
-            <span className="DashboardCountryDetail-MeasureTitle">Mean company size:&nbsp;</span>
-            <span className="DashboardCountryDetail-MeasureValue">{data.companySize} people</span>
-        </React.Fragment>;
+        return (
+            <React.Fragment>
+                <span className="DashboardCountryDetail-MeasureTitle">Mean company size:&nbsp;</span>
+                <span className="DashboardCountryDetail-MeasureValue">{data.companySize} people</span>
+            </React.Fragment>
+        );
     }
 }

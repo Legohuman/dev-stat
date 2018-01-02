@@ -1,72 +1,77 @@
 import * as moment from 'moment';
 
 export interface DashboardState {
-    operations: DashboardOperations,
-    messages: DashboardErrorMessages,
-    filter: DashboardFilterData,
-    map: DashboardMapData,
-    countryDetail: DashboardCountryDetailData
+    operations: DashboardOperations;
+    messages: DashboardErrorMessages;
+    filter: DashboardFilterData;
+    map: DashboardMapData;
+    countryDetail: DashboardCountryDetailData;
 }
 
 export interface DashboardOperations {
-    [operation: string]: boolean | undefined
+    [operation: string]: boolean | undefined;
 }
 
 export interface DashboardErrorMessages {
-    [key: string]: string | undefined
+    [key: string]: string | undefined;
 }
 
 export interface DashboardFilterData {
-    startDate?: moment.Moment,
-    endDate?: moment.Moment,
+    startDate?: moment.Moment;
+    endDate?: moment.Moment;
 }
 
 export interface DashboardMapData {
-    countries: CountriesSummary,
+    countries: CountriesSummary;
 }
 
 export interface DashboardCountryDetailData {
-    selectedCountry?: CountryInfo,
-    selectedChartType?: ChartType,
-    meanDev?: MeanDevSummary,
-    charts: ChartsData,
+    selectedCountry?: CountryInfo;
+    selectedChartType?: ChartType;
+    meanDev?: MeanDevSummary;
+    charts: ChartsData;
 }
 
 export type ChartsData = {
-    [P in keyof ChartType]?: ChartDataType
-    }
+    [P in keyof ChartType]?: ChartDataType;
+    };
+
+export interface ChartDataSet<T> {
+    values: Array<T>;
+    meanValue: number;
+}
 
 export interface ChartBin {
-    height: number,
-    x0: number,
-    x1: number
+    height: number;
+    x0: number;
+    x1: number;
 }
 
 export interface ChartPoint {
-    x: number,
-    y: number
+    x: number;
+    y: number;
 }
 
 export interface CountryInfo {
-    id: string,
-    name: string
+    id: string;
+    name: string;
 }
 
 export interface CountriesSummary {
-    [countryCode: string]: CountrySummary
+    [countryCode: string]: CountrySummary;
 }
 
 export interface CountrySummary {
-    developersCount: number,
-    vacancyCount: number,
-    economyLevel: number
+    developersCount: number;
+    vacancyCount: number;
+    economyLevel: number;
 }
 
 export interface MeanDevSummary {
-    age: number,
-    salary: number,
-    experience: number,
-    companySize: number,
+    age: number;
+    salary: number;
+    experience: number;
+    companySize: number;
 }
 
 export enum ChartType {
@@ -76,4 +81,4 @@ export enum ChartType {
     companySize = 'companySize'
 }
 
-export type ChartDataType = Array<ChartBin> | Array<ChartPoint>
+export type ChartDataType = ChartDataSet<ChartBin> | ChartDataSet<ChartPoint>;
