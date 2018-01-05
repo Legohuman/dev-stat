@@ -34,14 +34,14 @@ class DashboardCountryDetail extends React.Component<DashboardCountryDetailData 
     renderMeanDevInfo(): React.ReactNode {
         const p = this.props;
 
-        if (p.meanDev) {
+        if (p.selectedCountry && p.meanDev) {
             return (
                 <Grid className="DashboardCountryDetail-ProfileInfo">
                     {this.renderDevMeasures()}
                 </Grid>
             );
         } else {
-            return <div>No data available</div>;
+            return <div className="DashboardCountryDetail-ProfileInfo_notAvailable">No data available</div>;
         }
     }
 
@@ -54,6 +54,7 @@ class DashboardCountryDetail extends React.Component<DashboardCountryDetailData 
             const colNode = (
                 <Col
                     key={'c' + i}
+                    data-measure-type={descriptor.chartType}
                     className="DashboardCountryDetail-MeasureInfo"
                     sm={6}
                 >
@@ -74,7 +75,7 @@ class DashboardCountryDetail extends React.Component<DashboardCountryDetailData 
     renderSelectedChart(): React.ReactNode {
         const p = this.props;
 
-        if (p.selectedChartType && p.charts[p.selectedChartType]) {
+        if (p.selectedCountry && p.meanDev && p.selectedChartType && p.charts[p.selectedChartType]) {
             if (p.selectedChartType === ChartType.salary) {
                 return <LineChart width={500} height={500} data={p.charts[p.selectedChartType]}/>;
             } else {

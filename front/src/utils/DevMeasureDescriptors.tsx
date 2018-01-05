@@ -26,13 +26,11 @@ abstract class BaseChartDescriptor<T> implements DevMeasureDescriptor<T> {
             <div>
                 {this.renderMeanValue(data)}
                 <Button
-                    className="DashboardCountryDetail-MeasureChartIcon"
+                    onClick={() => selectChartHandler(this.chartType)}
+                    className="DashboardCountryDetail-MeasureChartButton"
                     bsStyle="primary"
                 >
-                    <Glyphicon
-                        glyph="signal"
-                        onClick={() => selectChartHandler(this.chartType)}
-                    />
+                    <Glyphicon glyph="signal"/>
                 </Button>
             </div>
         );

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as cheerio from 'cheerio';
 import BarChart from '../../../../../src/pages/dashboard/charts/BarChart';
-import { ChartTestHelper } from "./ChartTestHelper";
+import { ChartAssertFactory } from "./ChartAssertFactory";
 import { ChartBin, ChartDataSet } from "../../../../types/DashboardState";
 import { enzymeWrapperFactory } from "../../../EnzymeWrapperFactory";
 
@@ -20,7 +20,7 @@ it('renders bar chart with non-empty data', () => {
     expect(svg.props().width).toBe(500);
     expect(svg.props().height).toBe(500);
 
-    const chartTestHelper = new ChartTestHelper(cheerio.load(wrapper.html()));
+    const chartTestHelper = new ChartAssertFactory(cheerio.load(wrapper.html()));
     chartTestHelper.assertAxis('g.x.axis')
         .rendered()
         .hasDomainExtent(10, 30);
@@ -54,7 +54,7 @@ it('updates bar chart with non-empty data', () => {
     expect(svg.props().width).toBe(800);
     expect(svg.props().height).toBe(800);
 
-    const chartTestHelper = new ChartTestHelper(cheerio.load(wrapper.html()));
+    const chartTestHelper = new ChartAssertFactory(cheerio.load(wrapper.html()));
     chartTestHelper.assertAxis('g.x.axis')
         .rendered()
         .hasDomainExtent(10, 36);
@@ -87,7 +87,7 @@ it('renders bar chart with zero values', () => {
     expect(svg.props().width).toBe(500);
     expect(svg.props().height).toBe(500);
 
-    const chartTestHelper = new ChartTestHelper(cheerio.load(wrapper.html()));
+    const chartTestHelper = new ChartAssertFactory(cheerio.load(wrapper.html()));
     chartTestHelper.assertAxis('g.x.axis')
         .rendered()
         .hasDomainExtent(10, 30);
@@ -118,7 +118,7 @@ it('renders bar chart with no bars', () => {
     expect(svg.props().width).toBe(500);
     expect(svg.props().height).toBe(500);
 
-    const chartTestHelper = new ChartTestHelper(cheerio.load(wrapper.html()));
+    const chartTestHelper = new ChartAssertFactory(cheerio.load(wrapper.html()));
     chartTestHelper.assertAxis('g.x.axis')
         .rendered()
         .hasNoDomainExtent();
@@ -146,7 +146,7 @@ it('updates bar chart to empty dataset (no bars)', () => {
     expect(svg.props().width).toBe(800);
     expect(svg.props().height).toBe(800);
 
-    const chartTestHelper = new ChartTestHelper(cheerio.load(wrapper.html()));
+    const chartTestHelper = new ChartAssertFactory(cheerio.load(wrapper.html()));
     chartTestHelper.assertAxis('g.x.axis')
         .rendered()
         .hasNoDomainExtent();

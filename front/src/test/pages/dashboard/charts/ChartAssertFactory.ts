@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 
-export class ChartTestHelper {
+export class ChartAssertFactory {
     private $: CheerioStatic;
 
     constructor($: CheerioStatic) {

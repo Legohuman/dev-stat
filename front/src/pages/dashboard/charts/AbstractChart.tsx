@@ -3,7 +3,7 @@ import * as d3 from 'd3';
 import * as _ from 'lodash';
 import MessageList from '../../../components/MessageList';
 import { ChartDataSet } from '../../../types/DashboardState';
-import { Validators } from "../../../utils/PropValidators";
+import { Validators } from '../../../utils/PropValidators';
 
 const plotMargins = {
     top: 30,
@@ -58,7 +58,7 @@ abstract class AbstractChart<T> extends React.Component<ChartProps<T>, object> {
                 />
             );
         } else {
-            return <MessageList messages={errorMessages}/>
+            return <MessageList messages={errorMessages}/>;
         }
 
     }
@@ -70,7 +70,7 @@ abstract class AbstractChart<T> extends React.Component<ChartProps<T>, object> {
             Validators.positiveNumber('width', p.width),
             Validators.positiveNumber('height', p.height),
             Validators.positiveNumber('mean value', p.data.meanValue),
-        ])
+        ]);
     }
 
     componentDidMount() {

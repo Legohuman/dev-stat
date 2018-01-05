@@ -75,6 +75,7 @@ class WorldMap extends React.Component<Props, object> {
         countriesGroup.selectAll('path')
             .data(WorldData.features)
             .attr('class', 'WorldMap-CountryPath')
+            .attr('data-country-id', feature => feature.id)
             .attr('d', feature => pathGenerator(feature as d3.ExtendedFeature<Polygonal, any>))
             .on('click', feature => {
                 this.props.onCountryClick(feature as d3.ExtendedFeature<Polygonal, any>);

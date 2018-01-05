@@ -4,7 +4,7 @@ import { Alert } from 'react-bootstrap';
 import './MessageList.css';
 
 export interface MessageListProps {
-    messages: string[]
+    messages: string[];
 }
 
 class MessageList extends React.Component<MessageListProps, object> {

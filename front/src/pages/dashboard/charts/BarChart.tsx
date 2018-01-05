@@ -2,7 +2,7 @@ import * as d3 from 'd3';
 import * as _ from 'lodash';
 import { ChartBin } from '../../../types/DashboardState';
 import AbstractChart from './AbstractChart';
-import { Validators } from "../../../utils/PropValidators";
+import { Validators } from '../../../utils/PropValidators';
 
 const barParams = {
     strokeColor: '#666',

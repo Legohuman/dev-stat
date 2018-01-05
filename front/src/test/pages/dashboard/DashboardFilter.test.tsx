@@ -1,9 +1,9 @@
 import * as React from 'react';
 import * as moment from 'moment';
-import * as sinon from 'sinon';
 import DashboardFilter from '../../../../src/pages/dashboard/DashboardFilter';
 import { defaultDateFormat } from '../../../components/DatePicker'
-import { enzymeWrapperFactory } from "../../EnzymeWrapperFactory";
+import { enzymeWrapperFactory } from '../../EnzymeWrapperFactory';
+import { dashboardMockHandlers } from '../../DashboardMockHandlers';
 
 const defaultStartDate = moment().subtract(7, 'd'),
     defaultEndDate = moment();
@@ -15,7 +15,7 @@ it('renders dashboard filter with defined start and end dates', () => {
         <DashboardFilter
             startDate={defaultStartDate}
             endDate={defaultEndDate}
-            handlers={getHandlers()}
+            handlers={dashboardMockHandlers()}
         />
     );
 
@@ -36,7 +36,7 @@ it('renders dashboard filter with undefined start and end dates', () => {
         <DashboardFilter
             startDate={undefined}
             endDate={undefined}
-            handlers={getHandlers()}
+            handlers={dashboardMockHandlers()}
         />
     );
 
@@ -53,7 +53,7 @@ it('renders dashboard filter with undefined start and end dates', () => {
 });
 
 it('check handlers on date change', () => {
-    const handlers = getHandlers(),
+    const handlers = dashboardMockHandlers(),
         wrapper = enzymeWrapperFactory.mount(
             <DashboardFilter
                 startDate={defaultStartDate}
@@ -73,7 +73,7 @@ it('check handlers on date change', () => {
 });
 
 it('check handlers on set same value', () => {
-    const handlers = getHandlers(),
+    const handlers = dashboardMockHandlers(),
         wrapper = enzymeWrapperFactory.mount(
             <DashboardFilter
                 startDate={defaultStartDate}
@@ -91,12 +91,3 @@ it('check handlers on set same value', () => {
     endDateInput.simulate('change', {target: {value: defaultEndDate.format(defaultDateFormat)}});
     expect(handlers.handlePeriodChange).toHaveProperty('callCount', 0);
 });
-
-
-function getHandlers() {
-    return {
-        handlePeriodChange: sinon.spy(),
-        handleCountryChange: sinon.spy(),
-        handleChartChange: sinon.spy()
-    };
-}
