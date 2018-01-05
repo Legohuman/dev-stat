@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as _ from 'lodash';
 import './DashboardPage.css';
 import DashboardFilter from './DashboardFilter';
 import DashboardMap from './DashboardMap';
@@ -6,15 +7,16 @@ import DashboardCountryDetail from './DashboardCountryDetail';
 import { DashboardState } from '../../types/DashboardState';
 import { connect } from 'react-redux';
 import { createDashboardPageHandlers, DashboardPageHandlers } from './DashboardPageHandlers';
-import DashboardMessages from './DashboardMessages';
+import MessageList from '../../components/MessageList';
 
 class DashboardPage extends React.Component<DashboardState & DashboardPageHandlers, object> {
     render() {
-        const p = this.props;
+        const p = this.props,
+            messages = _.compact(_.values(p.messages));
 
         return (
             <div className="DashboardPage">
-                <DashboardMessages {...p.messages}/>
+                <MessageList messages={messages}/>
                 <DashboardFilter
                     {...p.filter}
                     handlers={p.handlers}

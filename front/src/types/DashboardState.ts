@@ -38,7 +38,7 @@ export type ChartsData = {
 
 export interface ChartDataSet<T> {
     values: Array<T>;
-    meanValue: number;
+    meanValue?: number;
 }
 
 export interface ChartBin {

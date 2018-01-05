@@ -1,15 +1,17 @@
 import * as React from 'react';
 import * as moment from 'moment';
-import * as Enzyme from 'enzyme';
 import * as sinon from 'sinon';
 import DashboardFilter from '../../../../src/pages/dashboard/DashboardFilter';
 import { defaultDateFormat } from '../../../components/DatePicker'
+import { enzymeWrapperFactory } from "../../EnzymeWrapperFactory";
 
 const defaultStartDate = moment().subtract(7, 'd'),
     defaultEndDate = moment();
 
+afterEach(enzymeWrapperFactory.unmount);
+
 it('renders dashboard filter with defined start and end dates', () => {
-    const wrapper = Enzyme.mount(
+    const wrapper = enzymeWrapperFactory.mount(
         <DashboardFilter
             startDate={defaultStartDate}
             endDate={defaultEndDate}
@@ -30,7 +32,7 @@ it('renders dashboard filter with defined start and end dates', () => {
 });
 
 it('renders dashboard filter with undefined start and end dates', () => {
-    const wrapper = Enzyme.mount(
+    const wrapper = enzymeWrapperFactory.mount(
         <DashboardFilter
             startDate={undefined}
             endDate={undefined}
@@ -52,7 +54,7 @@ it('renders dashboard filter with undefined start and end dates', () => {
 
 it('check handlers on date change', () => {
     const handlers = getHandlers(),
-        wrapper = Enzyme.mount(
+        wrapper = enzymeWrapperFactory.mount(
             <DashboardFilter
                 startDate={defaultStartDate}
                 endDate={defaultEndDate}
@@ -72,7 +74,7 @@ it('check handlers on date change', () => {
 
 it('check handlers on set same value', () => {
     const handlers = getHandlers(),
-        wrapper = Enzyme.mount(
+        wrapper = enzymeWrapperFactory.mount(
             <DashboardFilter
                 startDate={defaultStartDate}
                 endDate={defaultEndDate}
