@@ -25,12 +25,12 @@ open class DeveloperStatServiceImpl @Autowired constructor(
 
     override fun getMeanDevSummary(request: DashboardCountryPeriodRequest): MeanDevSummary? {
         val rows = developerFactRepository.getSummary(request.countryCode, request.startDate ?: LocalDate.MIN, request.endDate ?: LocalDate.MAX)
-        if (rows.isNotEmpty()) {
+        if (rows.isNotEmpty() && rows[0][0] != null) {
             val row = rows[0]
-            val age = implicitDoubleToRoundInt(row[0])
-            val salary = implicitDoubleToRoundInt(row[1])
-            val experience = implicitDoubleToRoundInt(row[2])
-            val companySize = implicitDoubleToRoundInt(row[3])
+            val age = implicitDoubleToRoundInt(row[0]!!)
+            val salary = implicitDoubleToRoundInt(row[1]!!)
+            val experience = implicitDoubleToRoundInt(row[2]!!)
+            val companySize = implicitDoubleToRoundInt(row[3]!!)
             return MeanDevSummary(age, salary, experience, companySize)
         }
         return null

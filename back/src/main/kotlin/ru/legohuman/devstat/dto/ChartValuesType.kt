@@ -15,5 +15,5 @@ data class ChartPoint(
 
 data class ChartDataSet<out T : ChartValuesType>(
         val values: List<T>,
-        val meanValue: Double
+        val meanValue: Double?
 )

@@ -8,7 +8,7 @@ import ru.legohuman.devstat.dto.*
 import javax.persistence.EntityManager
 
 interface DeveloperMeasureDescriptor<out T : ChartValuesType> {
-    fun getMeanValue(em: EntityManager, request: DashboardCountryPeriodMeasureTypeRequest): Double
+    fun getMeanValue(em: EntityManager, request: DashboardCountryPeriodMeasureTypeRequest): Double?
 
     fun getChartValues(em: EntityManager, request: DashboardCountryPeriodMeasureTypeRequest): List<T>
 }
@@ -17,13 +17,13 @@ abstract class DeveloperMeasureDescriptorBase<out T : ChartValuesType>(
         open protected val propertyName: String
 ) : DeveloperMeasureDescriptor<T> {
 
-    override fun getMeanValue(em: EntityManager, request: DashboardCountryPeriodMeasureTypeRequest): Double {
+    override fun getMeanValue(em: EntityManager, request: DashboardCountryPeriodMeasureTypeRequest): Double? {
         val propertyExpression = getEntityPropertyExpression("d")
         val query = em.createQuery("select avg($propertyExpression) from DeveloperFactEntity d where d.country.code = :code and d.actualDate >= :startDate and d.actualDate < :endDate")
         query.setParameter("code", request.countryCode)
         query.setParameter("startDate", request.startDate)
         query.setParameter("endDate", request.endDate)
-        return query.singleResult as Double
+        return query.singleResult as Double?
     }
 
     protected fun getEntityPropertyExpression(entityAlias: String): String {
@@ -69,7 +69,7 @@ abstract class ChartPointDeveloperMeasureDescriptorBase(
 
     override fun getChartValues(em: EntityManager, request: DashboardCountryPeriodMeasureTypeRequest): List<ChartPoint> {
         val propertyExpression = getEntityPropertyExpression("d")
-        val query = em.createQuery("select $propertyExpression from DeveloperFactEntity d where d.country.code = :code and d.actualDate >= :startDate and d.actualDate < :endDate")
+        val query = em.createQuery("select $propertyExpression from DeveloperFactEntity d where d.country.code = :code and d.actualDate >= :startDate and d.actualDate < :endDate order by $propertyExpression")
         query.setParameter("code", request.countryCode)
         query.setParameter("startDate", request.startDate)
         query.setParameter("endDate", request.endDate)

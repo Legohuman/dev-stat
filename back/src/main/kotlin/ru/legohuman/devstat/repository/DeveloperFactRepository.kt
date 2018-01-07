@@ -16,5 +16,5 @@ interface DeveloperFactRepository : CrudRepository<DeveloperFactEntity, UUID> {
     fun deleteByCodeAndDates(@Param("countryCode") countryCode: String, @Param("startDate") startDate: LocalDate, @Param("endDate") endDate: LocalDate)
 
     @Query("select avg(d.age), avg(d.salary), avg(d.experience), avg(d.companySize) from DeveloperFactEntity d where d.country.code = :countryCode and d.actualDate >= :startDate and d.actualDate < :endDate")
-    fun getSummary(@Param("countryCode") countryCode: String, @Param("startDate") startDate: LocalDate, @Param("endDate") endDate: LocalDate): List<Array<Any>>
+    fun getSummary(@Param("countryCode") countryCode: String, @Param("startDate") startDate: LocalDate, @Param("endDate") endDate: LocalDate): List<Array<Any?>>
 }

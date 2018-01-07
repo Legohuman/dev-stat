@@ -27,7 +27,7 @@ open class DashboardController @Autowired constructor(
             ResponseEntity(countryStatService.getSummary(request), HttpStatus.OK)
     }
 
-    @RequestMapping(path = ["/countries/{countryCode}/mean-dev"], method = [(RequestMethod.GET)])
+    @RequestMapping(path = ["/countries/{countryCode}/meanDev"], method = [(RequestMethod.GET)])
     fun getMeanDev(@PathVariable("countryCode") countryCode: String,
                    @RequestParam("startDate") startDate: String?,
                    @RequestParam("endDate") endDate: String?): ResponseEntity<Any?> {
