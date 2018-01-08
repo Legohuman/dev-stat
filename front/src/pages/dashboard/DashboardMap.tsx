@@ -4,6 +4,7 @@ import { DashboardMapData } from '../../types/DashboardState';
 import { DashboardPageHandlers } from './DashboardPageHandlers';
 import WorldMap, { Polygonal } from '../../components/map/WorldMap';
 import ConversionUtils from '../../utils/ConversionUtils';
+import Renderers from '../../utils/Renderers';
 
 class DashboardMap extends React.Component<DashboardMapData & DashboardPageHandlers, object> {
     render() {
@@ -43,9 +44,9 @@ class DashboardMap extends React.Component<DashboardMapData & DashboardPageHandl
 
         let tooltipHtml = '';
         if (countrySummary != null) {
-            tooltipHtml = `<br/>Devs #:  ${countrySummary.developersCount}
-                <br/>Jobs #:  ${countrySummary.vacancyCount}
-                <br/>Economy:  ${countrySummary.economyLevel}`;
+            tooltipHtml = `<br/>Devs #:  ${Renderers.numberWithCountSuffix(countrySummary.developersCount)}
+                <br/>Jobs #:  ${Renderers.numberWithCountSuffix(countrySummary.vacancyCount)}
+                <br/>Economy:  ${Renderers.economyLevel(countrySummary.economyLevel)}`;
         }
         return country.properties.name + tooltipHtml;
     }

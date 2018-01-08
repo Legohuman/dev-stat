@@ -16,9 +16,9 @@ it('check tooltip rendering', () => {
     );
     new DashboardMapAssertFactory(wrapper).assertMap()
         .rendered()
-        .countryTooltipText('RUS', ['Russia', '900000', '11000', '3'], ['Czech Republic', '80000', '2000'])
-        .countryTooltipText('CZE', ['Czech Republic', '80000', '2000', '3'], ['Russia', '900000', '11000'])
-        .countryTooltipText('DEU', ['Germany'], ['80000', '2000', '3'])
+        .countryTooltipText('RUS', ['Russia', '900 k', '11 k', 'below average'], ['Czech Republic', '80 k', '2000'])
+        .countryTooltipText('CZE', ['Czech Republic', '80 k', '2000', 'below average'], ['Russia', '900 k', '11000'])
+        .countryTooltipText('DEU', ['Germany'], ['80 k', '2000', 'below average'])
         .countriesClickHandled(['RUS', 'CZE', 'DEU'], handlers.handleCountryChange);
 });
 
@@ -36,9 +36,9 @@ it('check update with empty countries data', () => {
 
     new DashboardMapAssertFactory(wrapper).assertMap()
         .rendered()
-        .countryTooltipText('RUS', ['Russia'], ['900000', '11000', '3'])
-        .countryTooltipText('CZE', ['Czech Republic'], ['80000', '2000', '3'])
-        .countryTooltipText('DEU', ['Germany'], ['80000', '2000', '3'])
+        .countryTooltipText('RUS', ['Russia'], ['900 k', '11000', 'below average'])
+        .countryTooltipText('CZE', ['Czech Republic'], ['80 k', '2000', 'below average'])
+        .countryTooltipText('DEU', ['Germany'], ['80 k', '2000', 'below average'])
         .countriesClickHandled(['RUS', 'CZE', 'DEU'], handlers.handleCountryChange);
 });
 
