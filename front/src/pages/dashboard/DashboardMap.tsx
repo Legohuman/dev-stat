@@ -2,7 +2,7 @@ import * as React from 'react';
 import './DashboardMap.css';
 import { DashboardMapData } from '../../types/DashboardState';
 import { DashboardPageHandlers } from './DashboardPageHandlers';
-import WorldMap, { Polygonal } from './map/WorldMap';
+import WorldMap, { Polygonal } from '../../components/map/WorldMap';
 import ConversionUtils from '../../utils/ConversionUtils';
 
 class DashboardMap extends React.Component<DashboardMapData & DashboardPageHandlers, object> {

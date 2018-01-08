@@ -1,3 +1,5 @@
+@import '../../common.scss';
+
 .DashboardCountryDetail-ProfileTitle {
   padding: 5px 0 10px;
   font-size: 18px;
@@ -32,4 +34,14 @@
   font-size: 12px;
   line-height: 1.428571429;
   border-radius: 15px;
+}
+
+.DashboardCountryDetail-ProfileInfo_notAvailable{
+  color: $secondary-color;
+}
+
+.DashboardCountryDetail-ChartPlaceholder {
+  margin: 243px 0;
+  text-align: center;
+  color: $secondary-color;
 }

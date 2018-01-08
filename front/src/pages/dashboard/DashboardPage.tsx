@@ -10,6 +10,13 @@ import { createDashboardPageHandlers, DashboardPageHandlers } from './DashboardP
 import MessageList from '../../components/MessageList';
 
 class DashboardPage extends React.Component<DashboardState & DashboardPageHandlers, object> {
+
+    componentDidMount(): void {
+        const p = this.props;
+
+        p.handlers.handlePeriodChange(p.filter.startDate, p.filter.endDate);
+    }
+
     render() {
         const p = this.props,
             messages = _.compact(_.values(p.messages));
@@ -28,6 +35,7 @@ class DashboardPage extends React.Component<DashboardState & DashboardPageHandle
                 <DashboardCountryDetail
                     {...p.countryDetail}
                     handlers={p.handlers}
+                    operations={p.operations}
                 />
             </div>
         );

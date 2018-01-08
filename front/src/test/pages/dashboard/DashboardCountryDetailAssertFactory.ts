@@ -1,9 +1,10 @@
+import * as React from 'react';
 import * as Enzyme from 'enzyme';
 import * as sinon from 'sinon';
 import { ChartsData, ChartType } from '../../../types/DashboardState';
-import { ChartProps } from '../../../pages/dashboard/charts/AbstractChart';
-import BarChart from '../../../pages/dashboard/charts/BarChart';
-import LineChart from '../../../pages/dashboard/charts/LineChart';
+import { ChartProps } from '../../../components/charts/AbstractChart';
+import BarChart from '../../../components/charts/BarChart';
+import LineChart from '../../../components/charts/LineChart';
 
 export class DashboardCountryDetailAssertFactory {
     private wrapper: Enzyme.ShallowWrapper;

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import * as d3 from 'd3';
 import * as _ from 'lodash';
-import MessageList from '../../../components/MessageList';
-import { ChartDataSet } from '../../../types/DashboardState';
-import { Validators } from '../../../utils/PropValidators';
+import MessageList from '../MessageList';
+import { ChartDataSet } from '../../types/DashboardState';
+import { Validators } from '../../utils/PropValidators';
 
 const plotMargins = {
     top: 30,
@@ -19,6 +19,7 @@ const meanLineParams = {
     textFonSize: '14px',
     textShiftX: 5,
     textShiftY: 15,
+    roundPrecision: 2
 };
 
 export interface ChartProps<T> {
@@ -40,6 +41,8 @@ abstract class AbstractChart<T> extends React.Component<ChartProps<T>, object> {
 
     protected plotWidth: number;
     protected plotHeight: number;
+
+    private plotGroupsPrepared: boolean;
 
     protected abstract updateAxesScale(): void;
 
@@ -77,16 +80,22 @@ abstract class AbstractChart<T> extends React.Component<ChartProps<T>, object> {
         this.createChart();
     }
 
-    componentDidUpdate() {
-        this.updateChart();
+    componentDidUpdate(prevProps: Readonly<any>) {
+        this.createChart();
     }
 
     createChart() {
-        this.updatePlotDimensions();
-        this.prepareAxes();
-        this.prepareChartGroups();
+        //sometimes svgElement is null after componentDidMount and will be set after subsequent componentDidUpdate
+        if (this.svgElement) {
+            if (!this.plotGroupsPrepared) {
+                this.updatePlotDimensions();
+                this.prepareAxes();
+                this.prepareChartGroups();
+            }
+            this.plotGroupsPrepared = true;
 
-        this.updateChart();
+            this.updateChart();
+        }
     }
 
     updateChart() {
@@ -161,7 +170,7 @@ abstract class AbstractChart<T> extends React.Component<ChartProps<T>, object> {
                 .style('font-family', meanLineParams.textFonFamily)
                 .style('font-size', meanLineParams.textFonSize)
                 .style('fill', meanLineParams.color)
-                .text(meanValue);
+                .text(_.round(meanValue, meanLineParams.roundPrecision));
         }
     }
 }

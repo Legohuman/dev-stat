@@ -1,9 +1,9 @@
 import * as React from 'react';
 import * as cheerio from 'cheerio';
 import { ChartAssertFactory } from "./ChartAssertFactory";
-import { ChartDataSet, ChartPoint } from "../../../../types/DashboardState";
-import LineChart from "../../../../pages/dashboard/charts/LineChart";
-import { enzymeWrapperFactory } from "../../../EnzymeWrapperFactory";
+import { ChartDataSet, ChartPoint } from "../../../types/DashboardState";
+import LineChart from "../../../components/charts/LineChart";
+import { enzymeWrapperFactory } from "../../EnzymeWrapperFactory";
 
 afterEach(enzymeWrapperFactory.unmount);
 

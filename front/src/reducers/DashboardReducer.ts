@@ -1,7 +1,7 @@
 import * as moment from 'moment';
 import {
-    Action, ActionType, ApplyChartData, ApplyCountriesSummary, ApplyMeanDevSummary, PutErrorMessage,
-    SelectChartType, SelectCountry, SelectFilterPeriod
+    Action, ActionType, ApplyChartData, ApplyCountriesSummary, ApplyMeanDevSummary, FinishAsyncOperation,
+    PutErrorMessage, SelectChartType, SelectCountry, SelectFilterPeriod, StartAsyncOperation
 } from '../actions/Actions';
 import { DashboardState } from '../types/DashboardState';
 import { ActionHandlerSelector } from '../utils/ActionHandlerSelector';
@@ -57,6 +57,26 @@ const handlerSelector = new ActionHandlerSelector<DashboardState>()
                 }
             }
         };
+    })
+    .addHandler(ActionType.startAsyncOperation, (action, state) => {
+        const actionImpl = <StartAsyncOperation> action;
+        return {
+            ...state,
+            operations: {
+                ...state.operations,
+                [actionImpl.operation]: true
+            }
+        };
+    })
+    .addHandler(ActionType.finishAsyncOperation, (action, state) => {
+        const actionImpl = <FinishAsyncOperation> action;
+        return {
+            ...state,
+            operations: {
+                ...state.operations,
+                [actionImpl.operation]: false
+            }
+        };
     });
 
 function getDefaultDashboardState() {
@@ -64,8 +84,8 @@ function getDefaultDashboardState() {
         operations: {},
         messages: {},
         filter: {
-            startDate: moment().subtract(7, 'days'),
-            endDate: moment()
+            startDate: moment().startOf('y'),
+            endDate: moment().endOf('y')
         },
         map: {
             countries: {},

@@ -1,13 +1,13 @@
 import * as React from 'react';
 import './DashboardCountryDetail.css';
 import { Col, Grid, Row } from 'react-bootstrap';
-import { ChartType, DashboardCountryDetailData } from '../../types/DashboardState';
+import { ChartType, DashboardCountryDetailData, DashboardOperationsContainer } from '../../types/DashboardState';
 import { DashboardPageHandlers } from './DashboardPageHandlers';
 import { devMeasureDescriptorSelector } from '../../utils/DevMeasureDescriptorSelector';
-import BarChart from './charts/BarChart';
-import LineChart from './charts/LineChart';
+import BarChart from '../../components/charts/BarChart';
+import LineChart from '../../components/charts/LineChart';
 
-class DashboardCountryDetail extends React.Component<DashboardCountryDetailData & DashboardPageHandlers, object> {
+class DashboardCountryDetail extends React.Component<DashboardCountryDetailData & DashboardOperationsContainer & DashboardPageHandlers, object> {
     render() {
         return (
             <div className="DashboardCountryDetail">
@@ -75,14 +75,33 @@ class DashboardCountryDetail extends React.Component<DashboardCountryDetailData 
     renderSelectedChart(): React.ReactNode {
         const p = this.props;
 
-        if (p.selectedCountry && p.meanDev && p.selectedChartType && p.charts[p.selectedChartType]) {
-            if (p.selectedChartType === ChartType.salary) {
-                return <LineChart width={500} height={500} data={p.charts[p.selectedChartType]}/>;
+        if (p.selectedCountry && p.meanDev) {
+            if (p.selectedChartType && p.charts[p.selectedChartType]) {
+                if (p.selectedChartType === ChartType.salary) {
+                    return <LineChart width={500} height={500} data={p.charts[p.selectedChartType]}/>;
+                } else {
+                    return <BarChart width={500} height={500} data={p.charts[p.selectedChartType]}/>;
+                }
             } else {
-                return <BarChart width={500} height={500} data={p.charts[p.selectedChartType]}/>;
+                return (
+                    <div className="DashboardCountryDetail-ChartPlaceholder">
+                        {this.renderChartPlaceholderText()}
+                    </div>);
             }
         }
         return undefined;
+    }
+
+    renderChartPlaceholderText() {
+        const p = this.props;
+
+        if (!p.selectedChartType) {
+            return 'Click one of chart buttons to see distribution chart.';
+        } else if (p.operations[devMeasureDescriptorSelector.get(p.selectedChartType)!!.chartDataRequestOperation]) {
+            return 'Loading...';
+        } else {
+            return 'No data available.';
+        }
     }
 }
 

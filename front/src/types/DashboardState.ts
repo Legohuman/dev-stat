@@ -12,6 +12,10 @@ export interface DashboardOperations {
     [operation: string]: boolean | undefined;
 }
 
+export interface DashboardOperationsContainer {
+    operations: DashboardOperations;
+}
+
 export interface DashboardErrorMessages {
     [key: string]: string | undefined;
 }

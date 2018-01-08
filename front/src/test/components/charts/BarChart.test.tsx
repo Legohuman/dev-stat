@@ -1,9 +1,9 @@
 import * as React from 'react';
 import * as cheerio from 'cheerio';
-import BarChart from '../../../../../src/pages/dashboard/charts/BarChart';
+import BarChart from '../../../../src/components/charts/BarChart';
 import { ChartAssertFactory } from "./ChartAssertFactory";
-import { ChartBin, ChartDataSet } from "../../../../types/DashboardState";
-import { enzymeWrapperFactory } from "../../../EnzymeWrapperFactory";
+import { ChartBin, ChartDataSet } from "../../../types/DashboardState";
+import { enzymeWrapperFactory } from "../../EnzymeWrapperFactory";
 
 afterEach(enzymeWrapperFactory.unmount);
 
@@ -157,6 +157,30 @@ it('updates bar chart to empty dataset (no bars)', () => {
         .notRendered();
     chartTestHelper.assertBars()
         .count(0);
+});
+
+it('check round of mean value', () => {
+    const wrapper = enzymeWrapperFactory.mount(
+        <BarChart
+            width={500}
+            height={500}
+            data={{...dataSet1, meanValue: 15.1345677}}
+        />
+    );
+
+    let chartTestHelper = new ChartAssertFactory(cheerio.load(wrapper.html()));
+    chartTestHelper.assertMeanLine()
+        .rendered()
+        .hasDomainValue(15.13)
+        .hasCoordinate(107.83);
+
+    wrapper.setProps({data: {...dataSet1, meanValue: 15.1389567}});
+
+    chartTestHelper = new ChartAssertFactory(cheerio.load(wrapper.html()));
+    chartTestHelper.assertMeanLine()
+        .rendered()
+        .hasDomainValue(15.14)
+        .hasCoordinate(107.92);
 });
 
 const dataSet1: ChartDataSet<ChartBin> = {

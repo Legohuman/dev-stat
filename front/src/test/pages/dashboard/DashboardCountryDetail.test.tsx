@@ -4,9 +4,9 @@ import * as Enzyme from 'enzyme';
 import DashboardCountryDetail from '../../../pages/dashboard/DashboardCountryDetail';
 import { dashboardMockHandlers } from '../../DashboardMockHandlers';
 import { ChartType } from '../../../types/DashboardState';
-import BarChart from '../../../pages/dashboard/charts/BarChart';
+import BarChart from '../../../components/charts/BarChart';
 import { DashboardCountryDetailAssertFactory } from './DashboardCountryDetailAssertFactory';
-import LineChart from '../../../pages/dashboard/charts/LineChart';
+import LineChart from '../../../components/charts/LineChart';
 
 it('renders country detail with age chart', () => {
     const handlers = dashboardMockHandlers();
@@ -17,6 +17,7 @@ it('renders country detail with age chart', () => {
             meanDev={getMeanDevInfo()}
             charts={getAgeChartsData()}
             handlers={handlers}
+            operations={{}}
         />
     );
     const assertFactory = new DashboardCountryDetailAssertFactory(wrapper);
@@ -46,6 +47,7 @@ it('renders country detail with salary chart', () => {
             meanDev={getMeanDevInfo()}
             charts={getSalaryChartsData()}
             handlers={handlers}
+            operations={{}}
         />
     );
     const assertFactory = new DashboardCountryDetailAssertFactory(wrapper);
@@ -75,6 +77,7 @@ it('render updated country detail with salary chart', () => {
             meanDev={getMeanDevInfo()}
             charts={getAgeChartsData()}
             handlers={handlers}
+            operations={{}}
         />
     );
     wrapper.setProps({
@@ -108,6 +111,7 @@ it('renders country detail without selected country', () => {
             meanDev={getMeanDevInfo()}
             charts={getSalaryChartsData()}
             handlers={dashboardMockHandlers()}
+            operations={{}}
         />
     );
     const assertFactory = new DashboardCountryDetailAssertFactory(wrapper);
@@ -130,6 +134,7 @@ it('renders country detail without mean dev', () => {
             meanDev={undefined}
             charts={getSalaryChartsData()}
             handlers={dashboardMockHandlers()}
+            operations={{}}
         />
     );
     const assertFactory = new DashboardCountryDetailAssertFactory(wrapper);
@@ -153,6 +158,7 @@ it('renders country detail without selected chart', () => {
             meanDev={getMeanDevInfo()}
             charts={getSalaryChartsData()}
             handlers={dashboardMockHandlers()}
+            operations={{}}
         />
     );
     const assertFactory = new DashboardCountryDetailAssertFactory(wrapper);
@@ -180,6 +186,7 @@ it('renders country detail without selected chart', () => {
             meanDev={getMeanDevInfo()}
             charts={getSalaryChartsData()}
             handlers={dashboardMockHandlers()}
+            operations={{}}
         />
     );
     const assertFactory = new DashboardCountryDetailAssertFactory(wrapper);
