@@ -84,6 +84,10 @@ abstract class AbstractChart<T> extends React.Component<ChartProps<T>, object> {
         this.createChart();
     }
 
+    shouldComponentUpdate?(nextProps: Readonly<ChartProps<T>>, nextState: Readonly<object>, nextContext: any): boolean {
+        return Object.keys(nextProps).some(k => nextProps[k] !== this.props[k]);
+    }
+
     createChart() {
         //sometimes svgElement is null after componentDidMount and will be set after subsequent componentDidUpdate
         if (this.svgElement) {
