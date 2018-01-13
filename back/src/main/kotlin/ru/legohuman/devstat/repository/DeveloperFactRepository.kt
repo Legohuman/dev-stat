@@ -12,7 +12,7 @@ import java.util.*
 @Repository
 interface DeveloperFactRepository : CrudRepository<DeveloperFactEntity, UUID> {
     @Modifying
-    @Query("delete from DeveloperFactEntity d where d.country.code = :countryCode and d.actualDate >= :startDate and d.actualDate < :endDate")
+    @Query("delete from DeveloperFactEntity d where d.country.code = :countryCode and d.actualDate >= :startDate and d.actualDate <= :endDate")
     fun deleteByCodeAndDates(@Param("countryCode") countryCode: String, @Param("startDate") startDate: LocalDate, @Param("endDate") endDate: LocalDate)
 
     @Query("select avg(d.age), avg(d.salary), avg(d.experience), avg(d.companySize) from DeveloperFactEntity d where d.country.code = :countryCode and d.actualDate >= :startDate and d.actualDate < :endDate")

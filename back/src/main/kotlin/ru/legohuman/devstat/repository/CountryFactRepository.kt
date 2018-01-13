@@ -11,9 +11,9 @@ import java.time.LocalDate
 @Repository
 interface CountryFactRepository : CrudRepository<CountryFactEntity, String> {
     @Modifying
-    @Query("delete from CountryFactEntity c where c.country.code = :code and c.actualDate >= :startDate and c.actualDate < :endDate")
+    @Query("delete from CountryFactEntity c where c.country.code = :code and c.actualDate >= :startDate and c.actualDate <= :endDate")
     fun deleteByCodeAndDates(@Param("code") code: String, @Param("startDate") startDate: LocalDate, @Param("endDate") endDate: LocalDate)
 
-    @Query("select c.country.code, avg(c.devCount), avg(c.vacancyCount), avg(c.economyLevel) from CountryFactEntity c where c.actualDate >= :startDate and c.actualDate < :endDate group by c.country.code")
+    @Query("select c.country.code, avg(c.devCount), avg(c.vacancyCount), avg(c.economyLevel) from CountryFactEntity c where c.actualDate >= :startDate and c.actualDate <= :endDate group by c.country.code")
     fun getSummary(@Param("startDate") startDate: LocalDate, @Param("endDate") endDate: LocalDate): List<Array<Any>>
 }

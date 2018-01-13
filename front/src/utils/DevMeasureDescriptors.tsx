@@ -2,26 +2,26 @@ import * as React from 'react';
 import { Button, Glyphicon } from 'react-bootstrap';
 import { DataService, PeriodAndCountryRequest } from '../service/DataService';
 import { DataResponse } from '../service/RestService';
-import { ChartBin, ChartDataSet, ChartPoint, ChartType, MeanDevSummary } from '../types/DashboardState';
+import { ChartBin, ChartDataSet, ChartPoint, DeveloperMeasureType, MeanDevSummary } from '../types/DashboardState';
 
 export interface DevMeasureDescriptor<T> {
-    readonly chartType: ChartType;
+    readonly chartType: DeveloperMeasureType;
     readonly chartDataRequestOperation: keyof typeof DataService;
 
     fetchChartData(request: PeriodAndCountryRequest): Promise<DataResponse<T>>;
 
-    renderMeasureInfo(data: MeanDevSummary, selectChartHandler: (chartType: ChartType) => void): React.ReactNode;
+    renderMeasureInfo(data: MeanDevSummary, selectChartHandler: (chartType: DeveloperMeasureType) => void): React.ReactNode;
 }
 
 abstract class BaseChartDescriptor<T> implements DevMeasureDescriptor<T> {
-    readonly abstract chartType: ChartType;
+    readonly abstract chartType: DeveloperMeasureType;
     readonly abstract chartDataRequestOperation: keyof typeof DataService;
 
     abstract fetchChartData(request: PeriodAndCountryRequest): Promise<DataResponse<T>>;
 
     abstract renderMeanValue(data: MeanDevSummary): React.ReactNode;
 
-    renderMeasureInfo(data: MeanDevSummary, selectChartHandler: (chartType: ChartType) => void): React.ReactNode {
+    renderMeasureInfo(data: MeanDevSummary, selectChartHandler: (chartType: DeveloperMeasureType) => void): React.ReactNode {
         return (
             <div>
                 {this.renderMeanValue(data)}
@@ -38,7 +38,7 @@ abstract class BaseChartDescriptor<T> implements DevMeasureDescriptor<T> {
 }
 
 export class AgeChartDescriptor extends BaseChartDescriptor<ChartDataSet<ChartBin>> {
-    readonly chartType = ChartType.age;
+    readonly chartType = DeveloperMeasureType.age;
     readonly chartDataRequestOperation: keyof typeof DataService = 'getDevAgeChart';
 
     fetchChartData(request: PeriodAndCountryRequest) {
@@ -56,7 +56,7 @@ export class AgeChartDescriptor extends BaseChartDescriptor<ChartDataSet<ChartBi
 }
 
 export class SalaryChartDescriptor extends BaseChartDescriptor<ChartDataSet<ChartPoint>> {
-    readonly chartType = ChartType.salary;
+    readonly chartType = DeveloperMeasureType.salary;
     readonly chartDataRequestOperation: keyof typeof DataService = 'getDevSalaryChart';
 
     fetchChartData(request: PeriodAndCountryRequest) {
@@ -74,7 +74,7 @@ export class SalaryChartDescriptor extends BaseChartDescriptor<ChartDataSet<Char
 }
 
 export class ExperienceChartDescriptor extends BaseChartDescriptor<ChartDataSet<ChartBin>> {
-    readonly chartType = ChartType.experience;
+    readonly chartType = DeveloperMeasureType.experience;
     readonly chartDataRequestOperation: keyof typeof DataService = 'getDevExperienceChart';
 
     fetchChartData(request: PeriodAndCountryRequest) {
@@ -92,7 +92,7 @@ export class ExperienceChartDescriptor extends BaseChartDescriptor<ChartDataSet<
 }
 
 export class CompanySizeChartDescriptor extends BaseChartDescriptor<ChartDataSet<ChartBin>> {
-    readonly chartType = ChartType.companySize;
+    readonly chartType = DeveloperMeasureType.companySize;
     readonly chartDataRequestOperation: keyof typeof DataService = 'getDevCompanySizeChart';
 
     fetchChartData(request: PeriodAndCountryRequest) {

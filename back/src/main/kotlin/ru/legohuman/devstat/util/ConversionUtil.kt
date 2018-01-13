@@ -10,7 +10,7 @@ object ConversionUtil {
     val dateTimePattern = "dd.MM.yyyy-HHmm"
     private val defaultDateFormatter = DateTimeFormatter.ofPattern(datePattern)
 
-    fun parseDateTime(value: String?): LocalDate? {
+    fun parseDate(value: String?): LocalDate? {
         try {
             if (value != null && !value.isEmpty()) {
                 return LocalDate.parse(value, defaultDateFormatter)

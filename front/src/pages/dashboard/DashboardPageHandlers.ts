@@ -1,6 +1,6 @@
 import * as moment from 'moment';
 import { Dispatch } from 'react-redux';
-import { ChartType, CountryInfo, DashboardState } from '../../types/DashboardState';
+import { CountryInfo, DashboardState, DeveloperMeasureType } from '../../types/DashboardState';
 import { ActionsFactory } from '../../actions/ActionsFactory';
 
 export interface DashboardPageHandlers {
@@ -9,7 +9,7 @@ export interface DashboardPageHandlers {
 
         handleCountryChange(country?: CountryInfo): void
 
-        handleChartChange(chartType?: ChartType): void
+        handleChartChange(chartType?: DeveloperMeasureType): void
     };
 }
 
@@ -23,7 +23,7 @@ export function createDashboardPageHandlers(dispatch: Dispatch<DashboardState &
             handleCountryChange(country?: CountryInfo): void {
                 dispatch(ActionsFactory.handleCountryChange(country));
             },
-            handleChartChange(chartType?: ChartType): void {
+            handleChartChange(chartType?: DeveloperMeasureType): void {
                 dispatch(ActionsFactory.handleChartChange(chartType));
             }
         }

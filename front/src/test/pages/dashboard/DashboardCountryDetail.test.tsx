@@ -3,7 +3,7 @@ import * as Enzyme from 'enzyme';
 
 import DashboardCountryDetail from '../../../pages/dashboard/DashboardCountryDetail';
 import { dashboardMockHandlers } from '../../DashboardMockHandlers';
-import { ChartType } from '../../../types/DashboardState';
+import { DeveloperMeasureType } from '../../../types/DashboardState';
 import BarChart from '../../../components/charts/BarChart';
 import { DashboardCountryDetailAssertFactory } from './DashboardCountryDetailAssertFactory';
 import LineChart from '../../../components/charts/LineChart';
@@ -13,7 +13,7 @@ it('renders country detail with age chart', () => {
     const wrapper = Enzyme.shallow(
         <DashboardCountryDetail
             selectedCountry={getSelectedCountryInfo()}
-            selectedChartType={ChartType.age}
+            selectedChartType={DeveloperMeasureType.age}
             meanDev={getMeanDevInfo()}
             charts={getAgeChartsData()}
             handlers={handlers}
@@ -28,14 +28,14 @@ it('renders country detail with age chart', () => {
 
     assertFactory.assertMeanDevInfo()
         .rendered()
-        .measure(ChartType.age, '29')
-        .measure(ChartType.salary, '2000')
-        .measure(ChartType.experience, '7')
-        .measure(ChartType.companySize, '100')
-        .chartSelectionsHandled(Object.keys(ChartType).map(k => ChartType[k]), handlers.handleChartChange);
+        .measure(DeveloperMeasureType.age, '29')
+        .measure(DeveloperMeasureType.salary, '2000')
+        .measure(DeveloperMeasureType.experience, '7')
+        .measure(DeveloperMeasureType.companySize, '100')
+        .chartSelectionsHandled(Object.keys(DeveloperMeasureType).map(k => DeveloperMeasureType[k]), handlers.handleChartChange);
 
     assertFactory.assertChart()
-        .rendered(BarChart, getAgeChartsData()[ChartType.age])
+        .rendered(BarChart, getAgeChartsData()[DeveloperMeasureType.age])
 });
 
 it('renders country detail with salary chart', () => {
@@ -43,7 +43,7 @@ it('renders country detail with salary chart', () => {
     const wrapper = Enzyme.shallow(
         <DashboardCountryDetail
             selectedCountry={getSelectedCountryInfo()}
-            selectedChartType={ChartType.salary}
+            selectedChartType={DeveloperMeasureType.salary}
             meanDev={getMeanDevInfo()}
             charts={getSalaryChartsData()}
             handlers={handlers}
@@ -58,14 +58,14 @@ it('renders country detail with salary chart', () => {
 
     assertFactory.assertMeanDevInfo()
         .rendered()
-        .measure(ChartType.age, '29')
-        .measure(ChartType.salary, '2000')
-        .measure(ChartType.experience, '7')
-        .measure(ChartType.companySize, '100')
-        .chartSelectionsHandled(Object.keys(ChartType).map(k => ChartType[k]), handlers.handleChartChange);
+        .measure(DeveloperMeasureType.age, '29')
+        .measure(DeveloperMeasureType.salary, '2000')
+        .measure(DeveloperMeasureType.experience, '7')
+        .measure(DeveloperMeasureType.companySize, '100')
+        .chartSelectionsHandled(Object.keys(DeveloperMeasureType).map(k => DeveloperMeasureType[k]), handlers.handleChartChange);
 
     assertFactory.assertChart()
-        .rendered(LineChart, getSalaryChartsData()[ChartType.salary])
+        .rendered(LineChart, getSalaryChartsData()[DeveloperMeasureType.salary])
 });
 
 it('render updated country detail with salary chart', () => {
@@ -73,7 +73,7 @@ it('render updated country detail with salary chart', () => {
     const wrapper = Enzyme.shallow(
         <DashboardCountryDetail
             selectedCountry={getSelectedCountryInfo()}
-            selectedChartType={ChartType.age}
+            selectedChartType={DeveloperMeasureType.age}
             meanDev={getMeanDevInfo()}
             charts={getAgeChartsData()}
             handlers={handlers}
@@ -81,7 +81,7 @@ it('render updated country detail with salary chart', () => {
         />
     );
     wrapper.setProps({
-        selectedChartType: ChartType.salary,
+        selectedChartType: DeveloperMeasureType.salary,
         charts: getSalaryChartsData(),
         meanDev: getMeanDevInfo2()
     });
@@ -93,21 +93,21 @@ it('render updated country detail with salary chart', () => {
 
     assertFactory.assertMeanDevInfo()
         .rendered()
-        .measure(ChartType.age, '30')
-        .measure(ChartType.salary, '2500')
-        .measure(ChartType.experience, '8')
-        .measure(ChartType.companySize, '200')
-        .chartSelectionsHandled(Object.keys(ChartType).map(k => ChartType[k]), handlers.handleChartChange);
+        .measure(DeveloperMeasureType.age, '30')
+        .measure(DeveloperMeasureType.salary, '2500')
+        .measure(DeveloperMeasureType.experience, '8')
+        .measure(DeveloperMeasureType.companySize, '200')
+        .chartSelectionsHandled(Object.keys(DeveloperMeasureType).map(k => DeveloperMeasureType[k]), handlers.handleChartChange);
 
     assertFactory.assertChart()
-        .rendered(LineChart, getSalaryChartsData()[ChartType.salary])
+        .rendered(LineChart, getSalaryChartsData()[DeveloperMeasureType.salary])
 });
 
 it('renders country detail without selected country', () => {
     const wrapper = Enzyme.shallow(
         <DashboardCountryDetail
             selectedCountry={undefined}
-            selectedChartType={ChartType.salary}
+            selectedChartType={DeveloperMeasureType.salary}
             meanDev={getMeanDevInfo()}
             charts={getSalaryChartsData()}
             handlers={dashboardMockHandlers()}
@@ -130,7 +130,7 @@ it('renders country detail without mean dev', () => {
     const wrapper = Enzyme.shallow(
         <DashboardCountryDetail
             selectedCountry={getSelectedCountryInfo()}
-            selectedChartType={ChartType.salary}
+            selectedChartType={DeveloperMeasureType.salary}
             meanDev={undefined}
             charts={getSalaryChartsData()}
             handlers={dashboardMockHandlers()}
@@ -169,10 +169,10 @@ it('renders country detail without selected chart', () => {
 
     assertFactory.assertMeanDevInfo()
         .rendered()
-        .measure(ChartType.age, '29')
-        .measure(ChartType.salary, '2000')
-        .measure(ChartType.experience, '7')
-        .measure(ChartType.companySize, '100');
+        .measure(DeveloperMeasureType.age, '29')
+        .measure(DeveloperMeasureType.salary, '2000')
+        .measure(DeveloperMeasureType.experience, '7')
+        .measure(DeveloperMeasureType.companySize, '100');
 
     assertFactory.assertChart()
         .notRendered();
@@ -197,10 +197,10 @@ it('renders country detail without selected chart', () => {
 
     assertFactory.assertMeanDevInfo()
         .rendered()
-        .measure(ChartType.age, '29')
-        .measure(ChartType.salary, '2000')
-        .measure(ChartType.experience, '7')
-        .measure(ChartType.companySize, '100');
+        .measure(DeveloperMeasureType.age, '29')
+        .measure(DeveloperMeasureType.salary, '2000')
+        .measure(DeveloperMeasureType.experience, '7')
+        .measure(DeveloperMeasureType.companySize, '100');
 
     assertFactory.assertChart()
         .notRendered();
@@ -208,7 +208,7 @@ it('renders country detail without selected chart', () => {
 
 function getAgeChartsData() {
     const chartsData = {};
-    chartsData[ChartType.age] = {
+    chartsData[DeveloperMeasureType.age] = {
         meanValue: 29,
         values: [{x0: 25, x1: 30, height: 100}]
     };
@@ -217,7 +217,7 @@ function getAgeChartsData() {
 
 function getSalaryChartsData() {
     const chartsData = {};
-    chartsData[ChartType.salary] = {
+    chartsData[DeveloperMeasureType.salary] = {
         meanValue: 2000,
         values: [
             {x: 1500, y: 0.2},

@@ -2,13 +2,13 @@ package ru.legohuman.devstat.service
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import ru.legohuman.devstat.dao.ChartDataDao
 import ru.legohuman.devstat.dto.*
 import ru.legohuman.devstat.repository.DeveloperFactRepository
 import ru.legohuman.devstat.util.ConversionUtil.implicitDoubleToRoundInt
 import ru.legohuman.devstat.util.DeveloperMeasureDescriptorRegistry
 import java.lang.RuntimeException
 import java.time.LocalDate
-import javax.persistence.EntityManager
 
 interface DeveloperStatService {
     fun getMeanDevSummary(request: DashboardCountryPeriodRequest): MeanDevSummary?
@@ -19,7 +19,7 @@ interface DeveloperStatService {
 @Service
 open class DeveloperStatServiceImpl @Autowired constructor(
         private val developerFactRepository: DeveloperFactRepository,
-        private val em: EntityManager,
+        private val chartDataDao: ChartDataDao,
         private val descriptorRegistry: DeveloperMeasureDescriptorRegistry
 ) : DeveloperStatService {
 
@@ -39,7 +39,7 @@ open class DeveloperStatServiceImpl @Autowired constructor(
     override fun getDevMeasureChartData(request: DashboardCountryPeriodMeasureTypeRequest): ChartDataSet<ChartValuesType> {
         val descriptor = descriptorRegistry.getDescriptor<ChartBin>(request.measureType!!)
         if (descriptor != null) {
-            return ChartDataSet(descriptor.getChartValues(em, request), descriptor.getMeanValue(em, request))
+            return ChartDataSet(descriptor.getChartValues(chartDataDao, request), descriptor.getMeanValue(chartDataDao, request))
         }
         throw RuntimeException("Unable to find developer measure descriptor for ${request.measureType} type")
     }

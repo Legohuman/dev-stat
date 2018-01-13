@@ -11,13 +11,16 @@ data class DensityEstimationParameters(
 
 object KernelDensityEstimator {
     fun calculateDensityPoints(values: Collection<Double>, parameters: DensityEstimationParameters): List<ChartPoint> {
-        val kernelFunction: KernelFunction = EpanechnikovKernelFunction(parameters.bandwidth)
-        val xValues = getXValues(parameters)
-        return xValues.map { x ->
-            ChartPoint(x, values.map { v ->
-                kernelFunction.apply(x - v)
-            }.average())
+        if (values.isNotEmpty()) {
+            val kernelFunction: KernelFunction = EpanechnikovKernelFunction(parameters.bandwidth)
+            val xValues = getXValues(parameters)
+            return xValues.map { x ->
+                ChartPoint(x, values.map { v ->
+                    kernelFunction.apply(x - v)
+                }.average())
+            }
         }
+        return listOf()
     }
 
     private fun getXValues(parameters: DensityEstimationParameters): List<Double> {

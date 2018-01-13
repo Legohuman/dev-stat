@@ -3,27 +3,24 @@ package ru.legohuman.devstat.util
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Component
+import ru.legohuman.devstat.dao.ChartDataDao
 import ru.legohuman.devstat.domain.DeveloperFactEntity
 import ru.legohuman.devstat.dto.*
-import javax.persistence.EntityManager
+import java.time.LocalDate
 
 interface DeveloperMeasureDescriptor<out T : ChartValuesType> {
-    fun getMeanValue(em: EntityManager, request: DashboardCountryPeriodMeasureTypeRequest): Double?
+    fun getMeanValue(chartDataDao: ChartDataDao, request: DashboardCountryPeriodMeasureTypeRequest): Double?
 
-    fun getChartValues(em: EntityManager, request: DashboardCountryPeriodMeasureTypeRequest): List<T>
+    fun getChartValues(chartDataDao: ChartDataDao, request: DashboardCountryPeriodMeasureTypeRequest): List<T>
 }
 
 abstract class DeveloperMeasureDescriptorBase<out T : ChartValuesType>(
         open protected val propertyName: String
 ) : DeveloperMeasureDescriptor<T> {
 
-    override fun getMeanValue(em: EntityManager, request: DashboardCountryPeriodMeasureTypeRequest): Double? {
+    override fun getMeanValue(chartDataDao: ChartDataDao, request: DashboardCountryPeriodMeasureTypeRequest): Double? {
         val propertyExpression = getEntityPropertyExpression("d")
-        val query = em.createQuery("select avg($propertyExpression) from DeveloperFactEntity d where d.country.code = :code and d.actualDate >= :startDate and d.actualDate < :endDate")
-        query.setParameter("code", request.countryCode)
-        query.setParameter("startDate", request.startDate)
-        query.setParameter("endDate", request.endDate)
-        return query.singleResult as Double?
+        return chartDataDao.getMeanValue(propertyExpression, request.countryCode, request.startDate ?: LocalDate.MIN, request.endDate ?: LocalDate.MAX)
     }
 
     protected fun getEntityPropertyExpression(entityAlias: String): String {
@@ -36,24 +33,19 @@ abstract class ChartBinDeveloperMeasureDescriptorBase(
         final override val propertyName: String,
         defaultGroupWidth: Int
 ) : DeveloperMeasureDescriptorBase<ChartBin>(propertyName) {
-    private val groupWidth: Int = ConversionUtil.parseInt(env.getProperty("app.measure.group.width.$propertyName"), defaultGroupWidth)
+    private val groupWidth: Int = ConversionUtil.parseInt(env.getProperty("app.measure.bins.group.width.$propertyName"), defaultGroupWidth)
 
-    override fun getChartValues(em: EntityManager, request: DashboardCountryPeriodMeasureTypeRequest): List<ChartBin> {
+    override fun getChartValues(chartDataDao: ChartDataDao, request: DashboardCountryPeriodMeasureTypeRequest): List<ChartBin> {
         val discriminatorExpression = getDiscriminatorExpression("d")
-        val query = em.createQuery("select $discriminatorExpression, count(d.uuid) from DeveloperFactEntity d where d.country.code = :code and d.actualDate >= :startDate and d.actualDate < :endDate group by $discriminatorExpression order by $discriminatorExpression")
-        query.setParameter("code", request.countryCode)
-        query.setParameter("startDate", request.startDate)
-        query.setParameter("endDate", request.endDate)
-
-        @Suppress("UNCHECKED_CAST")
-        return query.resultList.map { row -> mapResultRow(row as Array<Any>) }
+        return chartDataDao.getChartGroupedValues(discriminatorExpression, request.countryCode, request.startDate ?: LocalDate.MIN, request.endDate ?: LocalDate.MAX)
+                .map { row -> mapResultRow(row) }
     }
 
     private fun getDiscriminatorExpression(entityAlias: String): String {
         return "$entityAlias.$propertyName/$groupWidth"
     }
 
-    private fun mapResultRow(cells: Array<Any>): ChartBin {
+    private fun mapResultRow(cells: Array<out Any>): ChartBin {
         val ageGroupBase = cells[0] as Int
         val x0 = ageGroupBase * groupWidth
         val x1 = (ageGroupBase + 1) * groupWidth
@@ -64,25 +56,27 @@ abstract class ChartBinDeveloperMeasureDescriptorBase(
 }
 
 abstract class ChartPointDeveloperMeasureDescriptorBase(
-        final override val propertyName: String
+        env: Environment,
+        final override val propertyName: String,
+        defaultPointsCount: Int
 ) : DeveloperMeasureDescriptorBase<ChartPoint>(propertyName) {
+    private val pointsCount: Int = ConversionUtil.parseInt(env.getProperty("app.measure.density.points.count.$propertyName"), defaultPointsCount)
+    private val extentShiftFactor = 0.5
 
-    override fun getChartValues(em: EntityManager, request: DashboardCountryPeriodMeasureTypeRequest): List<ChartPoint> {
+    override fun getChartValues(chartDataDao: ChartDataDao, request: DashboardCountryPeriodMeasureTypeRequest): List<ChartPoint> {
         val propertyExpression = getEntityPropertyExpression("d")
-        val query = em.createQuery("select $propertyExpression from DeveloperFactEntity d where d.country.code = :code and d.actualDate >= :startDate and d.actualDate < :endDate order by $propertyExpression")
-        query.setParameter("code", request.countryCode)
-        query.setParameter("startDate", request.startDate)
-        query.setParameter("endDate", request.endDate)
 
         @Suppress("UNCHECKED_CAST")
-        val values = query.resultList.map { row -> (row as Number).toDouble() }
+        val values = chartDataDao.getChartSortedValues(propertyExpression, request.countryCode, request.startDate ?: LocalDate.MIN, request.endDate ?: LocalDate.MAX)
+                .map { row -> row.toDouble() }
         return when {
             values.isEmpty() -> listOf()
-            values.size == 1 -> listOf(ChartPoint(values[0], 1.0))
             else -> {
                 val minVal = values[0]
                 val maxVal = values[values.size - 1]
-                KernelDensityEstimator.calculateDensityPoints(values, DensityEstimationParameters(minVal, maxVal, 10, 7.0))
+                val spread = maxVal - minVal
+                val extentShift = spread * extentShiftFactor
+                KernelDensityEstimator.calculateDensityPoints(values, DensityEstimationParameters(minVal - extentShift, maxVal + extentShift, pointsCount, 7.0))
             }
         }
     }
@@ -92,8 +86,9 @@ class AgeDeveloperMeasureDescriptor(
         env: Environment
 ) : ChartBinDeveloperMeasureDescriptorBase(env, DeveloperFactEntity::age.name, 5)
 
-class SalaryDeveloperMeasureDescriptor :
-        ChartPointDeveloperMeasureDescriptorBase(DeveloperFactEntity::salary.name)
+class SalaryDeveloperMeasureDescriptor(
+        env: Environment
+) : ChartPointDeveloperMeasureDescriptorBase(env, DeveloperFactEntity::salary.name, 10)
 
 class ExperienceDeveloperMeasureDescriptor(
         env: Environment
@@ -109,7 +104,7 @@ open class DeveloperMeasureDescriptorRegistry @Autowired constructor(
 ) {
     private val measureTypeToDescriptor: Map<DeveloperMeasureType, DeveloperMeasureDescriptor<ChartValuesType>> = mapOf(
             Pair(DeveloperMeasureType.age, AgeDeveloperMeasureDescriptor(env)),
-            Pair(DeveloperMeasureType.salary, SalaryDeveloperMeasureDescriptor()),
+            Pair(DeveloperMeasureType.salary, SalaryDeveloperMeasureDescriptor(env)),
             Pair(DeveloperMeasureType.experience, ExperienceDeveloperMeasureDescriptor(env)),
             Pair(DeveloperMeasureType.companySize, CompanySizeDeveloperMeasureDescriptor(env))
     )

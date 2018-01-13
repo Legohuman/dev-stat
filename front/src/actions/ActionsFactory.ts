@@ -2,7 +2,7 @@ import * as moment from 'moment';
 import { Dispatch } from 'react-redux';
 import { ThunkAction } from 'redux-thunk';
 import {
-    ChartDataType, ChartType, CountriesSummary, CountryInfo, DashboardState,
+    ChartValuesType, CountriesSummary, CountryInfo, DashboardState, DeveloperMeasureType,
     MeanDevSummary
 } from '../types/DashboardState';
 import { DataService, PeriodAndCountryRequest, PeriodRequest } from '../service/DataService';
@@ -48,7 +48,7 @@ export const ActionsFactory = {
         };
     },
 
-    handleChartChange(chartType?: ChartType): ThunkAction<void, DashboardState, any> {
+    handleChartChange(chartType?: DeveloperMeasureType): ThunkAction<void, DashboardState, any> {
         return (dispatch, getState) => {
             const startDate = getState().filter.startDate,
                 endDate = getState().filter.endDate,
@@ -87,7 +87,7 @@ function isValidDates(startDate?: moment.Moment, endDate?: moment.Moment) {
 }
 
 function changeChartType(dispatch: Dispatch<DashboardState>, getState: () => DashboardState,
-                         periodAndCountryRequest: PeriodAndCountryRequest, selectedChartType?: ChartType) {
+                         periodAndCountryRequest: PeriodAndCountryRequest, selectedChartType?: DeveloperMeasureType) {
     dispatch(selectChartType(selectedChartType)); //to render updated values
 
     if (selectedChartType) {
@@ -128,7 +128,7 @@ function selectCountry(country?: CountryInfo): SelectCountry {
     };
 }
 
-function selectChartType(chartType?: ChartType): SelectChartType {
+function selectChartType(chartType?: DeveloperMeasureType): SelectChartType {
     return {
         type: ActionType.selectChartType,
         chartType
@@ -149,7 +149,7 @@ function applyMeanDevSummary(summary?: MeanDevSummary): ApplyMeanDevSummary {
     };
 }
 
-function applyChartData(chartType: ChartType, data?: ChartDataType): ApplyChartData {
+function applyChartData(chartType: DeveloperMeasureType, data?: ChartValuesType): ApplyChartData {
     return {
         type: ActionType.applyChartData,
         chartType,

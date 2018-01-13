@@ -1,7 +1,10 @@
 import * as React from 'react';
 import './DashboardCountryDetail.css';
 import { Col, Grid, Row } from 'react-bootstrap';
-import { ChartType, DashboardCountryDetailData, DashboardOperationsContainer } from '../../types/DashboardState';
+import {
+    DashboardCountryDetailData, DashboardOperationsContainer,
+    DeveloperMeasureType
+} from '../../types/DashboardState';
 import { DashboardPageHandlers } from './DashboardPageHandlers';
 import { devMeasureDescriptorSelector } from '../../utils/DevMeasureDescriptorSelector';
 import BarChart from '../../components/charts/BarChart';
@@ -77,7 +80,7 @@ class DashboardCountryDetail extends React.Component<DashboardCountryDetailData 
 
         if (p.selectedCountry && p.meanDev) {
             if (p.selectedChartType && p.charts[p.selectedChartType]) {
-                if (p.selectedChartType === ChartType.salary) {
+                if (p.selectedChartType === DeveloperMeasureType.salary) {
                     return <LineChart width={500} height={500} data={p.charts[p.selectedChartType]}/>;
                 } else {
                     return <BarChart width={500} height={500} data={p.charts[p.selectedChartType]}/>;

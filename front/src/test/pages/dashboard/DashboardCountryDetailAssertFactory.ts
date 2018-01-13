@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as Enzyme from 'enzyme';
 import * as sinon from 'sinon';
-import { ChartsData, ChartType } from '../../../types/DashboardState';
+import { ChartsData, DeveloperMeasureType } from '../../../types/DashboardState';
 import { ChartProps } from '../../../components/charts/AbstractChart';
 import BarChart from '../../../components/charts/BarChart';
 import LineChart from '../../../components/charts/LineChart';
@@ -68,18 +68,18 @@ class MeanDevInfoAssert {
         return this;
     }
 
-    measure(type: ChartType, expectedValue: string): this {
+    measure(type: DeveloperMeasureType, expectedValue: string): this {
         const measureValue = this.wrapper.find(`[data-measure-type="${type}"]`).find('.DashboardCountryDetail-MeasureValue');
         expect(measureValue.text()).toContain(expectedValue);
         return this;
     }
 
-    chartSelectionsHandled(types: ChartType[], expectedHandler: sinon.SinonSpy): this {
+    chartSelectionsHandled(types: DeveloperMeasureType[], expectedHandler: sinon.SinonSpy): this {
         types.forEach(type => this.chartSelectionHandled(type, expectedHandler));
         return this;
     }
 
-    chartSelectionHandled(type: ChartType, expectedHandler: sinon.SinonSpy): this {
+    chartSelectionHandled(type: DeveloperMeasureType, expectedHandler: sinon.SinonSpy): this {
         const measureValue = this.wrapper.find(`[data-measure-type="${type}"]`).find('.DashboardCountryDetail-MeasureChartButton');
         const prevCallCount = expectedHandler.callCount;
         measureValue.simulate('click');

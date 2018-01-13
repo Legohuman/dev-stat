@@ -31,13 +31,13 @@ export interface DashboardMapData {
 
 export interface DashboardCountryDetailData {
     selectedCountry?: CountryInfo;
-    selectedChartType?: ChartType;
+    selectedChartType?: DeveloperMeasureType;
     meanDev?: MeanDevSummary;
     charts: ChartsData;
 }
 
 export type ChartsData = {
-    [P in keyof ChartType]?: ChartDataType;
+    [P in keyof DeveloperMeasureType]?: ChartValuesType;
     };
 
 export interface ChartDataSet<T> {
@@ -55,6 +55,8 @@ export interface ChartPoint {
     x: number;
     y: number;
 }
+
+export type ChartValuesType = ChartDataSet<ChartBin> | ChartDataSet<ChartPoint>;
 
 export interface CountryInfo {
     id: string;
@@ -78,11 +80,9 @@ export interface MeanDevSummary {
     companySize: number;
 }
 
-export enum ChartType {
+export enum DeveloperMeasureType {
     age = 'age',
     salary = 'salary',
     experience = 'experience',
     companySize = 'companySize'
 }
-
-export type ChartDataType = ChartDataSet<ChartBin> | ChartDataSet<ChartPoint>;

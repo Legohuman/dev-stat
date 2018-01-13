@@ -27,38 +27,38 @@ data class DashboardCountryPeriodMeasureTypeRequest(
 
 object DashboardRequestFactory {
     fun periodRequest(startDate: String?, endDate: String?): DashboardPeriodRequest {
-        val startInstant = ConversionUtil.parseDateTime(startDate)
-        val endInstant = ConversionUtil.parseDateTime(endDate)
+        val startLocalDate = ConversionUtil.parseDate(startDate)
+        val endLocalDate = ConversionUtil.parseDate(endDate)
         val errorMessages: MutableList<String> = mutableListOf()
-        if (startInstant == null && startDate != null) {
+        if (startLocalDate == null && startDate != null) {
             errorMessages.add("Invalid start date value $startDate. Expected date should have format ${ConversionUtil.datePattern}")
         }
-        if (endInstant == null && endDate != null) {
+        if (endLocalDate == null && endDate != null) {
             errorMessages.add("Invalid end date value $endDate. Expected date should have format ${ConversionUtil.datePattern}")
         }
-        if (endInstant != null && startInstant != null && endInstant.isBefore(startInstant)) {
+        if (endLocalDate != null && startLocalDate != null && endLocalDate.isBefore(startLocalDate)) {
             errorMessages.add("Invalid start date value $startDate and end date value $endDate. End date should not be before start date.")
         }
 
-        return DashboardPeriodRequest(startInstant, endInstant, errorMessages)
+        return DashboardPeriodRequest(startLocalDate, endLocalDate, errorMessages)
     }
 
-    fun countryPeriodRequest(countryCode: String, startDate: String?, endDate: String?): DashboardCountryPeriodRequest {
+    fun countryPeriodRequest(countryCode: String?, startDate: String?, endDate: String?): DashboardCountryPeriodRequest {
         val periodRequest = periodRequest(startDate, endDate)
         val errorMessages = periodRequest.errorMessages.toMutableList()
 
-        if (countryCode.isEmpty()) {
+        if (countryCode == null || countryCode.isBlank()) {
             errorMessages.add("Invalid empty country code. Expected country code contains 3 letters.")
         }
 
-        return DashboardCountryPeriodRequest(countryCode, periodRequest.startDate, periodRequest.endDate, errorMessages)
+        return DashboardCountryPeriodRequest(countryCode!!, periodRequest.startDate, periodRequest.endDate, errorMessages)
     }
 
-    fun countryPeriodMeasureTypeRequest(countryCode: String, measureType: String, startDate: String?, endDate: String?): DashboardCountryPeriodMeasureTypeRequest {
+    fun countryPeriodMeasureTypeRequest(countryCode: String?, measureType: String?, startDate: String?, endDate: String?): DashboardCountryPeriodMeasureTypeRequest {
         val countryPeriodRequest = countryPeriodRequest(countryCode, startDate, endDate)
         val errorMessages = countryPeriodRequest.errorMessages.toMutableList()
 
-        val measureTypeOption = EnumUtil.nullableValueOf<DeveloperMeasureType>(measureType, DeveloperMeasureType.values())
+        val measureTypeOption = EnumUtil.nullableValueOf(measureType, DeveloperMeasureType.values())
         if (measureTypeOption == null) {
             errorMessages.add("Invalid measure type $measureType. Expected one of types: ${DeveloperMeasureType.values().joinToString()}.")
         }

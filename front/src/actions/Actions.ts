@@ -1,5 +1,8 @@
 import * as moment from 'moment';
-import { ChartDataType, ChartType, CountriesSummary, CountryInfo, MeanDevSummary } from '../types/DashboardState';
+import {
+    ChartValuesType, CountriesSummary, CountryInfo, DeveloperMeasureType,
+    MeanDevSummary
+} from '../types/DashboardState';
 
 export enum ActionType {
     startAsyncOperation = 'startAsyncOperation',
@@ -42,7 +45,7 @@ export interface SelectCountry {
 
 export interface SelectChartType {
     readonly type: typeof ActionType.selectChartType;
-    readonly chartType?: ChartType;
+    readonly chartType?: DeveloperMeasureType;
 }
 
 export interface ApplyCountriesSummary {
@@ -57,8 +60,8 @@ export interface ApplyMeanDevSummary {
 
 export interface ApplyChartData {
     readonly type: typeof ActionType.applyChartData;
-    readonly chartType: ChartType;
-    readonly data?: ChartDataType;
+    readonly chartType: DeveloperMeasureType;
+    readonly data?: ChartValuesType;
 }
 
 export type Action = StartAsyncOperation | FinishAsyncOperation | PutErrorMessage |
