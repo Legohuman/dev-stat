@@ -9,7 +9,6 @@ import ru.legohuman.devstat.dto.CountrySummary
 import ru.legohuman.devstat.repository.CountryFactRepository
 import ru.legohuman.devstat.util.ConversionUtil
 import ru.legohuman.devstat.util.Validators
-import java.time.LocalDate
 
 
 class DashboardControllerGetCountrySummaryTest : ControllerTests() {
@@ -43,7 +42,7 @@ class DashboardControllerGetCountrySummaryTest : ControllerTests() {
     }
 
     private fun testAndAssertCorrectResults(startDate: String?, endDate: String?) {
-        `when`(countryFactRepository!!.getSummary(ConversionUtil.parseDate(startDate) ?: LocalDate.MIN, ConversionUtil.parseDate(endDate) ?: LocalDate.MAX)).thenReturn(listOf(arrayOf("RUS", 900_000.4, 12_000.5, 3.0)))
+        `when`(countryFactRepository!!.getSummary(ConversionUtil.parseDate(startDate) ?: Validators.minDate, ConversionUtil.parseDate(endDate) ?: Validators.maxDate)).thenReturn(listOf(arrayOf("RUS", 900_000.4, 12_000.5, 3.0)))
 
         val summaryRequest = get("/dashboard/countries/summary")
         if (startDate != null) {

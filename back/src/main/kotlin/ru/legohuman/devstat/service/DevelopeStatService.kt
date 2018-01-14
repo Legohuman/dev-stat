@@ -7,8 +7,8 @@ import ru.legohuman.devstat.dto.*
 import ru.legohuman.devstat.repository.DeveloperFactRepository
 import ru.legohuman.devstat.util.ConversionUtil.implicitDoubleToRoundInt
 import ru.legohuman.devstat.util.DeveloperMeasureDescriptorRegistry
+import ru.legohuman.devstat.util.Validators
 import java.lang.RuntimeException
-import java.time.LocalDate
 
 interface DeveloperStatService {
     fun getMeanDevSummary(request: DashboardCountryPeriodRequest): MeanDevSummary?
@@ -24,7 +24,7 @@ open class DeveloperStatServiceImpl @Autowired constructor(
 ) : DeveloperStatService {
 
     override fun getMeanDevSummary(request: DashboardCountryPeriodRequest): MeanDevSummary? {
-        val rows = developerFactRepository.getSummary(request.countryCode!!, request.startDate ?: LocalDate.MIN, request.endDate ?: LocalDate.MAX)
+        val rows = developerFactRepository.getSummary(request.countryCode!!, request.startDate ?: Validators.minDate, request.endDate ?: Validators.maxDate)
         if (rows.isNotEmpty() && rows[0][0] != null) {
             val row = rows[0]
             val age = implicitDoubleToRoundInt(row[0]!!)

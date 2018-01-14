@@ -3,9 +3,13 @@
 }
 
 .react-datepicker__input-container input[type=text] {
-  width: 90px;
+  width: 110px;
   padding: 3px 6px;
-  text-align: center;
+  text-align: left;
   border: none;
   border-bottom: 1px solid #ccc;
+}
+
+.react-datepicker__close-icon::after {
+  margin: -9px 4px 0 0;
 }

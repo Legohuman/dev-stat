@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component
 import ru.legohuman.devstat.dao.ChartDataDao
 import ru.legohuman.devstat.domain.DeveloperFactEntity
 import ru.legohuman.devstat.dto.*
-import java.time.LocalDate
 
 interface DeveloperMeasureDescriptor<out T : ChartValuesType> {
     fun getMeanValue(chartDataDao: ChartDataDao, request: DashboardCountryPeriodMeasureTypeRequest): Double?
@@ -20,7 +19,7 @@ abstract class DeveloperMeasureDescriptorBase<out T : ChartValuesType>(
 
     override fun getMeanValue(chartDataDao: ChartDataDao, request: DashboardCountryPeriodMeasureTypeRequest): Double? {
         val propertyExpression = getEntityPropertyExpression("d")
-        return chartDataDao.getMeanValue(propertyExpression, request.countryCode!!, request.startDate ?: LocalDate.MIN, request.endDate ?: LocalDate.MAX)
+        return chartDataDao.getMeanValue(propertyExpression, request.countryCode!!, request.startDate ?: Validators.minDate, request.endDate ?: Validators.maxDate)
     }
 
     protected fun getEntityPropertyExpression(entityAlias: String): String {
@@ -37,7 +36,7 @@ abstract class ChartBinDeveloperMeasureDescriptorBase(
 
     override fun getChartValues(chartDataDao: ChartDataDao, request: DashboardCountryPeriodMeasureTypeRequest): List<ChartBin> {
         val discriminatorExpression = getDiscriminatorExpression("d")
-        return chartDataDao.getChartGroupedValues(discriminatorExpression, request.countryCode!!, request.startDate ?: LocalDate.MIN, request.endDate ?: LocalDate.MAX)
+        return chartDataDao.getChartGroupedValues(discriminatorExpression, request.countryCode!!, request.startDate ?: Validators.minDate, request.endDate ?: Validators.maxDate)
                 .map { row -> mapResultRow(row) }
     }
 
@@ -67,7 +66,7 @@ abstract class ChartPointDeveloperMeasureDescriptorBase(
         val propertyExpression = getEntityPropertyExpression("d")
 
         @Suppress("UNCHECKED_CAST")
-        val values = chartDataDao.getChartSortedValues(propertyExpression, request.countryCode!!, request.startDate ?: LocalDate.MIN, request.endDate ?: LocalDate.MAX)
+        val values = chartDataDao.getChartSortedValues(propertyExpression, request.countryCode!!, request.startDate ?: Validators.minDate, request.endDate ?: Validators.maxDate)
                 .map { row -> row.toDouble() }
         return when {
             values.isEmpty() -> listOf()

@@ -11,7 +11,8 @@ const commonDatePickerProps = {
     peekNextMonth: true,
     showMonthDropdown: true,
     showYearDropdown: true,
-    dateFormat: defaultDateFormat
+    dateFormat: defaultDateFormat,
+    isClearable: true
 };
 
 class DatePicker extends React.Component<ReactDatePickerProps, object> {
