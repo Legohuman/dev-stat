@@ -7,27 +7,27 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "developer_fact")
-class DeveloperFactEntity : FactEntity {
-    @Suppress("unused")
-    @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "uuid", updatable = false, nullable = false)
-    var uuid: UUID? = null
+data class DeveloperFactEntity(
+        @Suppress("unused")
+        @Id
+        @GeneratedValue(generator = "UUID")
+        @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+        @Column(name = "uuid", updatable = false, nullable = false)
+        val uuid: UUID? = null,
 
-    @ManyToOne
-    @JoinColumn(name = "country_code", updatable = false, nullable = false)
-    var country: CountryEntity? = null
+        @ManyToOne
+        @JoinColumn(name = "country_code", updatable = false, nullable = false)
+        val country: CountryEntity,
 
-    @Column(name = "actual_date", updatable = false, nullable = false)
-    var actualDate: LocalDate? = null
+        @Column(name = "actual_date", updatable = false, nullable = false)
+        val actualDate: LocalDate,
 
-    @Column(name = "age", nullable = false)
-    var age: Int? = null
-    @Column(name = "salary", nullable = false)
-    var salary: Int? = null
-    @Column(name = "experience", nullable = false)
-    var experience: Int? = null
-    @Column(name = "company_size", nullable = false)
-    var companySize: Int? = null
-}
+        @Column(name = "age", nullable = false)
+        val age: Int,
+        @Column(name = "salary", nullable = false)
+        val salary: Int,
+        @Column(name = "experience", nullable = false)
+        val experience: Int,
+        @Column(name = "company_size", nullable = false)
+        val companySize: Int
+) : FactEntity

@@ -15,7 +15,7 @@ import org.springframework.web.context.WebApplicationContext
 
 @RunWith(SpringRunner::class)
 @SpringBootTest
-open class ControllerTests {
+class ControllerTests {
     val jsonContentType = "application/json;charset=UTF-8"
 
     @Autowired

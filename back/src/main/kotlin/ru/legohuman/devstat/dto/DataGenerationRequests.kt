@@ -1,7 +1,7 @@
 package ru.legohuman.devstat.dto
 
+import com.fasterxml.jackson.annotation.JsonClassDescription
 import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.annotation.JsonProperty
 import ru.legohuman.devstat.util.Validators
 import ru.legohuman.devstat.util.addIfNotNull
 import java.time.LocalDate
@@ -28,9 +28,10 @@ abstract class BaseDataGenerationRequest<T> : DataGenerationRequest<T> {
     }
 }
 
+@JsonClassDescription
 data class CountryGenerationRequest @JsonCreator constructor(
-        @JsonProperty("identity") override val identity: DataRequestIdentity,
-        @JsonProperty("measureToValuesGenerationRequest") override val measureToValuesGenerationRequest: Map<CountryMeasureType, ValuesGenerationRequest<Int, Int>>
+        override val identity: DataRequestIdentity,
+        override val measureToValuesGenerationRequest: Map<CountryMeasureType, ValuesGenerationRequest<Int, Int>>
 ) : BaseDataGenerationRequest<CountryMeasureType>() {
 
     override fun validate(): List<String> {
@@ -44,10 +45,11 @@ data class CountryGenerationRequest @JsonCreator constructor(
     }
 }
 
-data class DeveloperGenerationRequest @JsonCreator constructor(
-        @JsonProperty("identity") override val identity: DataRequestIdentity,
-        @JsonProperty("measureToValuesGenerationRequest") override val measureToValuesGenerationRequest: Map<DeveloperMeasureType, ValuesGenerationRequest<Int, Int>>,
-        @JsonProperty("itemsCount") val itemsCount: Int
+@JsonClassDescription
+data class DeveloperGenerationRequest(
+        override val identity: DataRequestIdentity,
+        override val measureToValuesGenerationRequest: Map<DeveloperMeasureType, ValuesGenerationRequest<Int, Int>>,
+        val itemsCount: Int
 ) : BaseDataGenerationRequest<DeveloperMeasureType>() {
 
     override fun validate(): List<String> {
@@ -63,10 +65,11 @@ data class DeveloperGenerationRequest @JsonCreator constructor(
     }
 }
 
-data class DataRequestIdentity @JsonCreator constructor(
-        @JsonProperty("countryCode") val countryCode: String,
-        @JsonProperty("startDate") val startDate: LocalDate,
-        @JsonProperty("endDate") val endDate: LocalDate
+@JsonClassDescription
+data class DataRequestIdentity(
+        val countryCode: String,
+        val startDate: LocalDate,
+        val endDate: LocalDate
 ) : BaseRequest {
 
     override fun validate(): List<String> {
@@ -81,8 +84,9 @@ data class DataRequestIdentity @JsonCreator constructor(
     }
 }
 
-data class ValuesGenerationRequest<out T, out D> @JsonCreator constructor(
-        @JsonProperty("startValue") val startValue: T,
-        @JsonProperty("endValue") val endValue: T,
-        @JsonProperty("deviation") val deviation: D
+@JsonClassDescription
+data class ValuesGenerationRequest<out T, out D>(
+        val startValue: T,
+        val endValue: T,
+        val deviation: D
 )

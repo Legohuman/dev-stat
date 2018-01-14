@@ -15,12 +15,12 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2
 
 @Configuration
 @EnableSwagger2
-open class SwaggerConfig {
+class SwaggerConfig {
     @Value("\${app.api.host}")
     var apiHost: String? = null
 
     @Bean
-    open fun api(): Docket {
+    fun api(): Docket {
         return Docket(DocumentationType.SWAGGER_2)
                 .host(apiHost)
                 .select()
@@ -31,9 +31,9 @@ open class SwaggerConfig {
 }
 
 @Configuration
-open class CommonConfiguration {
+class CommonConfiguration {
     @Bean
-    open fun jacksonBuilder(): Jackson2ObjectMapperBuilder {
+    fun jacksonBuilder(): Jackson2ObjectMapperBuilder {
         val b = Jackson2ObjectMapperBuilder()
         b.modules(CustomizedFormatJavaTimeModule(), KotlinModule())
         return b

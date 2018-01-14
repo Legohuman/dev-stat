@@ -21,14 +21,12 @@ class DeveloperGenerationIterator(private val generationRequest: DeveloperGenera
 
     override fun next(): DeveloperFactEntity {
         val date = getRandomDate()
-        val developer = DeveloperFactEntity().apply {
-            country = this@DeveloperGenerationIterator.country
-            actualDate = date
-            age = getValueForDate(getValuesGenerateRequest(DeveloperMeasureType.age), generationRequest.identity, date)
-            salary = getValueForDate(getValuesGenerateRequest(DeveloperMeasureType.salary), generationRequest.identity, date)
-            experience = getValueForDate(getValuesGenerateRequest(DeveloperMeasureType.experience), generationRequest.identity, date)
-            companySize = getValueForDate(getValuesGenerateRequest(DeveloperMeasureType.companySize), generationRequest.identity, date)
-        }
+        val developer = DeveloperFactEntity(null,
+                this@DeveloperGenerationIterator.country, date,
+                getValueForDate(getValuesGenerateRequest(DeveloperMeasureType.age), generationRequest.identity, date),
+                getValueForDate(getValuesGenerateRequest(DeveloperMeasureType.salary), generationRequest.identity, date),
+                getValueForDate(getValuesGenerateRequest(DeveloperMeasureType.experience), generationRequest.identity, date),
+                getValueForDate(getValuesGenerateRequest(DeveloperMeasureType.companySize), generationRequest.identity, date))
         generatedCount++
 
         return developer

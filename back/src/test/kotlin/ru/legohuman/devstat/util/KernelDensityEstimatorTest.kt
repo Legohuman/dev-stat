@@ -23,7 +23,7 @@ class KernelDensityEstimatorTest {
             67.0, 74.0, 54.0, 83.0, 73.0, 73.0, 88.0, 80.0, 71.0, 83.0, 56.0, 79.0, 78.0, 84.0, 58.0, 83.0, 43.0, 60.0,
             75.0, 81.0, 46.0, 90.0, 46.0, 74.0)
 
-    val parameters = DensityEstimationParameters(30.0, 110.0, 9, 7.0)
+    private val parameters = DensityEstimationParameters(30.0, 110.0, 9, 7.0)
 
     @Test
     fun testCalculatePointsSampleData() {

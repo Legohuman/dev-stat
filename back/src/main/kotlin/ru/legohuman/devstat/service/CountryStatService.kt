@@ -1,6 +1,5 @@
 package ru.legohuman.devstat.service
 
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import ru.legohuman.devstat.dto.CountrySummary
 import ru.legohuman.devstat.dto.DashboardPeriodRequest
@@ -14,7 +13,7 @@ interface CountryStatService {
 }
 
 @Service
-open class CountryStatServiceImpl @Autowired constructor(
+class CountryStatServiceImpl(
         private val countryFactRepository: CountryFactRepository
 ) : CountryStatService {
 

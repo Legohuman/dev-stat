@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import ru.legohuman.devstat.dao.ChartDataDao
+import ru.legohuman.devstat.domain.CountryEntity
 import ru.legohuman.devstat.domain.CountryFactEntity
 import ru.legohuman.devstat.dto.CountryGenerationRequest
 import ru.legohuman.devstat.dto.CountryMeasureType
@@ -18,6 +19,7 @@ import ru.legohuman.devstat.dto.DataRequestIdentity
 import ru.legohuman.devstat.dto.ValuesGenerationRequest
 import ru.legohuman.devstat.repository.CountryFactRepository
 import ru.legohuman.devstat.util.ConversionUtil
+import java.time.LocalDate
 
 
 class GeneratorControllerCountryTest : ControllerTests() {
@@ -48,11 +50,11 @@ class GeneratorControllerCountryTest : ControllerTests() {
         verify(countryFactRepository, times(1)).deleteByCodeAndDates("RUS", requestIdentity.startDate, requestIdentity.endDate)
         verify(chartDataDao, times(10)).persist(
                 ArgumentMatchers.argThat<CountryFactEntity>({ country ->
-                    !country.actualDate!!.isBefore(requestIdentity.startDate) && !country.actualDate!!.isAfter(requestIdentity.endDate) &&
-                            country.devCount!! >= 90 && country.devCount!! <= 210 &&
-                            country.vacancyCount!! >= 45 && country.vacancyCount!! <= 105 &&
-                            country.economyLevel!! >= 2 && country.economyLevel!! <= 6
-                }) ?: CountryFactEntity())
+                    !country.actualDate.isBefore(requestIdentity.startDate) && !country.actualDate.isAfter(requestIdentity.endDate) &&
+                            country.devCount >= 90 && country.devCount <= 210 &&
+                            country.vacancyCount >= 45 && country.vacancyCount <= 105 &&
+                            country.economyLevel >= 2 && country.economyLevel <= 6
+                }) ?: CountryFactEntity(null, CountryEntity("RUS"), LocalDate.now(), 0, 0, 0))
     }
 
     @Test

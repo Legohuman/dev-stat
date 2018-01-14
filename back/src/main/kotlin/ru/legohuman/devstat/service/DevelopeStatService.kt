@@ -1,6 +1,5 @@
 package ru.legohuman.devstat.service
 
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import ru.legohuman.devstat.dao.ChartDataDao
 import ru.legohuman.devstat.dto.*
@@ -17,7 +16,7 @@ interface DeveloperStatService {
 }
 
 @Service
-open class DeveloperStatServiceImpl @Autowired constructor(
+class DeveloperStatServiceImpl(
         private val developerFactRepository: DeveloperFactRepository,
         private val chartDataDao: ChartDataDao,
         private val descriptorRegistry: DeveloperMeasureDescriptorRegistry

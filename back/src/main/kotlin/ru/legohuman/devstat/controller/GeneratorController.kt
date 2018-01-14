@@ -1,7 +1,6 @@
 package ru.legohuman.devstat.controller
 
 import com.fasterxml.jackson.databind.node.NullNode
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RequestBody
@@ -17,7 +16,7 @@ import ru.legohuman.devstat.service.DeveloperDataGenerationService
 @Suppress("unused")
 @RestController
 @RequestMapping("generators")
-class GeneratorController @Autowired constructor(
+class GeneratorController(
         private val countryDataGenerationService: CountryDataGenerationService,
         private val developerDataGenerationService: DeveloperDataGenerationService
 ) : BaseController() {

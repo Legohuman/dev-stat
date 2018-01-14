@@ -1,6 +1,5 @@
 package ru.legohuman.devstat.util
 
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.env.Environment
 import org.springframework.stereotype.Component
 import ru.legohuman.devstat.dao.ChartDataDao
@@ -98,7 +97,7 @@ class CompanySizeDeveloperMeasureDescriptor(
 ) : ChartBinDeveloperMeasureDescriptorBase(env, DeveloperFactEntity::companySize.name, 50)
 
 @Component
-open class DeveloperMeasureDescriptorRegistry @Autowired constructor(
+class DeveloperMeasureDescriptorRegistry(
         env: Environment
 ) {
     private val measureTypeToDescriptor: Map<DeveloperMeasureType, DeveloperMeasureDescriptor<ChartValuesType>> = mapOf(

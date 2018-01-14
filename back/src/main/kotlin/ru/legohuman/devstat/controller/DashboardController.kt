@@ -1,7 +1,6 @@
 package ru.legohuman.devstat.controller
 
 import com.fasterxml.jackson.databind.node.NullNode
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -9,6 +8,7 @@ import ru.legohuman.devstat.dto.DashboardCountryPeriodMeasureTypeRequest
 import ru.legohuman.devstat.dto.DashboardCountryPeriodRequest
 import ru.legohuman.devstat.dto.DashboardPeriodRequest
 import ru.legohuman.devstat.dto.DeveloperMeasureType
+import ru.legohuman.devstat.repository.CountryFactRepository
 import ru.legohuman.devstat.service.CountryStatService
 import ru.legohuman.devstat.service.DeveloperStatService
 import ru.legohuman.devstat.util.ConversionUtil
@@ -17,9 +17,10 @@ import ru.legohuman.devstat.util.EnumUtil
 @Suppress("unused")
 @RestController
 @RequestMapping("dashboard")
-open class DashboardController @Autowired constructor(
+class DashboardController(
         private val countryStatService: CountryStatService,
-        private val developerStatService: DeveloperStatService
+        private val developerStatService: DeveloperStatService,
+        private val countryFactRepository: CountryFactRepository
 ) : BaseController() {
 
     @RequestMapping(path = ["/countries/summary"], method = [(RequestMethod.GET)])

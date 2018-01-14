@@ -1,6 +1,5 @@
 package ru.legohuman.devstat.dao
 
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import javax.persistence.EntityManager
@@ -17,7 +16,7 @@ interface ChartDataDao : BaseDao {
 @Suppress("UNCHECKED_CAST")
 @Service
 @Transactional
-open class ChartDataDaoImpl @Autowired constructor(
+class ChartDataDaoImpl(
         em: EntityManager
 ) : BaseDaoImpl(em), ChartDataDao {
 

@@ -42,6 +42,6 @@ abstract class BaseDataGenerationService<in T : DataGenerationRequest<MT>, out E
 
     protected fun getOrSaveCountry(code: String): CountryEntity {
         val country = countryRepository.findOne(code)
-        return country ?: countryRepository.save(CountryEntity().apply { this.code = code })
+        return country ?: countryRepository.save(CountryEntity(code))
     }
 }

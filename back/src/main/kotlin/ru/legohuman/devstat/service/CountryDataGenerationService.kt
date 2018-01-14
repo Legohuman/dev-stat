@@ -1,6 +1,5 @@
 package ru.legohuman.devstat.service
 
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import ru.legohuman.devstat.dao.ChartDataDao
 import ru.legohuman.devstat.domain.CountryFactEntity
@@ -21,7 +20,7 @@ interface CountryDataGenerationService : DataGenerationService<CountryGeneration
 
 @Service
 @Transactional
-open class CountryDataGenerationServiceImpl @Autowired constructor(
+class CountryDataGenerationServiceImpl(
         chartDataDao: ChartDataDao,
         countryRepository: CountryRepository,
         private val countryFactRepository: CountryFactRepository

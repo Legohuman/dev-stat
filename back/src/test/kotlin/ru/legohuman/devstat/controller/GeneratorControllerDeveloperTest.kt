@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import ru.legohuman.devstat.dao.ChartDataDao
+import ru.legohuman.devstat.domain.CountryEntity
 import ru.legohuman.devstat.domain.DeveloperFactEntity
 import ru.legohuman.devstat.dto.DataRequestIdentity
 import ru.legohuman.devstat.dto.DeveloperGenerationRequest
@@ -18,6 +19,7 @@ import ru.legohuman.devstat.dto.DeveloperMeasureType
 import ru.legohuman.devstat.dto.ValuesGenerationRequest
 import ru.legohuman.devstat.repository.DeveloperFactRepository
 import ru.legohuman.devstat.util.ConversionUtil
+import java.time.LocalDate
 
 
 class GeneratorControllerDeveloperTest : ControllerTests() {
@@ -49,12 +51,12 @@ class GeneratorControllerDeveloperTest : ControllerTests() {
         verify(developerFactRepository, times(1)).deleteByCodeAndDates("RUS", requestIdentity.startDate, requestIdentity.endDate)
         verify(chartDataDao, times(200)).persist(
                 ArgumentMatchers.argThat<DeveloperFactEntity>({ dev ->
-                    !dev.actualDate!!.isBefore(requestIdentity.startDate) && !dev.actualDate!!.isAfter(requestIdentity.endDate) &&
-                            dev.age!! >= 20 && dev.age!! <= 30 &&
-                            dev.salary!! >= 2000 && dev.salary!! <= 3100 &&
-                            dev.experience!! >= 3 && dev.experience!! <= 11 &&
-                            dev.companySize!! >= 50 && dev.companySize!! <= 170
-                }) ?: DeveloperFactEntity())
+                    !dev.actualDate.isBefore(requestIdentity.startDate) && !dev.actualDate.isAfter(requestIdentity.endDate) &&
+                            dev.age >= 20 && dev.age <= 30 &&
+                            dev.salary >= 2000 && dev.salary <= 3100 &&
+                            dev.experience >= 3 && dev.experience <= 11 &&
+                            dev.companySize >= 50 && dev.companySize <= 170
+                }) ?: DeveloperFactEntity(null, CountryEntity("RUS"), LocalDate.now(), 0, 0, 0, 0))
     }
 
     @Test

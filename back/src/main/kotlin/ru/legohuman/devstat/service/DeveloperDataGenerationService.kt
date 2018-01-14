@@ -1,6 +1,5 @@
 package ru.legohuman.devstat.service
 
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import ru.legohuman.devstat.dao.ChartDataDao
 import ru.legohuman.devstat.domain.DeveloperFactEntity
@@ -21,7 +20,7 @@ interface DeveloperDataGenerationService : DataGenerationService<DeveloperGenera
 
 @Service
 @Transactional
-open class DeveloperDataGenerationServiceImpl @Autowired constructor(
+class DeveloperDataGenerationServiceImpl(
         chartDataDao: ChartDataDao,
         countryRepository: CountryRepository,
         private val developerFactRepository: DeveloperFactRepository

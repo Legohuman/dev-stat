@@ -1,6 +1,5 @@
 package ru.legohuman.devstat.dao
 
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import ru.legohuman.devstat.domain.BaseEntity
 import javax.persistence.EntityManager
@@ -14,7 +13,7 @@ interface BaseDao {
 
 @Service
 @Transactional
-abstract class BaseDaoImpl @Autowired constructor(
+abstract class BaseDaoImpl(
         protected val em: EntityManager
 ) : BaseDao {
     override fun persist(entity: BaseEntity) {

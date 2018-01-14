@@ -14,20 +14,18 @@ import java.time.temporal.ChronoUnit
  */
 class CountryGenerationIterator(private val generationRequest: CountryGenerationRequest,
                                 private val country: CountryEntity) : GenerationIteratorBase<CountryFactEntity>() {
-    var currentDate: LocalDate = generationRequest.identity.startDate
+    private var currentDate: LocalDate = generationRequest.identity.startDate
 
     override fun hasNext(): Boolean {
         return !currentDate.isAfter(generationRequest.identity.endDate)
     }
 
     override fun next(): CountryFactEntity {
-        val countryFact = CountryFactEntity().apply {
-            country = this@CountryGenerationIterator.country
-            actualDate = currentDate
-            devCount = getValueForDate(getValuesGenerateRequest(CountryMeasureType.devCount), generationRequest.identity, currentDate)
-            vacancyCount = getValueForDate(getValuesGenerateRequest(CountryMeasureType.vacancyCount), generationRequest.identity, currentDate)
-            economyLevel = getValueForDate(getValuesGenerateRequest(CountryMeasureType.economyLevel), generationRequest.identity, currentDate)
-        }
+        val countryFact = CountryFactEntity(null,
+                this@CountryGenerationIterator.country, currentDate,
+                getValueForDate(getValuesGenerateRequest(CountryMeasureType.devCount), generationRequest.identity, currentDate),
+                getValueForDate(getValuesGenerateRequest(CountryMeasureType.vacancyCount), generationRequest.identity, currentDate),
+                getValueForDate(getValuesGenerateRequest(CountryMeasureType.economyLevel), generationRequest.identity, currentDate))
         currentDate = currentDate.plus(1, ChronoUnit.DAYS)
 
         return countryFact

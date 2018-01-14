@@ -7,25 +7,25 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "country_fact")
-class CountryFactEntity : FactEntity {
-    @Suppress("unused")
-    @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "uuid", updatable = false, nullable = false)
-    var uuid: UUID? = null
+data class CountryFactEntity(
+        @Suppress("unused")
+        @Id
+        @GeneratedValue(generator = "UUID")
+        @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+        @Column(name = "uuid", updatable = false, nullable = false)
+        val uuid: UUID? = null,
 
-    @ManyToOne
-    @JoinColumn(name = "country_code", updatable = false, nullable = false)
-    var country: CountryEntity? = null
+        @ManyToOne
+        @JoinColumn(name = "country_code", updatable = false, nullable = false)
+        val country: CountryEntity,
 
-    @Column(name = "actual_date", updatable = false, nullable = false)
-    var actualDate: LocalDate? = null
+        @Column(name = "actual_date", updatable = false, nullable = false)
+        val actualDate: LocalDate,
 
-    @Column(name = "dev_count", nullable = false)
-    var devCount: Int? = null
-    @Column(name = "vacancy_count", nullable = false)
-    var vacancyCount: Int? = null
-    @Column(name = "economy_level", nullable = false)
-    var economyLevel: Int? = null
-}
+        @Column(name = "dev_count", nullable = false)
+        val devCount: Int,
+        @Column(name = "vacancy_count", nullable = false)
+        val vacancyCount: Int,
+        @Column(name = "economy_level", nullable = false)
+        val economyLevel: Int
+) : FactEntity

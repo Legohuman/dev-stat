@@ -7,8 +7,8 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "country")
-class CountryEntity : BaseEntity {
-    @Id
-    @Column(name = "code", updatable = false, nullable = false)
-    var code: String? = null
-}
+data class CountryEntity(
+        @Id
+        @Column(name = "code", updatable = false, nullable = false)
+        val code: String
+) : BaseEntity
