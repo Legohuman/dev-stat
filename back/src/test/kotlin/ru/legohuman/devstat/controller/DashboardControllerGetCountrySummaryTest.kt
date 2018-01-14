@@ -1,34 +1,21 @@
 package ru.legohuman.devstat.controller
 
-import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.`when`
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
-import org.springframework.test.web.servlet.setup.MockMvcBuilders
-import org.springframework.web.context.WebApplicationContext
+import ru.legohuman.devstat.dto.CountrySummary
 import ru.legohuman.devstat.repository.CountryFactRepository
 import ru.legohuman.devstat.util.ConversionUtil
+import ru.legohuman.devstat.util.Validators
 import java.time.LocalDate
 
 
 class DashboardControllerGetCountrySummaryTest : ControllerTests() {
 
-    @Autowired
-    private val webApplicationContext: WebApplicationContext? = null
-
-    private var mockMvc: MockMvc? = null
-
     @MockBean
     private val countryFactRepository: CountryFactRepository? = null
-
-    @Before
-    fun setup() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext!!).build()
-    }
 
     @Test
     fun testGetCountrySummaryCorrectDates() {
@@ -66,7 +53,7 @@ class DashboardControllerGetCountrySummaryTest : ControllerTests() {
             summaryRequest.param("endDate", endDate)
         }
 
-        mockMvc!!.perform(summaryRequest)
+        mockMvc.perform(summaryRequest)
                 .andExpect(status().isOk)
                 .andExpect(content().contentType(jsonContentType))
                 .andExpect(jsonPath("$.length()").value(1))
@@ -86,42 +73,39 @@ class DashboardControllerGetCountrySummaryTest : ControllerTests() {
     }
 
     private fun testAndAssertInvalidDateRange(startDate: String, endDate: String) {
-        mockMvc!!.perform(get("/dashboard/countries/summary")
+        mockMvc.perform(get("/dashboard/countries/summary")
                 .param("startDate", startDate)
                 .param("endDate", endDate))
 
                 .andExpect(status().isBadRequest)
                 .andExpect(content().contentType(jsonContentType))
-                .andExpect(jsonPath("$.length()").value(1))
-                .andExpect(jsonPath("$[0]").value("Invalid start date value $startDate and end date value $endDate. End date should not be before start date."))
+                .andExpect(content().json(mapper.writeValueAsString(listOf("Invalid date range $startDate, $endDate. Start date should not be later than end date."))))
     }
 
     @Test
     fun testGetCountrySummaryInvalidStartDate() {
-        val startDate = "01-01-2018"
+        val startDate = "01.01.1018"
         val endDate = "01.01.2019"
-        mockMvc!!.perform(get("/dashboard/countries/summary")
+        mockMvc.perform(get("/dashboard/countries/summary")
                 .param("startDate", startDate)
                 .param("endDate", endDate))
 
                 .andExpect(status().isBadRequest)
                 .andExpect(content().contentType(jsonContentType))
-                .andExpect(jsonPath("$.length()").value(1))
-                .andExpect(jsonPath("$[0]").value("Invalid start date value $startDate. Expected date should have format ${ConversionUtil.datePattern}"))
+                .andExpect(content().json(mapper.writeValueAsString(listOf("Invalid start date $startDate. Value should not be earlier than ${ConversionUtil.formatLocalDate(Validators.minDate)}."))))
     }
 
     @Test
     fun testGetCountrySummaryInvalidEndDate() {
         val startDate = "01.01.2018"
-        val endDate = "01-01-2019"
-        mockMvc!!.perform(get("/dashboard/countries/summary")
+        val endDate = "01.01.3019"
+        mockMvc.perform(get("/dashboard/countries/summary")
                 .param("startDate", startDate)
                 .param("endDate", endDate))
 
                 .andExpect(status().isBadRequest)
                 .andExpect(content().contentType(jsonContentType))
-                .andExpect(jsonPath("$.length()").value(1))
-                .andExpect(jsonPath("$[0]").value("Invalid end date value $endDate. Expected date should have format ${ConversionUtil.datePattern}"))
+                .andExpect(content().json(mapper.writeValueAsString(listOf("Invalid end date $endDate. Value should not be later than ${ConversionUtil.formatLocalDate(Validators.maxDate)}."))))
     }
 
     @Test
@@ -129,12 +113,12 @@ class DashboardControllerGetCountrySummaryTest : ControllerTests() {
         val startDate = "01.01.2019"
         val endDate = "01.01.2020"
         `when`(countryFactRepository!!.getSummary(ConversionUtil.parseDate(startDate)!!, ConversionUtil.parseDate(endDate)!!)).thenReturn(listOf())
-        mockMvc!!.perform(get("/dashboard/countries/summary")
+        mockMvc.perform(get("/dashboard/countries/summary")
                 .param("startDate", startDate)
                 .param("endDate", endDate))
 
                 .andExpect(status().isOk)
                 .andExpect(content().contentType(jsonContentType))
-                .andExpect(jsonPath("$.length()").value(0))
+                .andExpect(content().json(mapper.writeValueAsString(mapOf<String, CountrySummary>())))
     }
 }

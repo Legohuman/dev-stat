@@ -17,7 +17,7 @@ class CountryGenerationIterator(private val generationRequest: CountryGeneration
     var currentDate: LocalDate = generationRequest.identity.startDate
 
     override fun hasNext(): Boolean {
-        return currentDate.isBefore(generationRequest.identity.endDate)
+        return !currentDate.isAfter(generationRequest.identity.endDate)
     }
 
     override fun next(): CountryFactEntity {

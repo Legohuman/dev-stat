@@ -5,9 +5,14 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import ru.legohuman.devstat.dto.DashboardRequestFactory
+import ru.legohuman.devstat.dto.DashboardCountryPeriodMeasureTypeRequest
+import ru.legohuman.devstat.dto.DashboardCountryPeriodRequest
+import ru.legohuman.devstat.dto.DashboardPeriodRequest
+import ru.legohuman.devstat.dto.DeveloperMeasureType
 import ru.legohuman.devstat.service.CountryStatService
 import ru.legohuman.devstat.service.DeveloperStatService
+import ru.legohuman.devstat.util.ConversionUtil
+import ru.legohuman.devstat.util.EnumUtil
 
 @Suppress("unused")
 @RestController
@@ -15,29 +20,25 @@ import ru.legohuman.devstat.service.DeveloperStatService
 open class DashboardController @Autowired constructor(
         private val countryStatService: CountryStatService,
         private val developerStatService: DeveloperStatService
-) {
+) : BaseController() {
 
     @RequestMapping(path = ["/countries/summary"], method = [(RequestMethod.GET)])
     fun getCountriesSummary(@RequestParam("startDate", required = false) startDate: String?,
                             @RequestParam("endDate", required = false) endDate: String?): ResponseEntity<Any> {
-        val request = DashboardRequestFactory.periodRequest(startDate, endDate)
-
-        return if (request.errorMessages.isNotEmpty())
-            ResponseEntity(request.errorMessages, HttpStatus.BAD_REQUEST)
-        else
+        val request = DashboardPeriodRequest(ConversionUtil.parseDate(startDate), ConversionUtil.parseDate(endDate))
+        return handleRequestIfValid(request, {
             ResponseEntity(countryStatService.getSummary(request), HttpStatus.OK)
+        })
     }
 
     @RequestMapping(path = ["/countries/{countryCode}/meanDev"], method = [(RequestMethod.GET)])
     fun getMeanDev(@PathVariable("countryCode", required = false) countryCode: String?,
                    @RequestParam("startDate", required = false) startDate: String?,
-                   @RequestParam("endDate", required = false) endDate: String?): ResponseEntity<Any?> {
-        val request = DashboardRequestFactory.countryPeriodRequest(countryCode, startDate, endDate)
-
-        return if (request.errorMessages.isNotEmpty())
-            ResponseEntity(request.errorMessages, HttpStatus.BAD_REQUEST)
-        else
+                   @RequestParam("endDate", required = false) endDate: String?): ResponseEntity<Any> {
+        val request = DashboardCountryPeriodRequest(countryCode, ConversionUtil.parseDate(startDate), ConversionUtil.parseDate(endDate))
+        return handleRequestIfValid(request, {
             ResponseEntity(developerStatService.getMeanDevSummary(request) ?: NullNode.instance, HttpStatus.OK)
+        })
     }
 
     @RequestMapping(path = ["/countries/{countryCode}/charts/{measureType}"], method = [(RequestMethod.GET)])
@@ -45,11 +46,12 @@ open class DashboardController @Autowired constructor(
                             @PathVariable("measureType", required = false) measureType: String?,
                             @RequestParam("startDate", required = false) startDate: String?,
                             @RequestParam("endDate", required = false) endDate: String?): ResponseEntity<Any> {
-        val request = DashboardRequestFactory.countryPeriodMeasureTypeRequest(countryCode, measureType, startDate, endDate)
+        val request = DashboardCountryPeriodMeasureTypeRequest(countryCode,
+                ConversionUtil.parseDate(startDate), ConversionUtil.parseDate(endDate),
+                EnumUtil.nullableValueOf(measureType, DeveloperMeasureType.values()))
 
-        return if (request.errorMessages.isNotEmpty())
-            ResponseEntity(request.errorMessages, HttpStatus.BAD_REQUEST)
-        else
+        return handleRequestIfValid(request, {
             ResponseEntity(developerStatService.getDevMeasureChartData(request), HttpStatus.OK)
+        })
     }
 }

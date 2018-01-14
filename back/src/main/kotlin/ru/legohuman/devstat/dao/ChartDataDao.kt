@@ -6,7 +6,7 @@ import java.time.LocalDate
 import javax.persistence.EntityManager
 import javax.transaction.Transactional
 
-interface ChartDataDao {
+interface ChartDataDao : BaseDao {
     fun getMeanValue(propertyExpression: String, countryCode: String, startDate: LocalDate, endDate: LocalDate): Double?
 
     fun getChartSortedValues(propertyExpression: String, countryCode: String, startDate: LocalDate, endDate: LocalDate): List<Number>
@@ -18,8 +18,8 @@ interface ChartDataDao {
 @Service
 @Transactional
 open class ChartDataDaoImpl @Autowired constructor(
-        private val em: EntityManager
-) : ChartDataDao {
+        em: EntityManager
+) : BaseDaoImpl(em), ChartDataDao {
 
     override fun getMeanValue(propertyExpression: String, countryCode: String, startDate: LocalDate, endDate: LocalDate): Double? {
         val query = em.createQuery("select avg($propertyExpression) from DeveloperFactEntity d where d.country.code = :code and d.actualDate >= :startDate and d.actualDate <= :endDate")
@@ -45,6 +45,5 @@ open class ChartDataDaoImpl @Autowired constructor(
         query.setParameter("endDate", endDate)
 
         return query.resultList as List<Array<Any>>
-
     }
 }

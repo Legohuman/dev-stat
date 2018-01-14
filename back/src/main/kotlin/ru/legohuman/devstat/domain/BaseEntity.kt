@@ -1,3 +1,3 @@
 package ru.legohuman.devstat.domain
 
-interface FactEntity : BaseEntity
+interface BaseEntity

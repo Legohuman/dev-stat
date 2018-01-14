@@ -13,7 +13,7 @@ import java.time.LocalDate
  */
 class DeveloperGenerationIterator(private val generationRequest: DeveloperGenerationRequest,
                                   private val country: CountryEntity) : GenerationIteratorBase<DeveloperFactEntity>() {
-    var generatedCount: Int = 0
+    private var generatedCount: Int = 0
 
     override fun hasNext(): Boolean {
         return generatedCount < generationRequest.itemsCount

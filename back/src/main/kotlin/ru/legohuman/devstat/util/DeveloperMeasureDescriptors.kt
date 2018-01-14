@@ -20,7 +20,7 @@ abstract class DeveloperMeasureDescriptorBase<out T : ChartValuesType>(
 
     override fun getMeanValue(chartDataDao: ChartDataDao, request: DashboardCountryPeriodMeasureTypeRequest): Double? {
         val propertyExpression = getEntityPropertyExpression("d")
-        return chartDataDao.getMeanValue(propertyExpression, request.countryCode, request.startDate ?: LocalDate.MIN, request.endDate ?: LocalDate.MAX)
+        return chartDataDao.getMeanValue(propertyExpression, request.countryCode!!, request.startDate ?: LocalDate.MIN, request.endDate ?: LocalDate.MAX)
     }
 
     protected fun getEntityPropertyExpression(entityAlias: String): String {
@@ -37,7 +37,7 @@ abstract class ChartBinDeveloperMeasureDescriptorBase(
 
     override fun getChartValues(chartDataDao: ChartDataDao, request: DashboardCountryPeriodMeasureTypeRequest): List<ChartBin> {
         val discriminatorExpression = getDiscriminatorExpression("d")
-        return chartDataDao.getChartGroupedValues(discriminatorExpression, request.countryCode, request.startDate ?: LocalDate.MIN, request.endDate ?: LocalDate.MAX)
+        return chartDataDao.getChartGroupedValues(discriminatorExpression, request.countryCode!!, request.startDate ?: LocalDate.MIN, request.endDate ?: LocalDate.MAX)
                 .map { row -> mapResultRow(row) }
     }
 
@@ -67,7 +67,7 @@ abstract class ChartPointDeveloperMeasureDescriptorBase(
         val propertyExpression = getEntityPropertyExpression("d")
 
         @Suppress("UNCHECKED_CAST")
-        val values = chartDataDao.getChartSortedValues(propertyExpression, request.countryCode, request.startDate ?: LocalDate.MIN, request.endDate ?: LocalDate.MAX)
+        val values = chartDataDao.getChartSortedValues(propertyExpression, request.countryCode!!, request.startDate ?: LocalDate.MIN, request.endDate ?: LocalDate.MAX)
                 .map { row -> row.toDouble() }
         return when {
             values.isEmpty() -> listOf()

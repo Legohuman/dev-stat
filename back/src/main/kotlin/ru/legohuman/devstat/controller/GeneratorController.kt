@@ -1,5 +1,6 @@
 package ru.legohuman.devstat.controller
 
+import com.fasterxml.jackson.databind.node.NullNode
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -19,29 +20,37 @@ import ru.legohuman.devstat.service.DeveloperDataGenerationService
 class GeneratorController @Autowired constructor(
         private val countryDataGenerationService: CountryDataGenerationService,
         private val developerDataGenerationService: DeveloperDataGenerationService
-) {
+) : BaseController() {
     @RequestMapping(path = ["/countries"], method = [(RequestMethod.PUT)])
     fun generateCountriesData(@RequestBody request: CountryGenerationRequest
-    ): ResponseEntity<Array<String>> {
-        countryDataGenerationService.generateData(request)
-        return ResponseEntity(arrayOf(), HttpStatus.OK)
+    ): ResponseEntity<Any> {
+        return handleRequestIfValid(request, {
+            countryDataGenerationService.generateData(request)
+            ResponseEntity(NullNode.instance, HttpStatus.OK)
+        })
     }
 
     @RequestMapping(path = ["/countries"], method = [(RequestMethod.DELETE)])
-    fun removeCountriesData(@RequestBody request: DataRequestIdentity): ResponseEntity<Array<String>> {
-        countryDataGenerationService.removeData(request)
-        return ResponseEntity(arrayOf(), HttpStatus.OK)
+    fun removeCountriesData(@RequestBody request: DataRequestIdentity): ResponseEntity<Any> {
+        return handleRequestIfValid(request, {
+            countryDataGenerationService.removeData(request)
+            ResponseEntity(NullNode.instance, HttpStatus.OK)
+        })
     }
 
     @RequestMapping(path = ["/developers"], method = [(RequestMethod.PUT)])
-    fun generateDevelopersData(@RequestBody request: DeveloperGenerationRequest): ResponseEntity<Array<String>> {
-        developerDataGenerationService.generateData(request)
-        return ResponseEntity(arrayOf(), HttpStatus.OK)
+    fun generateDevelopersData(@RequestBody request: DeveloperGenerationRequest): ResponseEntity<Any> {
+        return handleRequestIfValid(request, {
+            developerDataGenerationService.generateData(request)
+            ResponseEntity(NullNode.instance, HttpStatus.OK)
+        })
     }
 
     @RequestMapping(path = ["/developers"], method = [(RequestMethod.DELETE)])
-    fun removeDevelopersData(@RequestBody request: DataRequestIdentity): ResponseEntity<Array<String>> {
-        developerDataGenerationService.removeData(request)
-        return ResponseEntity(arrayOf(), HttpStatus.OK)
+    fun removeDevelopersData(@RequestBody request: DataRequestIdentity): ResponseEntity<Any> {
+        return handleRequestIfValid(request, {
+            developerDataGenerationService.removeData(request)
+            ResponseEntity(NullNode.instance, HttpStatus.OK)
+        })
     }
 }

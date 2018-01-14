@@ -1,35 +1,39 @@
 package ru.legohuman.devstat.service
 
 import org.springframework.beans.factory.annotation.Value
+import ru.legohuman.devstat.dao.ChartDataDao
 import ru.legohuman.devstat.domain.CountryEntity
 import ru.legohuman.devstat.domain.FactEntity
 import ru.legohuman.devstat.dto.DataGenerationRequest
 import ru.legohuman.devstat.dto.DataRequestIdentity
 import ru.legohuman.devstat.repository.CountryRepository
-import javax.persistence.EntityManager
 
-abstract class BaseDataGenerationService<in T : DataGenerationRequest, out E : FactEntity> constructor(
-        open protected val em: EntityManager,
+abstract class BaseDataGenerationService<in T : DataGenerationRequest<MT>, out E : FactEntity, MT> constructor(
+        open protected val chartDataDao: ChartDataDao,
         open protected val countryRepository: CountryRepository
-) : DataGenerationService<T> {
+) : DataGenerationService<T, MT> {
     @Value("\${spring.jpa.properties.hibernate.jdbc.batch_size}")
     private var jdbcBatchSize = 100
 
-    override fun generateData(generationRequest: T) {
-        removeData(generationRequest.identity)
-        val iterator = createGenerationIterator(generationRequest)
+    override fun generateData(generationRequest: T): List<String> {
+        val errors = generationRequest.validate()
 
-        var generatedCount = 0
-        while (iterator.hasNext()) {
-            if (generatedCount > 0 && generatedCount % jdbcBatchSize == 0) {
-                em.flush()
-                em.clear()
+        if (errors.isEmpty()) {
+            removeData(generationRequest.identity)
+            val iterator = createGenerationIterator(generationRequest)
+
+            var generatedCount = 0
+            while (iterator.hasNext()) {
+                if (generatedCount > 0 && generatedCount % jdbcBatchSize == 0) {
+                    chartDataDao.flushAndClear()
+                }
+
+                val entity = iterator.next()
+                generatedCount++
+                chartDataDao.persist(entity)
             }
-
-            val entity = iterator.next()
-            generatedCount++
-            em.persist(entity)
         }
+        return errors
     }
 
     abstract fun createGenerationIterator(generationRequest: T): Iterator<E>

@@ -1,19 +1,12 @@
 package ru.legohuman.devstat.controller
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.`when`
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.context.TestPropertySource
-import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import org.springframework.test.web.servlet.setup.MockMvcBuilders
-import org.springframework.web.context.WebApplicationContext
 import ru.legohuman.devstat.dao.ChartDataDao
 import ru.legohuman.devstat.dto.ChartBin
 import ru.legohuman.devstat.dto.ChartDataSet
@@ -29,20 +22,8 @@ import ru.legohuman.devstat.util.ConversionUtil
 ])
 class DashboardControllerGetMeasureChartDataTest : ControllerTests() {
 
-    @Autowired
-    private val webApplicationContext: WebApplicationContext? = null
-    @Autowired
-    private var mapper: ObjectMapper? = null
-
-    private var mockMvc: MockMvc? = null
-
     @MockBean
-    private val chartDataDao: ChartDataDao? = null
-
-    @Before
-    fun setup() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext!!).build()
-    }
+    private lateinit var chartDataDao: ChartDataDao
 
     @Test
     fun testGetAgeChartDataCorrectParameters() {
@@ -78,15 +59,15 @@ class DashboardControllerGetMeasureChartDataTest : ControllerTests() {
 
         val startLocalDate = ConversionUtil.parseDate(startDate)!!
         val endLocalDate = ConversionUtil.parseDate(endDate)!!
-        `when`(chartDataDao!!.getMeanValue("d.$measureType", "RUS", startLocalDate, endLocalDate))
+        `when`(chartDataDao.getMeanValue("d.$measureType", "RUS", startLocalDate, endLocalDate))
                 .thenReturn(29.7)
         `when`(chartDataDao.getChartGroupedValues("d.$measureType/5", "RUS", startLocalDate, endLocalDate))
                 .then({ listOf(arrayOf<Any>(4, 100L), arrayOf<Any>(5, 80L)) })
-        val expectedContent = mapper!!.writeValueAsString(ChartDataSet(
+        val expectedContent = mapper.writeValueAsString(ChartDataSet(
                 listOf(ChartBin(20, 25, 100), ChartBin(25, 30, 80)),
                 29.7))
 
-        mockMvc!!.perform(get("/dashboard/countries/$countryCode/charts/$measureType")
+        mockMvc.perform(get("/dashboard/countries/$countryCode/charts/$measureType")
                 .param("startDate", startDate)
                 .param("endDate", endDate))
 
@@ -102,13 +83,13 @@ class DashboardControllerGetMeasureChartDataTest : ControllerTests() {
 
         val startLocalDate = ConversionUtil.parseDate(startDate)!!
         val endLocalDate = ConversionUtil.parseDate(endDate)!!
-        `when`(chartDataDao!!.getMeanValue("d.$measureType", "RUS", startLocalDate, endLocalDate))
+        `when`(chartDataDao.getMeanValue("d.$measureType", "RUS", startLocalDate, endLocalDate))
                 .thenReturn(meanValue)
         `when`(chartDataDao.getChartSortedValues("d.$measureType", "RUS", startLocalDate, endLocalDate))
                 .then({ sourceValues })
-        val expectedContent = mapper!!.writeValueAsString(ChartDataSet(expectedPoints, meanValue))
+        val expectedContent = mapper.writeValueAsString(ChartDataSet(expectedPoints, meanValue))
 
-        mockMvc!!.perform(get("/dashboard/countries/$countryCode/charts/$measureType")
+        mockMvc.perform(get("/dashboard/countries/$countryCode/charts/$measureType")
                 .param("startDate", startDate)
                 .param("endDate", endDate))
                 .andDo({ result ->
@@ -123,13 +104,12 @@ class DashboardControllerGetMeasureChartDataTest : ControllerTests() {
     fun testGetChartDataInvalidMeasureType() {
         val startDate = "01.01.2019"
         val endDate = "01.01.2020"
-        mockMvc!!.perform(get("/dashboard/countries/RUS/charts/unknown")
+        mockMvc.perform(get("/dashboard/countries/RUS/charts/unknown")
                 .param("startDate", startDate)
                 .param("endDate", endDate))
 
                 .andExpect(status().isBadRequest)
                 .andExpect(content().contentType(jsonContentType))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(1))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0]").value("Invalid measure type unknown. Expected one of types: ${DeveloperMeasureType.values().joinToString()}."))
+                .andExpect(content().json(mapper.writeValueAsString(listOf("Invalid measure type. Value should be one of options: ${DeveloperMeasureType.values().joinToString()}."))))
     }
 }
