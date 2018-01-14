@@ -35,7 +35,7 @@ class DeveloperGenerationIterator(private val generationRequest: DeveloperGenera
     private fun getRandomDate(): LocalDate {
         val startDay = generationRequest.identity.startDate.toEpochDay()
         val endDay = generationRequest.identity.endDate.toEpochDay()
-        return LocalDate.ofEpochDay((startDay + Math.random() * (endDay - startDay)).toLong())
+        return LocalDate.ofEpochDay((startDay + Math.random() * (endDay - startDay + 1)).toLong())
     }
 
     private fun getValuesGenerateRequest(measureType: DeveloperMeasureType): ValuesGenerationRequest<Int, Int> =
