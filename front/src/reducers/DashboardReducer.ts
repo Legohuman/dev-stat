@@ -79,7 +79,7 @@ const handlerSelector = new ActionHandlerSelector<DashboardState>()
         };
     });
 
-function getDefaultDashboardState() {
+export function getDefaultDashboardState(): DashboardState {
     return {
         operations: {},
         messages: {},
@@ -88,10 +88,10 @@ function getDefaultDashboardState() {
             endDate: moment().endOf('y')
         },
         map: {
-            countries: {},
-            selectedCountry: undefined
+            countries: {}
         },
         countryDetail: {
+            selectedCountry: undefined,
             meanDev: undefined,
             charts: {},
             selectedChartType: undefined

@@ -17,21 +17,21 @@ export const ActionsFactory = {
         return (dispatch, getState) => {
             const effectiveStartDate = startDate && startDate.startOf('d'),
                 effectiveEndDate = endDate && endDate.startOf('d');
-            dispatch(setFilterPeriod(effectiveStartDate, effectiveEndDate)); //to render updated values
+            dispatch(ActionsFactory.selectFilterPeriod(effectiveStartDate, effectiveEndDate)); //to render updated values
 
             if (isValidDates(effectiveStartDate, effectiveEndDate)) {
-                dispatch(removeErrorMessage('filterValidationDates'));
+                dispatch(ActionsFactory.removeErrorMessage('filterValidationDates'));
 
                 const periodRequest: PeriodRequest = {startDate: effectiveStartDate, endDate: effectiveEndDate};
                 invokeAsync(dispatch, 'getCountriesSummary', () => DataService.getCountriesSummary(periodRequest))
                     .then(
-                        result => dispatch(applyCountriesSummary(result.data || {})),
-                        error => dispatch(applyCountriesSummary({}))
+                        result => dispatch(ActionsFactory.applyCountriesSummary(result.data || {})),
+                        error => dispatch(ActionsFactory.applyCountriesSummary({}))
                     );
 
                 changePeriodAndCountry(dispatch, getState, periodRequest, getState().countryDetail.selectedCountry);
             } else {
-                dispatch(addErrorMessage('filterValidationDates', 'End date is expected to be not less than start date'));
+                dispatch(ActionsFactory.addErrorMessage('filterValidationDates', 'End date is expected to be not less than start date'));
             }
         };
     },
@@ -63,19 +63,86 @@ export const ActionsFactory = {
                 changeChartType(dispatch, getState, periodAndCountryRequest, chartType);
             }
         };
+    },
+
+    selectFilterPeriod(startDate?: moment.Moment, endDate?: moment.Moment): SelectFilterPeriod {
+        return {
+            type: ActionType.selectFilterPeriod,
+            startDate,
+            endDate
+        };
+    },
+
+    selectCountry(country?: CountryInfo): SelectCountry {
+        return {
+            type: ActionType.selectCountry,
+            country
+        };
+    },
+
+    selectChartType(chartType?: DeveloperMeasureType): SelectChartType {
+        return {
+            type: ActionType.selectChartType,
+            chartType
+        };
+    },
+
+    applyCountriesSummary(summary: CountriesSummary): ApplyCountriesSummary {
+        return {
+            type: ActionType.applyCountriesSummary,
+            summary
+        };
+    },
+
+    applyMeanDevSummary(summary?: MeanDevSummary): ApplyMeanDevSummary {
+        return {
+            type: ActionType.applyMeanDevSummary,
+            summary
+        };
+    },
+
+    applyChartData(chartType: DeveloperMeasureType, data?: ChartValuesType): ApplyChartData {
+        return {
+            type: ActionType.applyChartData,
+            chartType,
+            data
+        };
+    },
+
+    addErrorMessage(key: string, message: string): PutErrorMessage {
+        return {
+            type: ActionType.putErrorMessage,
+            key,
+            message
+        };
+    },
+
+    removeErrorMessage(key: string): PutErrorMessage {
+        return {
+            type: ActionType.putErrorMessage,
+            key
+        };
+    },
+
+    startAsyncOperation(operation: keyof typeof DataService) {
+        return {type: ActionType.startAsyncOperation, operation}
+    },
+
+    finishAsyncOperation(operation: keyof typeof DataService) {
+        return {type: ActionType.finishAsyncOperation, operation}
     }
 };
 
 function changePeriodAndCountry(dispatch: Dispatch<DashboardState>, getState: () => DashboardState,
                                 periodRequest: PeriodRequest, selectedCountry?: CountryInfo) {
-    dispatch(selectCountry(selectedCountry)); //to render updated values
+    dispatch(ActionsFactory.selectCountry(selectedCountry)); //to render updated values
 
     if (selectedCountry) {
         const periodAndCountryRequest: PeriodAndCountryRequest = {countryId: selectedCountry.id, ...periodRequest};
         invokeAsync(dispatch, 'getCountryMeanDev', () => DataService.getCountryMeanDev(periodAndCountryRequest))
             .then(
-                result => dispatch(applyMeanDevSummary(result.data!!)),
-                error => dispatch(applyMeanDevSummary(undefined))
+                result => dispatch(ActionsFactory.applyMeanDevSummary(result.data!!)),
+                error => dispatch(ActionsFactory.applyMeanDevSummary(undefined))
             );
 
         changeChartType(dispatch, getState, periodAndCountryRequest, getState().countryDetail.selectedChartType);
@@ -88,14 +155,14 @@ function isValidDates(startDate?: moment.Moment, endDate?: moment.Moment) {
 
 function changeChartType(dispatch: Dispatch<DashboardState>, getState: () => DashboardState,
                          periodAndCountryRequest: PeriodAndCountryRequest, selectedChartType?: DeveloperMeasureType) {
-    dispatch(selectChartType(selectedChartType)); //to render updated values
+    dispatch(ActionsFactory.selectChartType(selectedChartType)); //to render updated values
 
     if (selectedChartType) {
         const descriptor = devMeasureDescriptorSelector.get(selectedChartType);
         invokeAsync(dispatch, descriptor.chartDataRequestOperation, () => descriptor.fetchChartData(periodAndCountryRequest))
             .then(
-                result => dispatch(applyChartData(selectedChartType, result.data!!)),
-                error => dispatch(applyChartData(selectedChartType, undefined))
+                result => dispatch(ActionsFactory.applyChartData(selectedChartType, result.data!!)),
+                error => dispatch(ActionsFactory.applyChartData(selectedChartType, undefined))
             );
     }
 }
@@ -111,63 +178,4 @@ function invokeAsync<T>(dispatch: Dispatch<any>, operation: keyof typeof DataSer
             dispatch({type: ActionType.finishAsyncOperation, operation});
             return Promise.reject(error);
         });
-}
-
-function setFilterPeriod(startDate?: moment.Moment, endDate?: moment.Moment): SelectFilterPeriod {
-    return {
-        type: ActionType.selectFilterPeriod,
-        startDate,
-        endDate
-    };
-}
-
-function selectCountry(country?: CountryInfo): SelectCountry {
-    return {
-        type: ActionType.selectCountry,
-        country
-    };
-}
-
-function selectChartType(chartType?: DeveloperMeasureType): SelectChartType {
-    return {
-        type: ActionType.selectChartType,
-        chartType
-    };
-}
-
-function applyCountriesSummary(summary: CountriesSummary): ApplyCountriesSummary {
-    return {
-        type: ActionType.applyCountriesSummary,
-        summary
-    };
-}
-
-function applyMeanDevSummary(summary?: MeanDevSummary): ApplyMeanDevSummary {
-    return {
-        type: ActionType.applyMeanDevSummary,
-        summary
-    };
-}
-
-function applyChartData(chartType: DeveloperMeasureType, data?: ChartValuesType): ApplyChartData {
-    return {
-        type: ActionType.applyChartData,
-        chartType,
-        data
-    };
-}
-
-function addErrorMessage(key: string, message: string): PutErrorMessage {
-    return {
-        type: ActionType.putErrorMessage,
-        key,
-        message
-    };
-}
-
-function removeErrorMessage(key: string): PutErrorMessage {
-    return {
-        type: ActionType.putErrorMessage,
-        key
-    };
 }

@@ -195,6 +195,10 @@
     "@types/cheerio" "*"
     "@types/react" "*"
 
+"@types/fetch-mock@^5.12.2":
+  version "5.12.2"
+  resolved "https://registry.yarnpkg.com/@types/fetch-mock/-/fetch-mock-5.12.2.tgz#8c96517ff74303031c65c5da2d99858e34c844d2"
+
 "@types/geojson@*":
   version "7946.0.0"
   resolved "https://registry.yarnpkg.com/@types/geojson/-/geojson-7946.0.0.tgz#e8bc74e8183d966455f82023f0c72e1072a952d0"
@@ -245,6 +249,12 @@
 "@types/redux-logger@^3.0.5":
   version "3.0.5"
   resolved "https://registry.yarnpkg.com/@types/redux-logger/-/redux-logger-3.0.5.tgz#d1a02758f90845899cd304aa0912daeba2028eb6"
+  dependencies:
+    redux "^3.6.0"
+
+"@types/redux-mock-store@^0.0.13":
+  version "0.0.13"
+  resolved "https://registry.yarnpkg.com/@types/redux-mock-store/-/redux-mock-store-0.0.13.tgz#f7ec160214b854f2d976ca12525997a21512b2ea"
   dependencies:
     redux "^3.6.0"
 
@@ -2399,6 +2409,14 @@ fbjs@^0.8.16:
     setimmediate "^1.0.5"
     ua-parser-js "^0.7.9"
 
+fetch-mock@5.13.1:
+  version "5.13.1"
+  resolved "https://registry.yarnpkg.com/fetch-mock/-/fetch-mock-5.13.1.tgz#955794a77f3d972f1644b9ace65a0fdfd60f1df7"
+  dependencies:
+    glob-to-regexp "^0.3.0"
+    node-fetch "^1.3.3"
+    path-to-regexp "^1.7.0"
+
 figures@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/figures/-/figures-2.0.0.tgz#3ab1a2d2a62c8bfb431a0c94cb797a2fce27c962"
@@ -2653,6 +2671,10 @@ glob-parent@^2.0.0:
   resolved "https://registry.yarnpkg.com/glob-parent/-/glob-parent-2.0.0.tgz#81383d72db054fcccf5336daa902f182f6edbb28"
   dependencies:
     is-glob "^2.0.0"
+
+glob-to-regexp@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/glob-to-regexp/-/glob-to-regexp-0.3.0.tgz#8c5a1494d2066c570cc3bfe4496175acc4d502ab"
 
 glob@^6.0.4:
   version "6.0.4"
@@ -3972,6 +3994,10 @@ lodash.isequal@^3.0:
     lodash._baseisequal "^3.0.0"
     lodash._bindcallback "^3.0.0"
 
+lodash.isplainobject@^4.0.6:
+  version "4.0.6"
+  resolved "https://registry.yarnpkg.com/lodash.isplainobject/-/lodash.isplainobject-4.0.6.tgz#7c526a52d89b45c45cc690b88163be0497f550cb"
+
 lodash.istypedarray@^3.0.0:
   version "3.0.6"
   resolved "https://registry.yarnpkg.com/lodash.istypedarray/-/lodash.istypedarray-3.0.6.tgz#c9a477498607501d8e8494d283b87c39281cef62"
@@ -4292,7 +4318,7 @@ no-case@^2.2.0:
   dependencies:
     lower-case "^1.1.1"
 
-node-fetch@^1.0.1:
+node-fetch@^1.0.1, node-fetch@^1.3.3:
   version "1.7.3"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-1.7.3.tgz#980f6f72d85211a5347c6b2bc18c5b84c3eb47ef"
   dependencies:
@@ -5627,6 +5653,12 @@ redux-logger@^3.0.6:
   resolved "https://registry.yarnpkg.com/redux-logger/-/redux-logger-3.0.6.tgz#f7555966f3098f3c88604c449cf0baf5778274bf"
   dependencies:
     deep-diff "^0.3.5"
+
+redux-mock-store@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/redux-mock-store/-/redux-mock-store-1.4.0.tgz#cdc87650f5759f293588fecc9cac2b057d95190d"
+  dependencies:
+    lodash.isplainobject "^4.0.6"
 
 redux-thunk@*, redux-thunk@^2.2.0:
   version "2.2.0"
