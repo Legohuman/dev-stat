@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as moment from 'moment';
-import DashboardFilter from '../../../../src/pages/dashboard/DashboardFilter';
-import { defaultDateFormat } from '../../../components/DatePicker'
+import { DashboardFilter } from '../../../pages/dashboard/DashboardFilter';
+import { defaultDateFormat } from '../../../components/DatePicker';
 import { enzymeWrapperFactory } from '../../EnzymeWrapperFactory';
 import { dashboardMockHandlers } from '../../DashboardMockHandlers';
 
@@ -62,14 +62,16 @@ it('check handlers on date change', () => {
             />
         );
 
+    expect(handlers.handlePeriodChange).toHaveProperty('callCount', 1);
+
     const inputs = wrapper.find('input');
     const startDateInput = inputs.at(0);
     startDateInput.simulate('change', {target: {value: moment().format(defaultDateFormat)}});
-    expect(handlers.handlePeriodChange).toHaveProperty('callCount', 1);
+    expect(handlers.handlePeriodChange).toHaveProperty('callCount', 2);
 
     const endDateInput = inputs.at(1);
     endDateInput.simulate('change', {target: {value: moment().add(7, 'd').format(defaultDateFormat)}});
-    expect(handlers.handlePeriodChange).toHaveProperty('callCount', 2);
+    expect(handlers.handlePeriodChange).toHaveProperty('callCount', 3);
 });
 
 it('check handlers on set same value', () => {
@@ -82,12 +84,14 @@ it('check handlers on set same value', () => {
             />
         );
 
+    expect(handlers.handlePeriodChange).toHaveProperty('callCount', 1);
+
     const inputs = wrapper.find('input');
     const startDateInput = inputs.at(0);
     startDateInput.simulate('change', {target: {value: defaultStartDate.format(defaultDateFormat)}});
-    expect(handlers.handlePeriodChange).toHaveProperty('callCount', 0);
+    expect(handlers.handlePeriodChange).toHaveProperty('callCount', 1);
 
     const endDateInput = inputs.at(1);
     endDateInput.simulate('change', {target: {value: defaultEndDate.format(defaultDateFormat)}});
-    expect(handlers.handlePeriodChange).toHaveProperty('callCount', 0);
+    expect(handlers.handlePeriodChange).toHaveProperty('callCount', 1);
 });

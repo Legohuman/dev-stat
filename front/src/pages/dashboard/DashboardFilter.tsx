@@ -3,11 +3,24 @@ import { Form, FormGroup } from 'react-bootstrap';
 import * as moment from 'moment';
 
 import DatePicker from '../../components/DatePicker';
-import { DashboardFilterData } from '../../types/DashboardState';
-import { DashboardPageHandlers } from './DashboardPageHandlers';
+import { DashboardFilterData, DashboardState } from '../../types/DashboardState';
 import './DashboardFilter.css';
+import { connect, Dispatch } from 'react-redux';
+import { ActionsFactory } from '../../actions/ActionsFactory';
 
-class DashboardFilter extends React.Component<DashboardFilterData & DashboardPageHandlers, object> {
+interface DashboardFilterHandlers {
+    handlers: {
+        handlePeriodChange(startDate?: moment.Moment, endDate?: moment.Moment): void
+    };
+}
+
+export class DashboardFilter extends React.Component<DashboardFilterData & DashboardFilterHandlers, object> {
+    componentDidMount(): void {
+        const p = this.props;
+
+        p.handlers.handlePeriodChange(p.startDate, p.endDate);
+    }
+
     render() {
         const p = this.props;
 
@@ -19,11 +32,9 @@ class DashboardFilter extends React.Component<DashboardFilterData & DashboardPag
                         <DatePicker
                             selected={p.startDate}
                             selectsStart={true}
-                            startDate={p.startDate}
-                            endDate={p.endDate}
-                            onChange={(date: moment.Moment | null) => {
-                                p.handlers.handlePeriodChange(date || undefined, p.endDate);
-                            }}
+                            startDate={p.startDate || undefined}
+                            endDate={p.endDate || undefined}
+                            onChange={this.handleStartDateChange}
                         />
                     </FormGroup>
                     {' \u2014 '}
@@ -31,17 +42,40 @@ class DashboardFilter extends React.Component<DashboardFilterData & DashboardPag
                         <DatePicker
                             selected={p.endDate}
                             selectsEnd={true}
-                            startDate={p.startDate}
-                            endDate={p.endDate}
-                            onChange={(date: moment.Moment | null) => {
-                                p.handlers.handlePeriodChange(p.startDate, date || undefined);
-                            }}
+                            startDate={p.startDate || undefined}
+                            endDate={p.endDate || undefined}
+                            onChange={this.handleEndDateChange}
                         />
                     </FormGroup>
                 </Form>
             </div>
         );
     }
+
+    private handleStartDateChange = (date: moment.Moment | null) => {
+        const p = this.props;
+        p.handlers.handlePeriodChange(date || undefined, p.endDate);
+    }
+
+    private handleEndDateChange = (date: moment.Moment | null) => {
+        const p = this.props;
+        p.handlers.handlePeriodChange(p.startDate, date || undefined);
+    }
 }
 
-export default DashboardFilter;
+function mapStateToProps(state: DashboardState) {
+    return state.filter;
+}
+
+function createDashboardFilterHandlers(dispatch: Dispatch<DashboardState &
+    DashboardFilterHandlers>): DashboardFilterHandlers {
+    return {
+        handlers: {
+            handlePeriodChange(startDate?: moment.Moment, endDate?: moment.Moment): void {
+                dispatch(ActionsFactory.handlePeriodChange(startDate, endDate));
+            }
+        }
+    };
+}
+
+export const DashboardFilterContainer = connect(mapStateToProps, createDashboardFilterHandlers)(DashboardFilter);

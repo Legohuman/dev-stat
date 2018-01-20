@@ -2,18 +2,6 @@ import * as Enzyme from 'enzyme';
 import * as sinon from 'sinon';
 import { CountryInfo } from '../../../types/DashboardState';
 
-export class DashboardMapAssertFactory {
-    private wrapper: Enzyme.ReactWrapper;
-
-    constructor(wrapper: Enzyme.ReactWrapper) {
-        this.wrapper = wrapper;
-    }
-
-    assertMap(): WorldMapAssert {
-        return new WorldMapAssert(this.wrapper);
-    }
-}
-
 class WorldMapAssert {
     private wrapper: Enzyme.ReactWrapper;
 
@@ -59,5 +47,17 @@ class WorldMapAssert {
     countriesClickHandled(countriesId: string[], expectedHandler: sinon.SinonSpy): this {
         countriesId.forEach(countryId => this.countryClickHandled(countryId, expectedHandler));
         return this;
+    }
+}
+
+export class DashboardMapAssertFactory {
+    private wrapper: Enzyme.ReactWrapper;
+
+    constructor(wrapper: Enzyme.ReactWrapper) {
+        this.wrapper = wrapper;
+    }
+
+    assertMap(): WorldMapAssert {
+        return new WorldMapAssert(this.wrapper);
     }
 }

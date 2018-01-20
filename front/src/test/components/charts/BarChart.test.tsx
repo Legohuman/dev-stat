@@ -1,9 +1,39 @@
 import * as React from 'react';
 import * as cheerio from 'cheerio';
 import BarChart from '../../../../src/components/charts/BarChart';
-import { ChartAssertFactory } from "./ChartAssertFactory";
-import { ChartBin, ChartDataSet } from "../../../types/DashboardState";
-import { enzymeWrapperFactory } from "../../EnzymeWrapperFactory";
+import { ChartAssertFactory } from './ChartAssertFactory';
+import { ChartBin, ChartDataSet } from '../../../types/DashboardState';
+import { enzymeWrapperFactory } from '../../EnzymeWrapperFactory';
+
+const dataSet1: ChartDataSet<ChartBin> = {
+    meanValue: 15,
+    values: [
+        {x0: 10, x1: 20, height: 300},
+        {x0: 20, x1: 30, height: 200}
+    ]
+};
+
+const dataSet2: ChartDataSet<ChartBin> = {
+    meanValue: 20,
+    values: [
+        {x0: 10, x1: 20, height: 350},
+        {x0: 20, x1: 30, height: 200},
+        {x0: 30, x1: 35, height: 100}
+    ]
+};
+
+const emptyDataSet1: ChartDataSet<ChartBin> = {
+    meanValue: undefined,
+    values: [
+        {x0: 10, x1: 20, height: 0},
+        {x0: 20, x1: 30, height: 0},
+    ]
+};
+
+const emptyDataSet2: ChartDataSet<ChartBin> = {
+    meanValue: undefined,
+    values: []
+};
 
 afterEach(enzymeWrapperFactory.unmount);
 
@@ -182,33 +212,3 @@ it('check round of mean value', () => {
         .hasDomainValue(15.14)
         .hasCoordinate(107.92);
 });
-
-const dataSet1: ChartDataSet<ChartBin> = {
-    meanValue: 15,
-    values: [
-        {x0: 10, x1: 20, height: 300},
-        {x0: 20, x1: 30, height: 200}
-    ]
-};
-
-const dataSet2: ChartDataSet<ChartBin> = {
-    meanValue: 20,
-    values: [
-        {x0: 10, x1: 20, height: 350},
-        {x0: 20, x1: 30, height: 200},
-        {x0: 30, x1: 35, height: 100}
-    ]
-};
-
-const emptyDataSet1: ChartDataSet<ChartBin> = {
-    meanValue: undefined,
-    values: [
-        {x0: 10, x1: 20, height: 0},
-        {x0: 20, x1: 30, height: 0},
-    ]
-};
-
-const emptyDataSet2: ChartDataSet<ChartBin> = {
-    meanValue: undefined,
-    values: []
-};

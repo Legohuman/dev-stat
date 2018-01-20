@@ -6,31 +6,11 @@ import { ChartProps } from '../../../components/charts/AbstractChart';
 import BarChart from '../../../components/charts/BarChart';
 import LineChart from '../../../components/charts/LineChart';
 
-export class DashboardCountryDetailAssertFactory {
-    private wrapper: Enzyme.ShallowWrapper;
-
-    constructor(wrapper: Enzyme.ShallowWrapper) {
-        this.wrapper = wrapper;
-    }
-
-    assertProfileTitle(): ProfileTitleAssert {
-        return new ProfileTitleAssert(this.wrapper);
-    }
-
-    assertMeanDevInfo(): MeanDevInfoAssert {
-        return new MeanDevInfoAssert(this.wrapper);
-    }
-
-    assertChart(): ShallowChartAssert {
-        return new ShallowChartAssert(this.wrapper);
-    }
-}
-
 class ProfileTitleAssert {
-    private profileTitle: Enzyme.ShallowWrapper;
+    private profileTitle: Enzyme.ReactWrapper;
 
-    constructor(wrapper: Enzyme.ShallowWrapper) {
-        this.profileTitle = wrapper.find('.DashboardCountryDetail-ProfileTitle')
+    constructor(wrapper: Enzyme.ReactWrapper) {
+        this.profileTitle = wrapper.find('.DashboardCountryDetail-ProfileTitle');
     }
 
     rendered(): this {
@@ -50,21 +30,21 @@ class ProfileTitleAssert {
 }
 
 class MeanDevInfoAssert {
-    private wrapper: Enzyme.ShallowWrapper;
+    private wrapper: Enzyme.ReactWrapper;
 
-    constructor(wrapper: Enzyme.ShallowWrapper) {
+    constructor(wrapper: Enzyme.ReactWrapper) {
         this.wrapper = wrapper;
     }
 
     rendered(): this {
-        expect(this.wrapper.find('.DashboardCountryDetail-ProfileInfo').length).toBe(1);
-        expect(this.wrapper.find('.DashboardCountryDetail-ProfileInfo_notAvailable').length).toBe(0);
+        expect(this.wrapper.find('Grid.DashboardCountryDetail-ProfileInfo').length).toBe(1);
+        expect(this.wrapper.find('div.DashboardCountryDetail-ProfileInfo_notAvailable').length).toBe(0);
         return this;
     }
 
     renderedAsNotAvailable(): this {
-        expect(this.wrapper.find('.DashboardCountryDetail-ProfileInfo').length).toBe(0);
-        expect(this.wrapper.find('.DashboardCountryDetail-ProfileInfo_notAvailable').length).toBe(1);
+        expect(this.wrapper.find('Grid.DashboardCountryDetail-ProfileInfo').length).toBe(0);
+        expect(this.wrapper.find('div.DashboardCountryDetail-ProfileInfo_notAvailable').length).toBe(1);
         return this;
     }
 
@@ -80,7 +60,7 @@ class MeanDevInfoAssert {
     }
 
     chartSelectionHandled(type: DeveloperMeasureType, expectedHandler: sinon.SinonSpy): this {
-        const measureValue = this.wrapper.find(`[data-measure-type="${type}"]`).find('.DashboardCountryDetail-MeasureChartButton');
+        const measureValue = this.wrapper.find(`[data-measure-type="${type}"]`).find('Button.DashboardCountryDetail-MeasureChartButton');
         const prevCallCount = expectedHandler.callCount;
         measureValue.simulate('click');
         expect(expectedHandler.callCount).toBe(prevCallCount + 1);
@@ -90,10 +70,10 @@ class MeanDevInfoAssert {
     }
 }
 
-class ShallowChartAssert {
-    private wrapper: Enzyme.ShallowWrapper;
+class ChartAssert {
+    private wrapper: Enzyme.ReactWrapper;
 
-    constructor(wrapper: Enzyme.ShallowWrapper) {
+    constructor(wrapper: Enzyme.ReactWrapper) {
         this.wrapper = wrapper;
     }
 
@@ -108,5 +88,25 @@ class ShallowChartAssert {
         expect(this.wrapper.find(BarChart).length).toBe(0);
         expect(this.wrapper.find(LineChart).length).toBe(0);
         return this;
+    }
+}
+
+export class DashboardCountryDetailAssertFactory {
+    private wrapper: Enzyme.ReactWrapper;
+
+    constructor(wrapper: Enzyme.ReactWrapper) {
+        this.wrapper = wrapper;
+    }
+
+    assertProfileTitle(): ProfileTitleAssert {
+        return new ProfileTitleAssert(this.wrapper);
+    }
+
+    assertMeanDevInfo(): MeanDevInfoAssert {
+        return new MeanDevInfoAssert(this.wrapper);
+    }
+
+    assertChart(): ChartAssert {
+        return new ChartAssert(this.wrapper);
     }
 }

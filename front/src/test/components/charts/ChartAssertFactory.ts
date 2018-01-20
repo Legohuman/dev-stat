@@ -1,29 +1,5 @@
 import * as _ from 'lodash';
 
-export class ChartAssertFactory {
-    private $: CheerioStatic;
-
-    constructor($: CheerioStatic) {
-        this.$ = $;
-    }
-
-    assertAxis(axisSelector: string): ChartAxisAssert {
-        return new ChartAxisAssert(this.$, this.$(axisSelector));
-    }
-
-    assertMeanLine(): ChartMeanLineAssert {
-        return new ChartMeanLineAssert(this.$);
-    }
-
-    assertBars(): ChartBarsAssert {
-        return new ChartBarsAssert(this.$);
-    }
-
-    assertDataLine(): ChartDataLineAssert {
-        return new ChartDataLineAssert(this.$);
-    }
-}
-
 class ChartAxisAssert {
     private $: CheerioStatic;
     private axisElem: Cheerio;
@@ -121,12 +97,12 @@ class ChartBarsAssert {
             y: +barElem.attr('y'),
             width: +barElem.attr('width'),
             height: +barElem.attr('height'),
-        }
+        };
     }
 
     private areChartBarsSame(bar1: ChartBar, bar2: ChartBar): boolean {
         return closeTo(bar1.x, bar2.x) && closeTo(bar1.y, bar2.y) &&
-            closeTo(bar1.width, bar2.width) && closeTo(bar1.height, bar2.height)
+            closeTo(bar1.width, bar2.width) && closeTo(bar1.height, bar2.height);
     }
 }
 
@@ -154,8 +130,32 @@ class ChartDataLineAssert {
     }
 }
 
+export class ChartAssertFactory {
+    private $: CheerioStatic;
+
+    constructor($: CheerioStatic) {
+        this.$ = $;
+    }
+
+    assertAxis(axisSelector: string): ChartAxisAssert {
+        return new ChartAxisAssert(this.$, this.$(axisSelector));
+    }
+
+    assertMeanLine(): ChartMeanLineAssert {
+        return new ChartMeanLineAssert(this.$);
+    }
+
+    assertBars(): ChartBarsAssert {
+        return new ChartBarsAssert(this.$);
+    }
+
+    assertDataLine(): ChartDataLineAssert {
+        return new ChartDataLineAssert(this.$);
+    }
+}
+
 function closeTo(val1: number, val2: number, precision: number = 2): boolean {
-    return _.round(val1 - val2, 2) === 0
+    return _.round(val1 - val2, 2) === 0;
 }
 
 export interface ChartBar {

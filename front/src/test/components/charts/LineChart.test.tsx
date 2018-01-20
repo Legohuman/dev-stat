@@ -5,6 +5,39 @@ import { ChartDataSet, ChartPoint } from "../../../types/DashboardState";
 import LineChart from "../../../components/charts/LineChart";
 import { enzymeWrapperFactory } from "../../EnzymeWrapperFactory";
 
+const dataSet1: ChartDataSet<ChartPoint> = {
+    meanValue: 7,
+    values: [
+        {x: 0, y: 0},
+        {x: 1, y: 1},
+        {x: 2, y: 4},
+        {x: 3, y: 9},
+    ]
+};
+
+const dataSet2: ChartDataSet<ChartPoint> = {
+    meanValue: 6,
+    values: [
+        {x: 0, y: 10},
+        {x: 1, y: 5},
+        {x: 2, y: 2.5},
+        {x: 3, y: 1.11},
+    ]
+};
+
+const emptyDataSet1: ChartDataSet<ChartPoint> = {
+    meanValue: undefined,
+    values: [
+        {x: 0, y: 0},
+        {x: 5, y: 0},
+    ]
+};
+
+const emptyDataSet2: ChartDataSet<ChartPoint> = {
+    meanValue: undefined,
+    values: []
+};
+
 afterEach(enzymeWrapperFactory.unmount);
 
 it('renders line chart with non-empty data', () => {
@@ -15,7 +48,7 @@ it('renders line chart with non-empty data', () => {
             data={dataSet1}
         />
     );
-    
+
     const svg = wrapper.find('svg');
     expect(svg).toHaveLength(1);
     expect(svg.props().width).toBe(500);
@@ -82,7 +115,7 @@ it('renders line chart with zero y coordinates', () => {
             data={emptyDataSet1}
         />
     );
-    
+
     const svg = wrapper.find('svg');
     expect(svg).toHaveLength(1);
     expect(svg.props().width).toBe(500);
@@ -110,7 +143,7 @@ it('renders line chart with no points', () => {
             data={emptyDataSet2}
         />
     );
-    
+
     const svg = wrapper.find('svg');
     expect(svg).toHaveLength(1);
     expect(svg.props().width).toBe(500);
@@ -137,7 +170,7 @@ it('updates line chart to empty dataset (no points)', () => {
             data={dataSet1}
         />
     );
-    
+
     wrapper.setProps({width: 800, height: 800, data: emptyDataSet2});
 
     const svg = wrapper.find('svg');
@@ -157,36 +190,3 @@ it('updates line chart to empty dataset (no points)', () => {
     chartTestHelper.assertDataLine()
         .notRendered();
 });
-
-const dataSet1: ChartDataSet<ChartPoint> = {
-    meanValue: 7,
-    values: [
-        {x: 0, y: 0},
-        {x: 1, y: 1},
-        {x: 2, y: 4},
-        {x: 3, y: 9},
-    ]
-};
-
-const dataSet2: ChartDataSet<ChartPoint> = {
-    meanValue: 6,
-    values: [
-        {x: 0, y: 10},
-        {x: 1, y: 5},
-        {x: 2, y: 2.5},
-        {x: 3, y: 1.11},
-    ]
-};
-
-const emptyDataSet1: ChartDataSet<ChartPoint> = {
-    meanValue: undefined,
-    values: [
-        {x: 0, y: 0},
-        {x: 5, y: 0},
-    ]
-};
-
-const emptyDataSet2: ChartDataSet<ChartPoint> = {
-    meanValue: undefined,
-    values: []
-};

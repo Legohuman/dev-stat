@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as Enzyme from 'enzyme';
 
-import DashboardCountryDetail from '../../../pages/dashboard/DashboardCountryDetail';
+import { DashboardCountryDetail } from '../../../pages/dashboard/DashboardCountryDetail';
 import { dashboardMockHandlers } from '../../DashboardMockHandlers';
 import { DeveloperMeasureType } from '../../../types/DashboardState';
 import BarChart from '../../../components/charts/BarChart';
@@ -10,7 +10,7 @@ import LineChart from '../../../components/charts/LineChart';
 
 it('renders country detail with age chart', () => {
     const handlers = dashboardMockHandlers();
-    const wrapper = Enzyme.shallow(
+    const wrapper = Enzyme.mount(
         <DashboardCountryDetail
             selectedCountry={getSelectedCountryInfo()}
             selectedChartType={DeveloperMeasureType.age}
@@ -35,12 +35,12 @@ it('renders country detail with age chart', () => {
         .chartSelectionsHandled(Object.keys(DeveloperMeasureType).map(k => DeveloperMeasureType[k]), handlers.handleChartChange);
 
     assertFactory.assertChart()
-        .rendered(BarChart, getAgeChartsData()[DeveloperMeasureType.age])
+        .rendered(BarChart, getAgeChartsData()[DeveloperMeasureType.age]);
 });
 
 it('renders country detail with salary chart', () => {
     const handlers = dashboardMockHandlers();
-    const wrapper = Enzyme.shallow(
+    const wrapper = Enzyme.mount(
         <DashboardCountryDetail
             selectedCountry={getSelectedCountryInfo()}
             selectedChartType={DeveloperMeasureType.salary}
@@ -65,12 +65,12 @@ it('renders country detail with salary chart', () => {
         .chartSelectionsHandled(Object.keys(DeveloperMeasureType).map(k => DeveloperMeasureType[k]), handlers.handleChartChange);
 
     assertFactory.assertChart()
-        .rendered(LineChart, getSalaryChartsData()[DeveloperMeasureType.salary])
+        .rendered(LineChart, getSalaryChartsData()[DeveloperMeasureType.salary]);
 });
 
 it('render updated country detail with salary chart', () => {
     const handlers = dashboardMockHandlers();
-    const wrapper = Enzyme.shallow(
+    const wrapper = Enzyme.mount(
         <DashboardCountryDetail
             selectedCountry={getSelectedCountryInfo()}
             selectedChartType={DeveloperMeasureType.age}
@@ -100,11 +100,11 @@ it('render updated country detail with salary chart', () => {
         .chartSelectionsHandled(Object.keys(DeveloperMeasureType).map(k => DeveloperMeasureType[k]), handlers.handleChartChange);
 
     assertFactory.assertChart()
-        .rendered(LineChart, getSalaryChartsData()[DeveloperMeasureType.salary])
+        .rendered(LineChart, getSalaryChartsData()[DeveloperMeasureType.salary]);
 });
 
 it('renders country detail without selected country', () => {
-    const wrapper = Enzyme.shallow(
+    const wrapper = Enzyme.mount(
         <DashboardCountryDetail
             selectedCountry={undefined}
             selectedChartType={DeveloperMeasureType.salary}
@@ -127,7 +127,7 @@ it('renders country detail without selected country', () => {
 });
 
 it('renders country detail without mean dev', () => {
-    const wrapper = Enzyme.shallow(
+    const wrapper = Enzyme.mount(
         <DashboardCountryDetail
             selectedCountry={getSelectedCountryInfo()}
             selectedChartType={DeveloperMeasureType.salary}
@@ -151,7 +151,7 @@ it('renders country detail without mean dev', () => {
 });
 
 it('renders country detail without selected chart', () => {
-    const wrapper = Enzyme.shallow(
+    const wrapper = Enzyme.mount(
         <DashboardCountryDetail
             selectedCountry={getSelectedCountryInfo()}
             selectedChartType={undefined}
@@ -179,7 +179,7 @@ it('renders country detail without selected chart', () => {
 });
 
 it('renders country detail without selected chart', () => {
-    const wrapper = Enzyme.shallow(
+    const wrapper = Enzyme.mount(
         <DashboardCountryDetail
             selectedCountry={getSelectedCountryInfo()}
             selectedChartType={undefined}

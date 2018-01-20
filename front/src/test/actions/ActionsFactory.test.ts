@@ -1,6 +1,6 @@
-import configureMockStore from 'redux-mock-store'
-import thunk from 'redux-thunk'
-import * as fetchMock from 'fetch-mock'
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+import * as fetchMock from 'fetch-mock';
 import { getDefaultDashboardState } from '../../reducers/DashboardReducer';
 import { ActionsFactory } from '../../actions/ActionsFactory';
 import { DashboardState } from '../../types/DashboardState';
@@ -21,7 +21,7 @@ function response(status: number, data?: any) {
 }
 
 function success(data?: any) {
-    return response(200, data)
+    return response(200, data);
 }
 
 it('handles period change not defined range', () => {
@@ -38,7 +38,7 @@ it('handles period change not defined range', () => {
         ActionsFactory.startAsyncOperation('getCountriesSummary'),
         ActionsFactory.selectCountry(undefined)
     ];
-    expect(store.getActions()).toEqual(expectedActions)
+    expect(store.getActions()).toEqual(expectedActions);
 });
 
 it('handles period change defined correct range', () => {
@@ -57,7 +57,7 @@ it('handles period change defined correct range', () => {
         ActionsFactory.startAsyncOperation('getCountriesSummary'),
         ActionsFactory.selectCountry(undefined)
     ];
-    expect(store.getActions()).toEqual(expectedActions)
+    expect(store.getActions()).toEqual(expectedActions);
 });
 
 it('handles period change defined incorrect range', () => {
@@ -83,5 +83,5 @@ it('handles period change defined incorrect range', () => {
         ActionsFactory.startAsyncOperation('getCountryMeanDev'),
         ActionsFactory.selectChartType(undefined)
     ];
-    expect(store.getActions()).toEqual(expectedActions)
+    expect(store.getActions()).toEqual(expectedActions);
 });

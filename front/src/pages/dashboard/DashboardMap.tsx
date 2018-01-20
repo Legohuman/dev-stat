@@ -1,28 +1,34 @@
 import * as React from 'react';
 import './DashboardMap.css';
-import { DashboardMapData } from '../../types/DashboardState';
-import { DashboardPageHandlers } from './DashboardPageHandlers';
+import { CountryInfo, DashboardMapData, DashboardState } from '../../types/DashboardState';
 import WorldMap, { Polygonal } from '../../components/map/WorldMap';
 import ConversionUtils from '../../utils/ConversionUtils';
 import Renderers from '../../utils/Renderers';
+import { connect, Dispatch } from 'react-redux';
+import { ActionsFactory } from '../../actions/ActionsFactory';
 
-class DashboardMap extends React.Component<DashboardMapData & DashboardPageHandlers, object> {
+interface DashboardMapHandlers {
+    handlers: {
+        handleCountryChange(country?: CountryInfo): void
+    };
+}
+
+export class DashboardMap extends React.Component<DashboardMapData & DashboardMapHandlers, object> {
     render() {
-
         return (
             <div className="DashboardMap">
                 <WorldMap
-                    initialScale={210}
+                    initialScale={160}
                     initialShiftX={0}
                     initialShiftY={40}
-                    onCountryClick={country => this.onCountryClick(country)}
-                    getCountryTooltipHtml={country => this.getCountryTooltipHtml(country)}
+                    onCountryClick={this.onCountryClick}
+                    getCountryTooltipHtml={this.getCountryTooltipHtml}
                 />
             </div>
         );
     }
 
-    private onCountryClick(country: d3.ExtendedFeature<Polygonal, any>) {
+    private onCountryClick = (country: d3.ExtendedFeature<Polygonal, any>) => {
         const p = this.props,
             countryId = ConversionUtils.toStringOrUndefined(country.id);
 
@@ -37,7 +43,7 @@ class DashboardMap extends React.Component<DashboardMapData & DashboardPageHandl
         p.handlers.handleCountryChange(countryInfo);
     }
 
-    private getCountryTooltipHtml(country: d3.ExtendedFeature<Polygonal, any>): string {
+    private getCountryTooltipHtml = (country: d3.ExtendedFeature<Polygonal, any>): string => {
         const p = this.props,
             countryId = country.id as string,
             countrySummary = p.countries[countryId];
@@ -53,4 +59,19 @@ class DashboardMap extends React.Component<DashboardMapData & DashboardPageHandl
 
 }
 
-export default DashboardMap;
+function mapStateToProps(state: DashboardState) {
+    return state.map;
+}
+
+function createDashboardMapHandlers(dispatch: Dispatch<DashboardState &
+    DashboardMapHandlers>): DashboardMapHandlers {
+    return {
+        handlers: {
+            handleCountryChange(country?: CountryInfo): void {
+                dispatch(ActionsFactory.handleCountryChange(country));
+            }
+        }
+    };
+}
+
+export const DashboardMapContainer = connect(mapStateToProps, createDashboardMapHandlers)(DashboardMap);

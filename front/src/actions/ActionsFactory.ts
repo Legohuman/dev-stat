@@ -125,11 +125,11 @@ export const ActionsFactory = {
     },
 
     startAsyncOperation(operation: keyof typeof DataService) {
-        return {type: ActionType.startAsyncOperation, operation}
+        return {type: ActionType.startAsyncOperation, operation};
     },
 
     finishAsyncOperation(operation: keyof typeof DataService) {
-        return {type: ActionType.finishAsyncOperation, operation}
+        return {type: ActionType.finishAsyncOperation, operation};
     }
 };
 

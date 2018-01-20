@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as d3 from 'd3';
 import * as _ from 'lodash';
-import MessageList from '../MessageList';
+import { MessageList } from '../MessageList';
 import { ChartDataSet } from '../../types/DashboardState';
 import { Validators } from '../../utils/PropValidators';
 

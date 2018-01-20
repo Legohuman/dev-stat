@@ -2,15 +2,22 @@ import * as React from 'react';
 import './DashboardCountryDetail.css';
 import { Col, Grid, Row } from 'react-bootstrap';
 import {
-    DashboardCountryDetailData, DashboardOperationsContainer,
+    DashboardCountryDetailData, DashboardOperationsContainer, DashboardState,
     DeveloperMeasureType
 } from '../../types/DashboardState';
-import { DashboardPageHandlers } from './DashboardPageHandlers';
 import { devMeasureDescriptorSelector } from '../../utils/DevMeasureDescriptorSelector';
 import BarChart from '../../components/charts/BarChart';
 import LineChart from '../../components/charts/LineChart';
+import { connect, Dispatch } from 'react-redux';
+import { ActionsFactory } from '../../actions/ActionsFactory';
 
-class DashboardCountryDetail extends React.Component<DashboardCountryDetailData & DashboardOperationsContainer & DashboardPageHandlers, object> {
+interface DashboardCountryDetailHandlers {
+    handlers: {
+        handleChartChange(chartType?: DeveloperMeasureType): void
+    };
+}
+
+export class DashboardCountryDetail extends React.Component<DashboardCountryDetailData & DashboardOperationsContainer & DashboardCountryDetailHandlers, object> {
     render() {
         return (
             <div className="DashboardCountryDetail">
@@ -108,4 +115,19 @@ class DashboardCountryDetail extends React.Component<DashboardCountryDetailData 
     }
 }
 
-export default DashboardCountryDetail;
+function mapStateToProps({countryDetail, operations}: DashboardState) {
+    return {...countryDetail, operations};
+}
+
+function createDashboardPageHandlers(dispatch: Dispatch<DashboardState &
+    DashboardCountryDetailHandlers>): DashboardCountryDetailHandlers {
+    return {
+        handlers: {
+            handleChartChange(chartType?: DeveloperMeasureType): void {
+                dispatch(ActionsFactory.handleChartChange(chartType));
+            }
+        }
+    };
+}
+
+export const DashboardCountryDetailContainer = connect(mapStateToProps, createDashboardPageHandlers)(DashboardCountryDetail);

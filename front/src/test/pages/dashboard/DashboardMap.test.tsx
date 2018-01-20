@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { enzymeWrapperFactory } from '../../EnzymeWrapperFactory';
 import { dashboardMockHandlers } from '../../DashboardMockHandlers';
-import DashboardMap from '../../../pages/dashboard/DashboardMap';
+import { DashboardMap } from '../../../pages/dashboard/DashboardMap';
 import { DashboardMapAssertFactory } from './DashboardMapAssertFactory';
 
 afterEach(enzymeWrapperFactory.unmount);
