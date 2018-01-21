@@ -35,6 +35,6 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
         }
 
         log.error("Handled unspecified exception in global handler", ex)
-        return ResponseEntity("Internal server error: ${ex.message}", HttpStatus.INTERNAL_SERVER_ERROR)
+        return ResponseEntity(listOf("Internal server error: ${ex.message}"), HttpStatus.INTERNAL_SERVER_ERROR)
     }
 }
