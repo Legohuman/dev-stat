@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { Alert } from 'react-bootstrap';
 
 import './MessageList.css';
 import { connect } from 'react-redux';
 import { DashboardState } from '../types/DashboardState';
 import * as _ from 'lodash';
+import { Alert } from 'react-bootstrap';
 
 export interface MessageListProps {
     messages: string[];
@@ -23,7 +23,6 @@ export class MessageList extends React.Component<MessageListProps, object> {
                     {p.messages.map((message, i) =>
                         <div
                             key={'m' + i}
-                            className="MessagesList"
                         >
                             {message}
                         </div>

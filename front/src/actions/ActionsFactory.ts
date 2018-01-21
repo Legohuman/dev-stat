@@ -11,6 +11,7 @@ import {
     SelectCountry, SelectFilterPeriod
 } from './Actions';
 import { devMeasureDescriptorSelector } from '../utils/DevMeasureDescriptorSelector';
+import { defaultDateFormat } from '../utils/AppConstants';
 
 export const ActionsFactory = {
     handlePeriodChange(startDate?: moment.Moment, endDate?: moment.Moment): ThunkAction<void, DashboardState, any> {
@@ -19,7 +20,8 @@ export const ActionsFactory = {
                 effectiveEndDate = endDate && endDate.startOf('d');
             dispatch(ActionsFactory.selectFilterPeriod(effectiveStartDate, effectiveEndDate)); //to render updated values
 
-            if (isValidDates(effectiveStartDate, effectiveEndDate)) {
+            const validationError = getValidationError(effectiveStartDate, effectiveEndDate);
+            if (!validationError) {
                 dispatch(ActionsFactory.removeErrorMessage('filterValidationDates'));
 
                 const periodRequest: PeriodRequest = {startDate: effectiveStartDate, endDate: effectiveEndDate};
@@ -31,7 +33,9 @@ export const ActionsFactory = {
 
                 changePeriodAndCountry(dispatch, getState, periodRequest, getState().countryDetail.selectedCountry);
             } else {
-                dispatch(ActionsFactory.addErrorMessage('filterValidationDates', 'End date is expected to be not less than start date'));
+                dispatch(ActionsFactory.addErrorMessage('filterValidationDates', validationError));
+                dispatch(ActionsFactory.applyCountriesSummary({}));
+                dispatch(ActionsFactory.applyMeanDevSummary(undefined));
             }
         };
     },
@@ -41,7 +45,7 @@ export const ActionsFactory = {
             const startDate = getState().filter.startDate,
                 endDate = getState().filter.endDate;
 
-            if (isValidDates(startDate, endDate)) {
+            if (!getValidationError(startDate, endDate)) {
                 const periodRequest: PeriodRequest = {startDate, endDate};
                 changePeriodAndCountry(dispatch, getState, periodRequest, selectedCountry);
             }
@@ -54,7 +58,7 @@ export const ActionsFactory = {
                 endDate = getState().filter.endDate,
                 selectedCountry = getState().countryDetail.selectedCountry;
 
-            if (isValidDates(startDate, endDate) && selectedCountry) {
+            if (!getValidationError(startDate, endDate) && selectedCountry) {
                 const periodAndCountryRequest: PeriodAndCountryRequest = {
                     startDate,
                     endDate,
@@ -149,8 +153,22 @@ function changePeriodAndCountry(dispatch: Dispatch<DashboardState>, getState: ()
     }
 }
 
-function isValidDates(startDate?: moment.Moment, endDate?: moment.Moment) {
-    return !startDate || !endDate || !endDate.isBefore(startDate);
+function getValidationError(startDate?: moment.Moment, endDate?: moment.Moment): string | null {
+    const validStartDate = !startDate || startDate.isValid();
+    const validEndDate = !endDate || endDate.isValid();
+    const validRange = !startDate || !endDate || !startDate.isAfter(endDate);
+
+    if (!validStartDate && !validEndDate) {
+        return `Start date and end date have invalid format. Expected date format is ${defaultDateFormat}`;
+    } else if (!validStartDate) {
+        return `Start date has invalid format. Expected date format is ${defaultDateFormat}`;
+    } else if (!validEndDate) {
+        return `End date has invalid format. Expected date format is ${defaultDateFormat}`;
+    } else if (!validRange) {
+        return 'End date is expected to be not less than start date';
+    }
+
+    return null;
 }
 
 function changeChartType(dispatch: Dispatch<DashboardState>, getState: () => DashboardState,

@@ -30,26 +30,30 @@ export class DashboardFilter extends React.Component<DashboardFilterData & Dashb
                     Date period:
                     <FormGroup className="DashboardFilter-DatePickerContainer">
                         <DatePicker
-                            selected={p.startDate}
+                            selected={this.todayIfInvalid(p.startDate)}
                             selectsStart={true}
-                            startDate={p.startDate || undefined}
-                            endDate={p.endDate || undefined}
+                            startDate={this.todayIfInvalid(p.startDate)}
+                            endDate={this.todayIfInvalid(p.endDate)}
                             onChange={this.handleStartDateChange}
                         />
                     </FormGroup>
                     {' \u2014 '}
                     <FormGroup className="DashboardFilter-DatePickerContainer">
                         <DatePicker
-                            selected={p.endDate}
+                            selected={this.todayIfInvalid(p.endDate)}
                             selectsEnd={true}
-                            startDate={p.startDate || undefined}
-                            endDate={p.endDate || undefined}
+                            startDate={this.todayIfInvalid(p.startDate)}
+                            endDate={this.todayIfInvalid(p.endDate)}
                             onChange={this.handleEndDateChange}
                         />
                     </FormGroup>
                 </Form>
             </div>
         );
+    }
+
+    private todayIfInvalid(date?: moment.Moment): moment.Moment | undefined {
+        return date && !date.isValid() ? moment() : date;
     }
 
     private handleStartDateChange = (date: moment.Moment | null) => {

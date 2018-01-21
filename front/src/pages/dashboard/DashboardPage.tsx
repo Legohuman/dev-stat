@@ -10,8 +10,8 @@ class DashboardPage extends React.Component<object, object> {
     render() {
         return (
             <div className="DashboardPage">
-                <MessageListContainer/>
                 <DashboardFilterContainer/>
+                <MessageListContainer/>
                 <DashboardMapContainer/>
                 <DashboardCountryDetailContainer/>
             </div>

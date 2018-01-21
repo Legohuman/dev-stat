@@ -1,3 +1,10 @@
 .MessagesList {
-  padding: 6px 0;
+  padding: 6px 12px;
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  right: 0;
+  border-radius: 5px;
+  max-width: 600px;
+  margin: 0 auto;
 }

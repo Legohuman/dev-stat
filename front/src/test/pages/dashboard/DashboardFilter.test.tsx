@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as moment from 'moment';
 import { DashboardFilter } from '../../../pages/dashboard/DashboardFilter';
-import { defaultDateFormat } from '../../../components/DatePicker';
+import { defaultDateFormat } from '../../../utils/AppConstants';
 import { enzymeWrapperFactory } from '../../EnzymeWrapperFactory';
 import { dashboardMockHandlers } from '../../DashboardMockHandlers';
 
