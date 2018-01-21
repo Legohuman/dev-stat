@@ -28,7 +28,7 @@ export class DashboardFilter extends React.Component<DashboardFilterData & Dashb
             <div className="DashboardFilter">
                 <Form inline={true}>
                     Date period:
-                    <FormGroup>
+                    <FormGroup className="DashboardFilter-DatePickerContainer">
                         <DatePicker
                             selected={p.startDate}
                             selectsStart={true}
@@ -38,7 +38,7 @@ export class DashboardFilter extends React.Component<DashboardFilterData & Dashb
                         />
                     </FormGroup>
                     {' \u2014 '}
-                    <FormGroup>
+                    <FormGroup className="DashboardFilter-DatePickerContainer">
                         <DatePicker
                             selected={p.endDate}
                             selectsEnd={true}
