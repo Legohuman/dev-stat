@@ -8,7 +8,6 @@ import { MessageListContainer } from '../../components/MessageList';
 class DashboardPage extends React.Component<object, object> {
 
     render() {
-        console.log('render DashboardPage');
         return (
             <div className="DashboardPage">
                 <MessageListContainer/>

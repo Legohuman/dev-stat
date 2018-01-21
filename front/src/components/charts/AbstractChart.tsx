@@ -4,12 +4,18 @@ import * as _ from 'lodash';
 import { MessageList } from '../MessageList';
 import { ChartDataSet } from '../../types/DashboardState';
 import { Validators } from '../../utils/PropValidators';
+import './Chart.css';
+
+const axes = {
+    xTicksCount: 10,
+    yTicksCount: 5
+};
 
 const plotMargins = {
-    top: 30,
-    bottom: 30,
+    top: 10,
+    bottom: 20,
     left: 50,
-    right: 30
+    right: 20
 };
 
 const meanLineParams = {
@@ -24,11 +30,12 @@ const meanLineParams = {
 
 export interface ChartProps<T> {
     data: ChartDataSet<T>;
-    width: number;
-    height: number;
+    width?: number;
+    height?: number;
 }
 
 abstract class AbstractChart<T> extends React.Component<ChartProps<T>, object> {
+    protected container: HTMLElement | null;
     protected svgElement: SVGSVGElement | null;
     protected plotGroup: d3.Selection<any, any, null, undefined>;
     protected xAxisGroup: d3.Selection<any, any, null, undefined>;
@@ -54,11 +61,17 @@ abstract class AbstractChart<T> extends React.Component<ChartProps<T>, object> {
         const errorMessages = this.validateData();
         if (errorMessages.length === 0) {
             return (
-                <svg
-                    ref={node => this.svgElement = node}
-                    width={p.width}
-                    height={p.height}
-                />
+                <div
+                    className="Chart-Container"
+                    ref={node => this.container = node}
+                >
+                    <svg
+                        className="Chart-Svg"
+                        width={p.width}
+                        height={p.height}
+                        ref={node => this.svgElement = node}
+                    />
+                </div>
             );
         } else {
             return <MessageList messages={errorMessages}/>;
@@ -128,18 +141,18 @@ abstract class AbstractChart<T> extends React.Component<ChartProps<T>, object> {
     private prepareAxes() {
         this.xScale = d3.scaleLinear()
             .range([0, this.plotWidth]);
-        this.xAxis = d3.axisBottom(this.xScale);
+        this.xAxis = d3.axisBottom(this.xScale).ticks(axes.xTicksCount);
 
         this.yScale = d3.scaleLinear()
             .range([this.plotHeight, 0]);
-        this.yAxis = d3.axisLeft(this.yScale);
+        this.yAxis = d3.axisLeft(this.yScale).ticks(axes.yTicksCount);
     }
 
     private updatePlotDimensions() {
         const p = this.props;
 
-        this.plotWidth = p.width - plotMargins.left - plotMargins.right;
-        this.plotHeight = p.height - plotMargins.top - plotMargins.bottom;
+        this.plotWidth = (p.width || this.container!!.clientWidth) - plotMargins.left - plotMargins.right;
+        this.plotHeight = (p.height || this.container!!.clientHeight) - plotMargins.top - plotMargins.bottom;
     }
 
     private renderAxes() {

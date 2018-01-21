@@ -23,11 +23,11 @@ class WorldMap extends React.Component<Props, object> {
     render() {
         return (
             <div
-                className="WorldMap-MapContainer"
+                className="WorldMap-Container"
                 ref={node => this.container = node}
             >
                 <svg
-                    className="WorldMap-Map"
+                    className="WorldMap-Svg"
                     ref={node => this.svgElement = node}
                 />
                 <div

@@ -1,7 +1,7 @@
 @import '../../common.scss';
 
 .DashboardCountryDetail-ProfileTitle {
-  padding: 5px 0 10px;
+  padding: 0 0 6px;
   font-size: 18px;
 }
 
@@ -9,24 +9,18 @@
   font-size: 16px;
 }
 
-.DashboardCountryDetail-MeasureInfo {
-  padding: 6px 12px;
-}
-
-.DashboardCountryDetail-MeasureTitle {
-  display: inline-block;
-  min-width: 250px;
-  padding: 0 8px 0 0;
+.DashboardCountryDetail-MeasureTitleCol {
+  padding: 6px 0 6px 30px;
   text-align: left;
+  line-height: 30px;
 }
 
-.DashboardCountryDetail-MeasureValue {
-  display: inline-block;
-  padding: 0 8px 0 0;
-  min-width: 120px;
+.DashboardCountryDetail-MeasureValueCol {
+  padding: 6px 30px 6px 0;
+  text-align: right;
 }
 
-.DashboardCountryDetail-MeasureChartButton {
+.DashboardCountryDetail-ChartButton {
   width: 30px;
   height: 30px;
   text-align: center;
@@ -34,10 +28,16 @@
   font-size: 12px;
   line-height: 1.428571429;
   border-radius: 15px;
+  margin-left: 15px;
 }
 
-.DashboardCountryDetail-ProfileInfo_notAvailable{
+.DashboardCountryDetail-BackButton {
+
+}
+
+.DashboardCountryDetail-ProfileInfo_notAvailable {
   color: $secondary-color;
+  padding-top: 15px;
 }
 
 .DashboardCountryDetail-ChartPlaceholder {

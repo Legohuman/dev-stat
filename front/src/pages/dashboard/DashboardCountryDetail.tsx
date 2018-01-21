@@ -1,6 +1,6 @@
 import * as React from 'react';
 import './DashboardCountryDetail.css';
-import { Col, Grid, Row } from 'react-bootstrap';
+import { Button, Col, Grid, Row } from 'react-bootstrap';
 import {
     DashboardCountryDetailData, DashboardOperationsContainer, DashboardState,
     DeveloperMeasureType
@@ -10,6 +10,7 @@ import BarChart from '../../components/charts/BarChart';
 import LineChart from '../../components/charts/LineChart';
 import { connect, Dispatch } from 'react-redux';
 import { ActionsFactory } from '../../actions/ActionsFactory';
+import * as Glyphicon from 'react-bootstrap/lib/Glyphicon';
 
 interface DashboardCountryDetailHandlers {
     handlers: {
@@ -21,38 +22,72 @@ export class DashboardCountryDetail extends React.Component<DashboardCountryDeta
     render() {
         return (
             <div className="DashboardCountryDetail">
-                {this.renderSelectedCountry()}
-                {this.renderMeanDevInfo()}
-                {this.renderSelectedChart()}
+                <Grid className="DashboardCountryDetail-ProfileInfo">
+                    {this.renderSelectedInfoTitle()}
+                    {this.renderMeanDevInfo()}
+                </Grid>
             </div>
         );
     }
 
-    renderSelectedCountry() {
+    renderSelectedInfoTitle() {
         const p = this.props;
 
         if (p.selectedCountry) {
+            const selectedCountryName = p.selectedCountry!!.name;
+            let titleText = `Developer profile in ${selectedCountryName}`;
+            let backButton = undefined;
+
+            if (this.shouldShowChartData()) {
+                const measureTitle = devMeasureDescriptorSelector.get(p.selectedChartType!!).getMeasureTitle();
+                titleText = `${measureTitle} developer distribution in ${selectedCountryName}`;
+                backButton = this.renderBackToMeanInfoButton();
+            }
+
             return (
-                <div className="DashboardCountryDetail-ProfileTitle">
-                    Developer profile in {p.selectedCountry.name}
-                </div>
+                <Row>
+                    <Col xs={3} sm={2} md={1}>
+                        {backButton}
+                    </Col>
+                    <Col xs={6} sm={8} md={10}>
+                        <div className="DashboardCountryDetail-ProfileTitle">{titleText}</div>
+                    </Col>
+                    <Col xs={3} sm={2} md={1}/>
+                </Row>
             );
         }
         return undefined;
+    }
+
+    renderBackToMeanInfoButton() {
+        return (
+            <Button
+                onClick={this.handleBackToMeanInfoClick}
+                className="DashboardCountryDetail-BackButton"
+                bsStyle="link"
+            >
+                <Glyphicon glyph="chevron-left"/>&nbsp;Back
+            </Button>
+        );
     }
 
     renderMeanDevInfo(): React.ReactNode {
         const p = this.props;
 
         if (p.selectedCountry && p.meanDev) {
-            return (
-                <Grid className="DashboardCountryDetail-ProfileInfo">
-                    {this.renderDevMeasures()}
-                </Grid>
-            );
+            if (this.shouldShowChartData()) {
+                return this.renderSelectedChart();
+            } else {
+                return this.renderDevMeasures();
+            }
         } else {
             return <div className="DashboardCountryDetail-ProfileInfo_notAvailable">No data available</div>;
         }
+    }
+
+    shouldShowChartData() {
+        const p = this.props;
+        return p.selectedCountry && p.selectedChartType && p.charts[p.selectedChartType];
     }
 
     renderDevMeasures(): React.ReactNode {
@@ -61,17 +96,30 @@ export class DashboardCountryDetail extends React.Component<DashboardCountryDeta
         const rowNodes: Array<React.ReactNode> = [];
         let colNodes: Array<React.ReactNode> = [];
         devMeasureDescriptorSelector.list().forEach((descriptor, i) => {
-            const colNode = (
+            const titleColNode = (
                 <Col
-                    key={'c' + i}
+                    key={'ct' + i}
+                    className="DashboardCountryDetail-MeasureTitleCol"
+                    xs={6}
+                    sm={3}
+                >
+                    {descriptor.getMeasureTitle()}:
+                </Col>
+            );
+            colNodes.push(titleColNode);
+
+            const valueColNode = (
+                <Col
+                    key={'cv' + i}
                     data-measure-type={descriptor.chartType}
-                    className="DashboardCountryDetail-MeasureInfo"
-                    sm={6}
+                    className="DashboardCountryDetail-MeasureValueCol"
+                    xs={6}
+                    sm={3}
                 >
                     {descriptor.renderMeasureInfo(p.meanDev!!, p.handlers.handleChartChange)}
                 </Col>
             );
-            colNodes.push(colNode);
+            colNodes.push(valueColNode);
 
             if ((i + 1) % 2 === 0) {
                 const rowNode = <Row key={'r' + i}>{colNodes}</Row>;
@@ -85,18 +133,11 @@ export class DashboardCountryDetail extends React.Component<DashboardCountryDeta
     renderSelectedChart(): React.ReactNode {
         const p = this.props;
 
-        if (p.selectedCountry && p.meanDev) {
-            if (p.selectedChartType && p.charts[p.selectedChartType]) {
-                if (p.selectedChartType === DeveloperMeasureType.salary) {
-                    return <LineChart width={500} height={500} data={p.charts[p.selectedChartType]}/>;
-                } else {
-                    return <BarChart width={500} height={500} data={p.charts[p.selectedChartType]}/>;
-                }
+        if (p.selectedCountry && p.meanDev && p.selectedChartType) {
+            if (p.selectedChartType === DeveloperMeasureType.salary) {
+                return <LineChart data={p.charts[p.selectedChartType]}/>;
             } else {
-                return (
-                    <div className="DashboardCountryDetail-ChartPlaceholder">
-                        {this.renderChartPlaceholderText()}
-                    </div>);
+                return <BarChart data={p.charts[p.selectedChartType]}/>;
             }
         }
         return undefined;
@@ -112,6 +153,10 @@ export class DashboardCountryDetail extends React.Component<DashboardCountryDeta
         } else {
             return 'No data available.';
         }
+    }
+
+    private handleBackToMeanInfoClick = () => {
+        this.props.handlers.handleChartChange(undefined);
     }
 }
 

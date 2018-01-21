@@ -10,7 +10,7 @@ class WorldMapAssert {
     }
 
     rendered(): this {
-        expect(this.wrapper.find('.WorldMap-Map').length).toBe(1);
+        expect(this.wrapper.find('.WorldMap-Svg').length).toBe(1);
         expect(this.wrapper.find('.WorldMap-GestureHint').length).toBe(1);
         expect(this.wrapper.find('.WorldMap-Tooltip').length).toBe(1);
         return this;

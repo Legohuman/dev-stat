@@ -50,7 +50,7 @@ it('renders bar chart with non-empty data', () => {
     expect(svg.props().width).toBe(500);
     expect(svg.props().height).toBe(500);
 
-    const chartTestHelper = new ChartAssertFactory(cheerio.load(wrapper.html()));
+    const chartTestHelper = new ChartAssertFactory(cheerio.load(svg.html()));
     chartTestHelper.assertAxis('g.x.axis')
         .rendered()
         .hasDomainExtent(10, 30);
@@ -60,12 +60,12 @@ it('renders bar chart with non-empty data', () => {
     chartTestHelper.assertMeanLine()
         .rendered()
         .hasDomainValue(15)
-        .hasCoordinate(105);
+        .hasCoordinate(107.5);
     chartTestHelper.assertBars()
         .count(2)
         .hasBars([
-            {x: 2, y: 0, height: 440, width: 206},
-            {x: 212, y: 146.67, height: 293.33, width: 206},
+            {x: 2, y: 0, height: 470, width: 211},
+            {x: 217, y: 156.6667, height: 313.33333, width: 211},
         ]);
 });
 
@@ -94,13 +94,13 @@ it('updates bar chart with non-empty data', () => {
     chartTestHelper.assertMeanLine()
         .rendered()
         .hasDomainValue(20)
-        .hasCoordinate(161.54);
+        .hasCoordinate(165.38);
     chartTestHelper.assertBars()
         .count(3)
         .hasBars([
-            {x: 2, y: 0, height: 440, width: 157.54},
-            {x: 163.54, y: 188.57, height: 251.43, width: 157.54},
-            {x: 325.08, y: 314.29, height: 125.71, width: 76.77},
+            {x: 2, y: 0, height: 470, width: 161.3846},
+            {x: 167.3846, y: 201.4286, height: 268.5714, width: 161.3846},
+            {x: 332.7692, y: 335.7142, height: 134.2857, width: 78.6923},
         ]);
 });
 
@@ -129,8 +129,8 @@ it('renders bar chart with zero values', () => {
     chartTestHelper.assertBars()
         .count(2)
         .hasBars([
-            {x: 2, y: 440, height: 0, width: 206},
-            {x: 212, y: 440, height: 0, width: 206},
+            {x: 2, y: 470, height: 0, width: 211},
+            {x: 217, y: 470, height: 0, width: 211},
         ]);
 });
 
@@ -202,7 +202,7 @@ it('check round of mean value', () => {
     chartTestHelper.assertMeanLine()
         .rendered()
         .hasDomainValue(15.13)
-        .hasCoordinate(107.83);
+        .hasCoordinate(110.39);
 
     wrapper.setProps({data: {...dataSet1, meanValue: 15.1389567}});
 
@@ -210,5 +210,5 @@ it('check round of mean value', () => {
     chartTestHelper.assertMeanLine()
         .rendered()
         .hasDomainValue(15.14)
-        .hasCoordinate(107.92);
+        .hasCoordinate(110.49);
 });

@@ -43,7 +43,7 @@ class MeanDevInfoAssert {
     }
 
     renderedAsNotAvailable(): this {
-        expect(this.wrapper.find('Grid.DashboardCountryDetail-ProfileInfo').length).toBe(0);
+        expect(this.wrapper.find('Grid.DashboardCountryDetail-ProfileInfo').length).toBe(1);
         expect(this.wrapper.find('div.DashboardCountryDetail-ProfileInfo_notAvailable').length).toBe(1);
         return this;
     }
@@ -60,7 +60,7 @@ class MeanDevInfoAssert {
     }
 
     chartSelectionHandled(type: DeveloperMeasureType, expectedHandler: sinon.SinonSpy): this {
-        const measureValue = this.wrapper.find(`[data-measure-type="${type}"]`).find('Button.DashboardCountryDetail-MeasureChartButton');
+        const measureValue = this.wrapper.find(`[data-measure-type="${type}"]`).find('Button.DashboardCountryDetail-ChartButton');
         const prevCallCount = expectedHandler.callCount;
         measureValue.simulate('click');
         expect(expectedHandler.callCount).toBe(prevCallCount + 1);

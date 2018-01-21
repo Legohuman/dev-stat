@@ -27,12 +27,7 @@ it('renders country detail with age chart', () => {
         .hasText('Russian Federation');
 
     assertFactory.assertMeanDevInfo()
-        .rendered()
-        .measure(DeveloperMeasureType.age, '29')
-        .measure(DeveloperMeasureType.salary, '2000')
-        .measure(DeveloperMeasureType.experience, '7')
-        .measure(DeveloperMeasureType.companySize, '100')
-        .chartSelectionsHandled(Object.keys(DeveloperMeasureType).map(k => DeveloperMeasureType[k]), handlers.handleChartChange);
+        .rendered();
 
     assertFactory.assertChart()
         .rendered(BarChart, getAgeChartsData()[DeveloperMeasureType.age]);
@@ -57,12 +52,7 @@ it('renders country detail with salary chart', () => {
         .hasText('Russian Federation');
 
     assertFactory.assertMeanDevInfo()
-        .rendered()
-        .measure(DeveloperMeasureType.age, '29')
-        .measure(DeveloperMeasureType.salary, '2000')
-        .measure(DeveloperMeasureType.experience, '7')
-        .measure(DeveloperMeasureType.companySize, '100')
-        .chartSelectionsHandled(Object.keys(DeveloperMeasureType).map(k => DeveloperMeasureType[k]), handlers.handleChartChange);
+        .rendered();
 
     assertFactory.assertChart()
         .rendered(LineChart, getSalaryChartsData()[DeveloperMeasureType.salary]);
@@ -92,12 +82,7 @@ it('render updated country detail with salary chart', () => {
         .hasText('Russian Federation');
 
     assertFactory.assertMeanDevInfo()
-        .rendered()
-        .measure(DeveloperMeasureType.age, '30')
-        .measure(DeveloperMeasureType.salary, '2500')
-        .measure(DeveloperMeasureType.experience, '8')
-        .measure(DeveloperMeasureType.companySize, '200')
-        .chartSelectionsHandled(Object.keys(DeveloperMeasureType).map(k => DeveloperMeasureType[k]), handlers.handleChartChange);
+        .rendered();
 
     assertFactory.assertChart()
         .rendered(LineChart, getSalaryChartsData()[DeveloperMeasureType.salary]);
@@ -145,34 +130,6 @@ it('renders country detail without mean dev', () => {
 
     assertFactory.assertMeanDevInfo()
         .renderedAsNotAvailable();
-
-    assertFactory.assertChart()
-        .notRendered();
-});
-
-it('renders country detail without selected chart', () => {
-    const wrapper = Enzyme.mount(
-        <DashboardCountryDetail
-            selectedCountry={getSelectedCountryInfo()}
-            selectedChartType={undefined}
-            meanDev={getMeanDevInfo()}
-            charts={getSalaryChartsData()}
-            handlers={dashboardMockHandlers()}
-            operations={{}}
-        />
-    );
-    const assertFactory = new DashboardCountryDetailAssertFactory(wrapper);
-
-    assertFactory.assertProfileTitle()
-        .rendered()
-        .hasText('Russian Federation');
-
-    assertFactory.assertMeanDevInfo()
-        .rendered()
-        .measure(DeveloperMeasureType.age, '29')
-        .measure(DeveloperMeasureType.salary, '2000')
-        .measure(DeveloperMeasureType.experience, '7')
-        .measure(DeveloperMeasureType.companySize, '100');
 
     assertFactory.assertChart()
         .notRendered();
