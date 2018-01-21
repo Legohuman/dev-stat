@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as d3 from 'd3';
 import * as _ from 'lodash';
+import { Cancelable } from 'lodash';
 import { MessageList } from '../MessageList';
 import { ChartDataSet } from '../../types/DashboardState';
 import { Validators } from '../../utils/PropValidators';
@@ -50,10 +51,16 @@ abstract class AbstractChart<T> extends React.Component<ChartProps<T>, object> {
     protected plotHeight: number;
 
     private plotGroupsPrepared: boolean;
+    private throttledRefreshChart: (() => void) & Cancelable;
 
     protected abstract updateAxesScale(): void;
 
     protected abstract renderData(): void;
+
+    constructor(props: ChartProps<T>) {
+        super(props);
+        this.throttledRefreshChart = _.throttle(this.refreshChart, 400).bind(this);
+    }
 
     render() {
         const p = this.props;
@@ -91,6 +98,12 @@ abstract class AbstractChart<T> extends React.Component<ChartProps<T>, object> {
 
     componentDidMount() {
         this.createChart();
+        window.addEventListener("resize", this.throttledRefreshChart);
+    }
+
+    componentWillUnmount() {
+        this.svgElement = null;
+        window.removeEventListener("resize", this.throttledRefreshChart);
     }
 
     componentDidUpdate(prevProps: Readonly<any>) {
@@ -120,6 +133,18 @@ abstract class AbstractChart<T> extends React.Component<ChartProps<T>, object> {
         this.renderAxes();
         this.renderData();
         this.renderMeanLine();
+    }
+
+    refreshChart = () => {
+        if (this.svgElement) {
+            if (this.plotGroupsPrepared) {
+                this.plotGroup.remove();
+                this.xAxisGroup.remove();
+                this.yAxisGroup.remove();
+            }
+            this.plotGroupsPrepared = false;
+        }
+        this.createChart();
     }
 
     private prepareChartGroups() {
