@@ -1,7 +1,7 @@
 package ru.legohuman.devstat.util
 
-import org.springframework.core.env.Environment
 import org.springframework.stereotype.Component
+import ru.legohuman.devstat.CommonConfiguration
 import ru.legohuman.devstat.dao.ChartDataDao
 import ru.legohuman.devstat.domain.DeveloperFactEntity
 import ru.legohuman.devstat.dto.*
@@ -27,11 +27,9 @@ abstract class DeveloperMeasureDescriptorBase<out T : ChartValuesType>(
 }
 
 abstract class ChartBinDeveloperMeasureDescriptorBase(
-        env: Environment,
         final override val propertyName: String,
-        defaultGroupWidth: Int
+        private val groupWidth: Int
 ) : DeveloperMeasureDescriptorBase<ChartBin>(propertyName) {
-    private val groupWidth: Int = ConversionUtil.parseInt(env.getProperty("app.measure.bins.group.width.$propertyName"), defaultGroupWidth)
 
     override fun getChartValues(chartDataDao: ChartDataDao, request: DashboardCountryPeriodMeasureTypeRequest): List<ChartBin> {
         val discriminatorExpression = getDiscriminatorExpression("d")
@@ -54,11 +52,9 @@ abstract class ChartBinDeveloperMeasureDescriptorBase(
 }
 
 abstract class ChartPointDeveloperMeasureDescriptorBase(
-        env: Environment,
         final override val propertyName: String,
-        defaultPointsCount: Int
+        private val pointsCount: Int
 ) : DeveloperMeasureDescriptorBase<ChartPoint>(propertyName) {
-    private val pointsCount: Int = ConversionUtil.parseInt(env.getProperty("app.measure.density.points.count.$propertyName"), defaultPointsCount)
     private val extentShiftFactor = 0.5
 
     override fun getChartValues(chartDataDao: ChartDataDao, request: DashboardCountryPeriodMeasureTypeRequest): List<ChartPoint> {
@@ -81,30 +77,30 @@ abstract class ChartPointDeveloperMeasureDescriptorBase(
 }
 
 class AgeDeveloperMeasureDescriptor(
-        env: Environment
-) : ChartBinDeveloperMeasureDescriptorBase(env, DeveloperFactEntity::age.name, 5)
+        conf: CommonConfiguration
+) : ChartBinDeveloperMeasureDescriptorBase(DeveloperFactEntity::age.name, conf.measureBinsGroupWidthAge)
 
 class SalaryDeveloperMeasureDescriptor(
-        env: Environment
-) : ChartPointDeveloperMeasureDescriptorBase(env, DeveloperFactEntity::salary.name, 10)
+        conf: CommonConfiguration
+) : ChartPointDeveloperMeasureDescriptorBase(DeveloperFactEntity::salary.name, conf.measureDensityPointsCountSalary)
 
 class ExperienceDeveloperMeasureDescriptor(
-        env: Environment
-) : ChartBinDeveloperMeasureDescriptorBase(env, DeveloperFactEntity::experience.name, 2)
+        conf: CommonConfiguration
+) : ChartBinDeveloperMeasureDescriptorBase(DeveloperFactEntity::experience.name, conf.measureBinsGroupWidthExperience)
 
 class CompanySizeDeveloperMeasureDescriptor(
-        env: Environment
-) : ChartBinDeveloperMeasureDescriptorBase(env, DeveloperFactEntity::companySize.name, 50)
+        conf: CommonConfiguration
+) : ChartBinDeveloperMeasureDescriptorBase(DeveloperFactEntity::companySize.name, conf.measureBinsGroupWidthCompanySize)
 
 @Component
 class DeveloperMeasureDescriptorRegistry(
-        env: Environment
+        conf: CommonConfiguration
 ) {
     private val measureTypeToDescriptor: Map<DeveloperMeasureType, DeveloperMeasureDescriptor<ChartValuesType>> = mapOf(
-            Pair(DeveloperMeasureType.age, AgeDeveloperMeasureDescriptor(env)),
-            Pair(DeveloperMeasureType.salary, SalaryDeveloperMeasureDescriptor(env)),
-            Pair(DeveloperMeasureType.experience, ExperienceDeveloperMeasureDescriptor(env)),
-            Pair(DeveloperMeasureType.companySize, CompanySizeDeveloperMeasureDescriptor(env))
+            Pair(DeveloperMeasureType.age, AgeDeveloperMeasureDescriptor(conf)),
+            Pair(DeveloperMeasureType.salary, SalaryDeveloperMeasureDescriptor(conf)),
+            Pair(DeveloperMeasureType.experience, ExperienceDeveloperMeasureDescriptor(conf)),
+            Pair(DeveloperMeasureType.companySize, CompanySizeDeveloperMeasureDescriptor(conf))
     )
 
     @Suppress("UNCHECKED_CAST")

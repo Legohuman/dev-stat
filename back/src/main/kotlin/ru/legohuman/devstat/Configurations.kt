@@ -32,6 +32,20 @@ class SwaggerConfig {
 
 @Configuration
 class CommonConfiguration {
+
+    @Value("\${app.measure.bins.group.width.age}")
+    var measureBinsGroupWidthAge: Int = 5
+
+    @Value("\${app.measure.bins.group.width.experience}")
+    var measureBinsGroupWidthExperience: Int = 2
+
+    @Value("\${app.measure.bins.group.width.companySize}")
+    var measureBinsGroupWidthCompanySize: Int = 50
+
+    @Value("\${app.measure.density.points.count.salary}")
+    var measureDensityPointsCountSalary: Int = 10
+
+
     @Bean
     fun jacksonBuilder(): Jackson2ObjectMapperBuilder {
         val b = Jackson2ObjectMapperBuilder()
