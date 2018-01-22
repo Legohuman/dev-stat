@@ -56,6 +56,7 @@ class WorldMap extends React.Component<Props, object> {
             .scale(p.initialScale);
 
         const zoom = d3.zoom()
+            .translateExtent([[0, 0], [mapWidth, mapHeight]])
             .scaleExtent([1, 10])
             .filter(() => !d3.event.button && d3.event.altKey)
             .on('zoom', onZoom);
