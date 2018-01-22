@@ -26,10 +26,10 @@ export interface FinishAsyncOperation {
     readonly operation: string;
 }
 
-export interface PutErrorMessage {
+export interface PutErrorMessages {
     readonly type: typeof ActionType.putErrorMessage;
     readonly key: string;
-    readonly message?: string;
+    readonly messages?: string[];
 }
 
 export interface SelectFilterPeriod {
@@ -64,6 +64,6 @@ export interface ApplyChartData {
     readonly data?: ChartValuesType;
 }
 
-export type Action = StartAsyncOperation | FinishAsyncOperation | PutErrorMessage |
+export type Action = StartAsyncOperation | FinishAsyncOperation | PutErrorMessages |
     SelectFilterPeriod | SelectCountry | SelectChartType |
     ApplyCountriesSummary | ApplyMeanDevSummary | ApplyChartData;

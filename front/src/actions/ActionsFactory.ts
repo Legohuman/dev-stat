@@ -7,11 +7,13 @@ import {
 } from '../types/DashboardState';
 import { DataService, PeriodAndCountryRequest, PeriodRequest } from '../service/DataService';
 import {
-    ActionType, ApplyChartData, ApplyCountriesSummary, ApplyMeanDevSummary, PutErrorMessage, SelectChartType,
+    ActionType, ApplyChartData, ApplyCountriesSummary, ApplyMeanDevSummary, PutErrorMessages, SelectChartType,
     SelectCountry, SelectFilterPeriod
 } from './Actions';
 import { devMeasureDescriptorSelector } from '../utils/DevMeasureDescriptorSelector';
-import { defaultDateFormat } from '../utils/AppConstants';
+import { toasts } from '../utils/ToastUtils';
+import { Validators } from '../utils/PropValidators';
+import * as _ from 'lodash';
 
 export const ActionsFactory = {
     handlePeriodChange(startDate?: moment.Moment, endDate?: moment.Moment): ThunkAction<void, DashboardState, any> {
@@ -20,8 +22,8 @@ export const ActionsFactory = {
                 effectiveEndDate = endDate && endDate.startOf('d');
             dispatch(ActionsFactory.selectFilterPeriod(effectiveStartDate, effectiveEndDate)); //to render updated values
 
-            const validationError = getValidationError(effectiveStartDate, effectiveEndDate);
-            if (!validationError) {
+            const validationErrors = getValidationErrors(effectiveStartDate, effectiveEndDate);
+            if (validationErrors.length === 0) {
                 dispatch(ActionsFactory.removeErrorMessage('filterValidationDates'));
 
                 const periodRequest: PeriodRequest = {startDate: effectiveStartDate, endDate: effectiveEndDate};
@@ -33,7 +35,7 @@ export const ActionsFactory = {
 
                 changePeriodAndCountry(dispatch, getState, periodRequest, getState().countryDetail.selectedCountry);
             } else {
-                dispatch(ActionsFactory.addErrorMessage('filterValidationDates', validationError));
+                dispatch(ActionsFactory.putErrorMessage('filterValidationDates', validationErrors));
                 dispatch(ActionsFactory.applyCountriesSummary({}));
                 dispatch(ActionsFactory.applyMeanDevSummary(undefined));
             }
@@ -45,7 +47,7 @@ export const ActionsFactory = {
             const startDate = getState().filter.startDate,
                 endDate = getState().filter.endDate;
 
-            if (!getValidationError(startDate, endDate)) {
+            if (getValidationErrors(startDate, endDate).length === 0) {
                 const periodRequest: PeriodRequest = {startDate, endDate};
                 changePeriodAndCountry(dispatch, getState, periodRequest, selectedCountry);
             }
@@ -58,7 +60,7 @@ export const ActionsFactory = {
                 endDate = getState().filter.endDate,
                 selectedCountry = getState().countryDetail.selectedCountry;
 
-            if (!getValidationError(startDate, endDate) && selectedCountry) {
+            if (getValidationErrors(startDate, endDate).length === 0 && selectedCountry) {
                 const periodAndCountryRequest: PeriodAndCountryRequest = {
                     startDate,
                     endDate,
@@ -113,15 +115,15 @@ export const ActionsFactory = {
         };
     },
 
-    addErrorMessage(key: string, message: string): PutErrorMessage {
+    putErrorMessage(key: string, messages: string[]): PutErrorMessages {
         return {
             type: ActionType.putErrorMessage,
             key,
-            message
+            messages: messages
         };
     },
 
-    removeErrorMessage(key: string): PutErrorMessage {
+    removeErrorMessage(key: string): PutErrorMessages {
         return {
             type: ActionType.putErrorMessage,
             key
@@ -153,22 +155,16 @@ function changePeriodAndCountry(dispatch: Dispatch<DashboardState>, getState: ()
     }
 }
 
-function getValidationError(startDate?: moment.Moment, endDate?: moment.Moment): string | null {
-    const validStartDate = !startDate || startDate.isValid();
-    const validEndDate = !endDate || endDate.isValid();
-    const validRange = !startDate || !endDate || !startDate.isAfter(endDate);
-
-    if (!validStartDate && !validEndDate) {
-        return `Start date and end date have invalid format. Expected date format is ${defaultDateFormat}`;
-    } else if (!validStartDate) {
-        return `Start date has invalid format. Expected date format is ${defaultDateFormat}`;
-    } else if (!validEndDate) {
-        return `End date has invalid format. Expected date format is ${defaultDateFormat}`;
-    } else if (!validRange) {
-        return 'End date is expected to be not less than start date';
+function getValidationErrors(startDate?: moment.Moment, endDate?: moment.Moment): string[] {
+    const errors = [];
+    if (startDate) {
+        errors.push(Validators.saneDate('Start date', startDate));
     }
-
-    return null;
+    if (endDate) {
+        errors.push(Validators.saneDate('End date', endDate));
+    }
+    errors.push(Validators.datesInOrder(startDate, endDate));
+    return _.compact(errors);
 }
 
 function changeChartType(dispatch: Dispatch<DashboardState>, getState: () => DashboardState,
@@ -194,6 +190,9 @@ function invokeAsync<T>(dispatch: Dispatch<any>, operation: keyof typeof DataSer
             return result;
         }, error => {
             dispatch({type: ActionType.finishAsyncOperation, operation});
+            (error.data as string[]).forEach(message => {
+                toasts.error(message);
+            });
             return Promise.reject(error);
         });
 }

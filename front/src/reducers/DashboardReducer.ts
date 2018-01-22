@@ -1,19 +1,19 @@
 import * as moment from 'moment';
 import {
     Action, ActionType, ApplyChartData, ApplyCountriesSummary, ApplyMeanDevSummary, FinishAsyncOperation,
-    PutErrorMessage, SelectChartType, SelectCountry, SelectFilterPeriod, StartAsyncOperation
+    PutErrorMessages, SelectChartType, SelectCountry, SelectFilterPeriod, StartAsyncOperation
 } from '../actions/Actions';
 import { DashboardState } from '../types/DashboardState';
 import { ActionHandlerSelector } from '../utils/ActionHandlerSelector';
 
 const handlerSelector = new ActionHandlerSelector<DashboardState>()
     .addHandler(ActionType.putErrorMessage, (action, state) => {
-        const actionImpl = <PutErrorMessage> action;
+        const actionImpl = <PutErrorMessages> action;
         return {
             ...state,
             messages: {
                 ...state.messages,
-                [actionImpl.key]: actionImpl.message
+                [actionImpl.key]: actionImpl.messages
             }
         };
     })

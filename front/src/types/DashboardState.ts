@@ -17,7 +17,7 @@ export interface DashboardOperationsContainer {
 }
 
 export interface DashboardErrorMessages {
-    [key: string]: string | undefined;
+    [key: string]: string[] | undefined;
 }
 
 export interface DashboardFilterData {

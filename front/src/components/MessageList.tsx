@@ -35,7 +35,7 @@ export class MessageList extends React.Component<MessageListProps, object> {
 }
 
 function mapStateToProps(state: DashboardState) {
-    return {messages: _.compact(_.values(state.messages))};
+    return {messages: _.compact(_.flatten(_.compact(_.values(state.messages))))};
 }
 
 export const MessageListContainer = connect(mapStateToProps)(MessageList);
