@@ -162,6 +162,7 @@
 
                     <pluginOptions>
                         <option>no-arg:annotation=com.fasterxml.jackson.annotation.JsonClassDescription</option>
+                        <option>no-arg:annotation=ru.legohuman.devstat.util.RequestParametersObject</option>
                     </pluginOptions>
                 </configuration>
 

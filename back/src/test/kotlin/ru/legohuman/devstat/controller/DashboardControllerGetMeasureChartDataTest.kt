@@ -11,7 +11,6 @@ import ru.legohuman.devstat.dao.ChartDataDao
 import ru.legohuman.devstat.dto.ChartBin
 import ru.legohuman.devstat.dto.ChartDataSet
 import ru.legohuman.devstat.dto.ChartPoint
-import ru.legohuman.devstat.dto.DeveloperMeasureType
 import ru.legohuman.devstat.util.ConversionUtil
 
 @TestPropertySource(properties = [
@@ -110,6 +109,6 @@ class DashboardControllerGetMeasureChartDataTest : ControllerTests() {
 
                 .andExpect(status().isBadRequest)
                 .andExpect(content().contentType(jsonContentType))
-                .andExpect(content().json(mapper.writeValueAsString(listOf("Invalid measure type. Value should be one of options: ${DeveloperMeasureType.values().joinToString()}."))))
+                .andExpect(content().json(mapper.writeValueAsString(listOf("Request parameters can not be parsed: [Field error in object 'dashboardCountryPeriodMeasureTypeRequest' on field 'measureType': rejected value [unknown]; codes [typeMismatch.dashboardCountryPeriodMeasureTypeRequest.measureType,typeMismatch.measureType,typeMismatch.ru.legohuman.devstat.dto.DeveloperMeasureType,typeMismatch]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [dashboardCountryPeriodMeasureTypeRequest.measureType,measureType]; arguments []; default message [measureType]]; default message [Failed to convert property value of type 'java.lang.String' to required type 'ru.legohuman.devstat.dto.DeveloperMeasureType' for property 'measureType'; nested exception is org.springframework.core.convert.ConversionFailedException: Failed to convert from type [java.lang.String] to type [ru.legohuman.devstat.dto.DeveloperMeasureType] for value 'unknown'; nested exception is java.lang.IllegalArgumentException: No enum constant ru.legohuman.devstat.dto.DeveloperMeasureType.unknown]]"))))
     }
 }

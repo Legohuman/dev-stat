@@ -1,12 +1,14 @@
 package ru.legohuman.devstat.dto
 
+import ru.legohuman.devstat.util.RequestParametersObject
 import ru.legohuman.devstat.util.Validators
 import ru.legohuman.devstat.util.addIfNotNull
 import java.time.LocalDate
 
+@RequestParametersObject
 data class DashboardPeriodRequest(
-        val startDate: LocalDate?,
-        val endDate: LocalDate?
+        var startDate: LocalDate?,
+        var endDate: LocalDate?
 ) : BaseRequest {
 
     override fun validate(): List<String> {
@@ -18,10 +20,11 @@ data class DashboardPeriodRequest(
     }
 }
 
+@RequestParametersObject
 data class DashboardCountryPeriodRequest(
-        val countryCode: String?,
-        val startDate: LocalDate?,
-        val endDate: LocalDate?
+        var countryCode: String?,
+        var startDate: LocalDate?,
+        var endDate: LocalDate?
 ) : BaseRequest {
 
     override fun validate(): List<String> {
@@ -32,11 +35,12 @@ data class DashboardCountryPeriodRequest(
     }
 }
 
+@RequestParametersObject
 data class DashboardCountryPeriodMeasureTypeRequest(
-        val countryCode: String?,
-        val startDate: LocalDate?,
-        val endDate: LocalDate?,
-        val measureType: DeveloperMeasureType?
+        var countryCode: String?,
+        var startDate: LocalDate?,
+        var endDate: LocalDate?,
+        var measureType: DeveloperMeasureType?
 ) : BaseRequest {
 
     override fun validate(): List<String> {
